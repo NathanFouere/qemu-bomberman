@@ -97,11 +97,6 @@ void Sextant_Init(){
 }
 
 
-
-int globalCounter=14;
-	int positionCounter=0;
-
-
 extern "C" void Sextant_main(unsigned long magic, unsigned long addr){
 	Clavier clavier;
 	void *temp1;
