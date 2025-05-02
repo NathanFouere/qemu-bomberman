@@ -39,6 +39,8 @@
 #include <drivers/vga.h>
 #include <drivers/sprite.h>
 
+#include <Applications/Game/Movable.h>
+
 extern char __e_kernel,__b_kernel, __b_data, __e_data,  __b_stack, __e_load ;
 int i;
 
@@ -102,13 +104,32 @@ int globalCounter=14;
 
 extern "C" void Sextant_main(unsigned long magic, unsigned long addr){
 	Clavier clavier;
-
-	set_vga_mode13(); // set VGA mode
-	set_palette_vga(palette_vga); // set to given palette
-	clear_vga_screen(16); // put the color 0 on each pixel
-	
+	void *temp1;
+	address = addr;
+	Movable *movable = new Movable(25, 25, sprite_door_data);
 	Sextant_Init();
 
-	while (true);
+	while (true)
+	{
+		set_vga_mode13();
+		set_palette_vga(palette_vga);
+		clear_vga_screen(0);
+		plot_square(50, 50, 25, 4);
+		draw_sprite(movable->getSprite(), 32, 32, movable->getX(),movable->getY()); 
 
+		char c = clavier.getchar();
+		if (c == 'd') {
+			movable->move(1, 0);
+		}
+		if (c == 'q') {
+			movable->move(-1, 0);
+		}
+		if (c == 's') {
+			movable->move(0, 1);
+		}
+		if (c == 'z') {
+			movable->move(0, -1);
+		}
+		draw_sprite(movable->getSprite(), 32, 32, movable->getX(),movable->getY());
+	}
 }
