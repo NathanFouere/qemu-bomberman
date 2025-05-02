@@ -36,6 +36,8 @@
 #include <sextant/memoire/pagination/MemoirePhysique.h>
 #include <sextant/memoire/pagination/Pagination.h>
 #include <Applications/Pipeline/Pipeline.h>
+#include <drivers/vga.h>
+#include <drivers/sprite.h>
 
 extern char __e_kernel,__b_kernel, __b_data, __e_data,  __b_stack, __e_load ;
 int i;
@@ -108,6 +110,12 @@ extern "C" void Sextant_main(unsigned long magic, unsigned long addr){
 	address = addr;
 
 
+
+	set_vga_mode13(); // set VGA mode
+	set_palette_vga(palette_vga); // set to given palette
+	clear_vga_screen(0); // put the color 0 on each pixel
+	plot_square(50, 50, 25, 4); // plot a square of 25 width at 50,50 of color 4
+	draw_sprite(sprite_door_data, 32, 32, 100,100); // draw the 32x32 sprite at 100,100
 
 	Sextant_Init();
 

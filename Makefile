@@ -61,6 +61,8 @@ OBJECTSNAMES=\
  Pipeline  Prod PortSerie\
  Semaphore Spinlock  sched\
  timer TestAndSet Threads thread\
+ vga\
+ sprite\
  
 
 OBJECTS=$(patsubst %,build/all-o/%.o,$(OBJECTSNAMES))					  		
