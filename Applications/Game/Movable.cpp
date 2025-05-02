@@ -12,8 +12,6 @@ Movable::Movable(int x, int y, unsigned char* data)
 {
     if (data)
         spriteData = data;
-    else
-        spriteData = sprite_data;
 }
 
 void Movable::setSprite(unsigned char* data) {

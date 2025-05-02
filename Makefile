@@ -58,7 +58,7 @@ OBJECTSNAMES=\
  InfiniteHello irq_wrappers i8259 idt irq\
  Memoire multiboot Mutex MemoirePion MemoireListe main\
  op_memoire\
- Pipeline  Prod PortSerie\
+ Prod PortSerie\
  Semaphore Spinlock  sched\
  timer TestAndSet Threads thread\
  vga\
