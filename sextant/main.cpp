@@ -113,9 +113,12 @@ extern "C" void Sextant_main(unsigned long magic, unsigned long addr){
 
 	set_vga_mode13(); // set VGA mode
 	set_palette_vga(palette_vga); // set to given palette
-	clear_vga_screen(0); // put the color 0 on each pixel
-	plot_square(50, 50, 25, 4); // plot a square of 25 width at 50,50 of color 4
-	draw_sprite(sprite_door_data, 32, 32, 100,100); // draw the 32x32 sprite at 100,100
+	clear_vga_screen(228); // put the color 0 on each pixel
+
+	draw_sprite(wall_1, 16, 16, 0,0); // draw the 16x16 sprite at 100,100
+	draw_sprite(wall_1, 16, 16, 0,16); // draw the 16x16 sprite at 100,100
+	draw_sprite(bomb_1, 16, 16, 100,100); // draw the 16x16 sprite at 100,100
+
 
 	Sextant_Init();
 

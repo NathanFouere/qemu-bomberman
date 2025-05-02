@@ -2,11 +2,108 @@
 #define SPRITE_H
 
 // Généré par png_to_c_with_palette.py à partir de 'pixel-32x32.png'
-#define SPRITE_WIDTH  32
-#define SPRITE_HEIGHT 32
+#define SPRITE_WIDTH  16
+#define SPRITE_HEIGHT 16
 
-extern unsigned char palette_vga[256][3];
-extern unsigned char sprite_data[SPRITE_WIDTH*SPRITE_HEIGHT];
-extern unsigned char sprite_door_data[SPRITE_WIDTH*SPRITE_HEIGHT];
-
+extern unsigned char palette_vga[256][3];extern unsigned char enemy1_left_1[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char wall_7[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char enemy1_death_1[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char enemy1_right_1[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char wall_6[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char enemy1_left_2[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char wall_4[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char enemy1_death_2[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char enemy1_right_3[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char exp_start_4[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char enemy1_right_2[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char enemy1_death_3[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char wall_5[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char enemy1_left_3[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char wall_1[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char enemy4_right_3[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char enemy4_left_2[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char enemy4_left_3[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char enemy4_right_2[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char exp_start_1[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char player1_front_1[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char wall_2[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char player1_front_3[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char enemy1_death_4[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char exp_start_3[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char enemy4_death_1[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char enemy4_left_1[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char enemy4_right_1[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char exp_start_2[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char enemy1_death_5[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char player1_front_2[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char wall_3[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char enemy2_death_5[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char player1_back_2[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char exp_end_4[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char enemy3_left_1[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char player1_back_3[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char enemy2_death_4[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char player1_back_1[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char enemy3_left_3[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char enemy3_left_2[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char enemy2_right_2[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char enemy2_death_3[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char exp_end_2[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char exp_end_3[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char enemy2_death_2[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char enemy2_right_3[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char enemy2_right_1[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char exp_end_1[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char buff_8[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char enemy2_death_1[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char enemy5_right_1[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char buff_5[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char enemy5_left_2[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char exp_mid_2[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char player1_left_2[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char player1_left_3[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char exp_mid_3[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char enemy5_left_3[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char enemy5_death_1[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char buff_4[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char buff_6[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char enemy5_death_3[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char enemy5_right_2[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char enemy5_left_1[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char player1_left_1[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char exp_mid_1[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char enemy5_right_3[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char buff_7[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char enemy5_death_2[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char buff_3[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char exp_mid_4[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char buff_2[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char enemy5_death_5[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char buff_1[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char enemy5_death_4[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char enemy3_death_1[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char player1_death_5[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char player1_death_4[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char enemy3_right_1[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char enemy3_right_3[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char enemy3_death_2[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char player1_death_6[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char player1_death_7[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char enemy3_death_3[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char enemy3_right_2[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char wall_8[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char player1_death_3[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char player1_right_2[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char player1_right_3[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char player1_death_2[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char bomb_2[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char bomb3[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char enemy2_left_1[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char enemy2_left_3[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char enemy3_death_4[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char player1_right_1[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char player1_death_1[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char enemy3_death_5[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char enemy2_left_2[SPRITE_WIDTH*SPRITE_WIDTH];
+extern unsigned char bomb_1[SPRITE_WIDTH*SPRITE_WIDTH];
 #endif
