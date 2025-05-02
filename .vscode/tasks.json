@@ -1,0 +1,157 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "List the current folder content",
+            "type": "shell",
+            "command": "ls -l"
+
+        },
+        {
+            "label": "Download and install the windows dependencies (Windows10)",
+            "type": "shell",
+            "command": "echo 'nothing to do'",
+            "windows": {
+                "command": [
+                    "if (Test-Path -Path 'C:\\sextant') {rmdir -r C:\\sextant};",
+                    "if (Test-Path -Path 'C:\\extract_sextant') {rmdir -r C:\\extract_sextant};",
+                    "Invoke-WebRequest http://www.menaud.fr/Cours/Systeme/Subjects/Codes/PS1/sextant_Win10_64.zip -O sextant_Win10_64.zip;",
+                    "Expand-Archive -Force sextant_Win10_64.zip C:\\extract_sextant;",
+                    "mv C:\\extract_sextant\\sextant C:\\sextant;",
+                    "rmdir -r C:\\extract_sextant;",
+                    "rm sextant_Win10_64.zip;"
+                ],
+                "options": {
+                    "env": {
+                        "PATH": "C:\\sextant\\ccompil"
+                    }
+                }
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Build Sextant",
+            "type": "shell",
+            "windows": {
+                "command": "make",
+                "options": {
+                    "env": {
+                        "PATH": "C:\\sextant\\ccompil"
+                    }
+                }
+            },
+            "linux": {
+                "command": "make"
+            },
+            "osx": {
+                "command": "make"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Run Sextant",
+            "type": "shell",
+            "windows": {
+                "command": "cd build/boot; c:\\sextant\\qemu\\qemu.exe -L \"c:\\sextant\\qemu\" -no-kqemu -net 'nic,model=ne2k_isa' -net user -tftp ./ -cdrom grub.iso",
+                "options": {
+                    "env": {
+                        "PATH": "C:\\sextant\\ccompil"
+                    }
+                }                
+            },
+            "linux": {
+                "comments": "To quit Alt + 2 > quit",
+                "command": "cd build/boot; qemu-system-x86_64 -net nic,model=ne2k_isa -net user,tftp=./ -cdrom grub.iso"
+            },
+            "osx": {
+                "comments": "To quit Alt + 2 > quit",
+                "command": "cd build/boot; qemu-system-x86_64 -net nic,model=ne2k_isa -net user,tftp=./ -cdrom grub.iso"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Debug Sextant",
+            "type": "shell",
+            "windows": {
+                "command": "cd build/boot; c:\\sextant\\qemu\\qemu.exe -S -s -L \"c:\\sextant\\qemu\" -net nic,model=ne2k_isa -net user -tftp ./ -cdrom grub.iso",
+                "options": {
+                    "env": {
+                        "PATH": "C:\\sextant\\ccompil"
+                    }
+                }
+            },
+            "linux": {
+                "comments": "To quit Alt + 2 > quit",
+                "command": "cd build/boot; qemu-system-i386 -S -s -net nic,model=ne2k_isa -net user,tftp=./ -cdrom grub.iso"
+            },
+            "osx": {
+                "comments": "To quit Alt + 2 > quit",
+                "command": "cd build/boot; qemu-system-i386 -S -s -net nic,model=ne2k_isa -net user,tftp=./ -cdrom grub.iso"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Run Sextant (nographic)",
+            "type": "shell",
+            "windows": {
+                "command": "C:\\Program Files\\nodejs\\node.exe"
+            },
+            "linux": {
+                "comments": "To quit Alt + 2 > quit",
+                "command": "cd build/boot; qemu-system-x86_64 -display curses -net nic,model=ne2k_isa -net user,tftp=./ -cdrom grub.iso"
+            },
+            "osx": {
+                "comments": "To quit Alt + 2 > quit",
+                "command": "cd build/boot; qemu-system-x86_64 -display curses -net nic,model=ne2k_isa -net user,tftp=./ -cdrom grub.iso"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Debug Sextant (nographic)",
+            "type": "shell",
+            "windows": {
+                "command": "cd build/boot; c:\\sextant\\qemu\\qemu.exe -S -s -L \"c:\\sextant\\qemu\" -net nic,model=ne2k_isa -net user -tftp ./ -cdrom grub.iso",
+                "options": {
+                    "env": {
+                        "PATH": "C:\\sextant\\ccompil"
+                    }
+                }
+            },
+            "linux": {
+                "comments": "To quit Alt + 2 > quit",
+                "command": "cd build/boot; qemu-system-i386 -display curses -S -s -net nic,model=ne2k_isa -net user,tftp=./ -cdrom grub.iso"
+            },
+            "osx": {
+                "comments": "To quit Alt + 2 > quit",
+                "command": "cd build/boot; qemu-system-i386 -display curses -S -s -net nic,model=ne2k_isa -net user,tftp=./ -cdrom grub.iso"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        },
+    ]
+}
