@@ -35,9 +35,10 @@
 //#include <sextant/memoire/pagination/memoireliste4k.h>
 #include <sextant/memoire/pagination/MemoirePhysique.h>
 #include <sextant/memoire/pagination/Pagination.h>
-#include <Applications/Pipeline/Pipeline.h>
 #include <drivers/vga.h>
 #include <drivers/sprite.h>
+
+#include <Applications/Game/Movable.h>
 
 extern char __e_kernel,__b_kernel, __b_data, __e_data,  __b_stack, __e_load ;
 int i;
@@ -60,13 +61,10 @@ char tab[30000];
 Ecran ecran;
 
 memoire *InterfaceMemoire;
-
-
 Ecran *monEcran = &ecran;
 
 
 #define PAGINATION_USE 1
-
 
 
 void Sextant_Init(){
@@ -98,111 +96,39 @@ void Sextant_Init(){
 }
 
 
-
-/*pour question 1*/
-int globalCounter=14;
-int positionCounter=0;
-
-
 extern "C" void Sextant_main(unsigned long magic, unsigned long addr){
 	Clavier clavier;
 	void *temp1;
 	address = addr;
-
-
-
-	set_vga_mode13(); // set VGA mode
-	set_palette_vga(palette_vga); // set to given palette
-	clear_vga_screen(228); // put the color 0 on each pixel
-
-	draw_sprite(wall_1, 16, 16, 0,0); // draw the 16x16 sprite at 100,100
-	draw_sprite(wall_1, 16, 16, 0,16); // draw the 16x16 sprite at 100,100
-	draw_sprite(bomb_1, 16, 16, 100,100); // draw the 16x16 sprite at 100,100
-
+	Movable *movable = new Movable(25, 25, player1_front_1);
 
 	Sextant_Init();
 
+	while (true)
+	{
+		set_vga_mode13();
+		set_palette_vga(palette_vga);
+		clear_vga_screen(228);
 
-	ecran.effacerEcran(NOIR);
+		draw_sprite(wall_1, 16, 16, 0,0); // draw the 16x16 sprite at 100,100
+		draw_sprite(wall_1, 16, 16, 0,16); // draw the 16x16 sprite at 100,100
+		draw_sprite(bomb_1, 16, 16, 100,100); // draw the 16x16 sprite at 100,100
 
-	/* Question 1 */
+		draw_sprite(movable->getSprite(), 16, 16, movable->getX(),movable->getY()); 
 
-	/* Sous question 1 */
-
-	Semaphore sem1;
-	Pipeline tabPipelineQ1[8];
-
-
-
-	/* Sous question 2 */
-
-	globalCounter=14;
-	positionCounter=0;
-
-	Semaphore sem[8];
-	Pipeline tabPipelineQ2[8];
-
-
-	while(true);
-
-	/* Question 2 et suivantes */
-
-	InterfaceMemoire->memoireaffiche(&ecran);
-
-	clavier.getchar(); /*1*/
-
-	temp1=(void*)InterfaceMemoire->malloc(4093);
-	InterfaceMemoire->memoireaffiche(&ecran);
-
-	clavier.getchar(); /*2*/
-
-	temp1=(void*)InterfaceMemoire->malloc(10);
-	memcpy(temp1,"toto",5);
-	InterfaceMemoire->memoireaffiche(&ecran);
-
-	clavier.getchar(); /*3*/
-
-	InterfaceMemoire->free((vaddr_t)temp1);
-//	memcpy(temp1,"toto",5);
-
-	InterfaceMemoire->memoireaffiche(&ecran);
-
-	clavier.getchar(); /*4*/
-
-	void *temp2,*temp3;
-
-	temp1=(void*)InterfaceMemoire->malloc(10);
-	InterfaceMemoire->memoireaffiche(&ecran);
-	temp2=(void*)InterfaceMemoire->malloc(10);
-	InterfaceMemoire->memoireaffiche(&ecran);
-	temp3=(void*)InterfaceMemoire->malloc(10);
-	InterfaceMemoire->memoireaffiche(&ecran);
-
-	clavier.getchar(); /*5*/
-
-	InterfaceMemoire->free((vaddr_t)temp2);
-	InterfaceMemoire->memoireaffiche(&ecran);
-
-	clavier.getchar(); /*6*/
-
-	temp2=(void*)InterfaceMemoire->malloc(10);
-	InterfaceMemoire->memoireaffiche(&ecran);
-
-	clavier.getchar(); /*7*/
-
-	Semaphore *sem3;
-	sem3 = new Semaphore(1);
-	InterfaceMemoire->memoireaffiche(&ecran);
-	clavier.getchar(); /*8*/
-
-	delete sem3;
-	InterfaceMemoire->memoireaffiche(&ecran);
-	clavier.getchar(); /*9*/
-
-	monEcran->effacerEcran(NOIR);
-	InterfaceMemoire->test();
-	clavier.getchar(); /*10*/
-
-	while (true);
-
+		char c = clavier.getchar();
+		if (c == 'd') {
+			movable->move(1, 0);
+		}
+		if (c == 'q') {
+			movable->move(-1, 0);
+		}
+		if (c == 's') {
+			movable->move(0, 1);
+		}
+		if (c == 'z') {
+			movable->move(0, -1);
+		}
+		draw_sprite(movable->getSprite(), 16, 16, movable->getX(),movable->getY());
+	}
 }
