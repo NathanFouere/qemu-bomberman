@@ -106,9 +106,9 @@ int positionCounter=0;
 
 extern "C" void Sextant_main(unsigned long magic, unsigned long addr){
 	Clavier clavier;
-	void *temp1;
-	address = addr;
+	Ecran ecran;
 
+<<<<<<< Updated upstream
 
 
 	set_vga_mode13(); // set VGA mode
@@ -199,6 +199,10 @@ extern "C" void Sextant_main(unsigned long magic, unsigned long addr){
 	monEcran->effacerEcran(NOIR);
 	InterfaceMemoire->test();
 	clavier.getchar(); /*10*/
+=======
+	//Initialisation de l'écran
+	ecran.effacerEcran(VERT);
+>>>>>>> Stashed changes
 
 	while (true);
 
