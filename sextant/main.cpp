@@ -99,7 +99,6 @@ void Sextant_Init(){
 
 
 
-/*pour question 1*/
 int globalCounter=14;
 int positionCounter=0;
 
@@ -107,9 +106,6 @@ int positionCounter=0;
 extern "C" void Sextant_main(unsigned long magic, unsigned long addr){
 	Clavier clavier;
 	Ecran ecran;
-
-<<<<<<< Updated upstream
-
 
 	set_vga_mode13(); // set VGA mode
 	set_palette_vga(palette_vga); // set to given palette
@@ -120,89 +116,7 @@ extern "C" void Sextant_main(unsigned long magic, unsigned long addr){
 	Sextant_Init();
 
 
-	ecran.effacerEcran(NOIR);
-
-	/* Question 1 */
-
-	/* Sous question 1 */
-
-	Semaphore sem1;
-	Pipeline tabPipelineQ1[8];
-
-
-
-	/* Sous question 2 */
-
-	globalCounter=14;
-	positionCounter=0;
-
-	Semaphore sem[8];
-	Pipeline tabPipelineQ2[8];
-
-
-	while(true);
-
-	/* Question 2 et suivantes */
-
-	InterfaceMemoire->memoireaffiche(&ecran);
-
-	clavier.getchar(); /*1*/
-
-	temp1=(void*)InterfaceMemoire->malloc(4093);
-	InterfaceMemoire->memoireaffiche(&ecran);
-
-	clavier.getchar(); /*2*/
-
-	temp1=(void*)InterfaceMemoire->malloc(10);
-	memcpy(temp1,"toto",5);
-	InterfaceMemoire->memoireaffiche(&ecran);
-
-	clavier.getchar(); /*3*/
-
-	InterfaceMemoire->free((vaddr_t)temp1);
-//	memcpy(temp1,"toto",5);
-
-	InterfaceMemoire->memoireaffiche(&ecran);
-
-	clavier.getchar(); /*4*/
-
-	void *temp2,*temp3;
-
-	temp1=(void*)InterfaceMemoire->malloc(10);
-	InterfaceMemoire->memoireaffiche(&ecran);
-	temp2=(void*)InterfaceMemoire->malloc(10);
-	InterfaceMemoire->memoireaffiche(&ecran);
-	temp3=(void*)InterfaceMemoire->malloc(10);
-	InterfaceMemoire->memoireaffiche(&ecran);
-
-	clavier.getchar(); /*5*/
-
-	InterfaceMemoire->free((vaddr_t)temp2);
-	InterfaceMemoire->memoireaffiche(&ecran);
-
-	clavier.getchar(); /*6*/
-
-	temp2=(void*)InterfaceMemoire->malloc(10);
-	InterfaceMemoire->memoireaffiche(&ecran);
-
-	clavier.getchar(); /*7*/
-
-	Semaphore *sem3;
-	sem3 = new Semaphore(1);
-	InterfaceMemoire->memoireaffiche(&ecran);
-	clavier.getchar(); /*8*/
-
-	delete sem3;
-	InterfaceMemoire->memoireaffiche(&ecran);
-	clavier.getchar(); /*9*/
-
-	monEcran->effacerEcran(NOIR);
-	InterfaceMemoire->test();
-	clavier.getchar(); /*10*/
-=======
-	//Initialisation de l'écran
 	ecran.effacerEcran(VERT);
->>>>>>> Stashed changes
 
 	while (true);
 
