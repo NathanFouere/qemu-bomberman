@@ -38,7 +38,8 @@
 #include <drivers/vga.h>
 #include <drivers/sprite.h>
 
-#include <Applications/Game/Movable.h>
+#include <Applications/Game/Player.h>
+#include <Applications/Game/Bot.h>
 
 extern char __e_kernel,__b_kernel, __b_data, __e_data,  __b_stack, __e_load ;
 int i;
@@ -97,38 +98,27 @@ void Sextant_Init(){
 
 
 extern "C" void Sextant_main(unsigned long magic, unsigned long addr){
+	Sextant_Init();
 	Clavier clavier;
 	void *temp1;
 	address = addr;
-	Movable *movable = new Movable(25, 25, player1_front_1);
+	Player *player = new Player(25, 25, player1_front_1, &clavier);
+	Bot *bot = new Bot(50, 50, enemy1_left_1);
 
-	Sextant_Init();
 
+
+	draw_sprite(wall_1, 16, 16, 0,0); // draw the 16x16 sprite at 100,100
+	draw_sprite(wall_1, 16, 16, 0,16); // draw the 16x16 sprite at 100,100
 	while (true)
 	{
 		set_vga_mode13();
 		set_palette_vga(palette_vga);
 		clear_vga_screen(228);
 
-		draw_sprite(wall_1, 16, 16, 0,0); // draw the 16x16 sprite at 100,100
-		draw_sprite(wall_1, 16, 16, 0,16); // draw the 16x16 sprite at 100,100
-		draw_sprite(bomb_1, 16, 16, 100,100); // draw the 16x16 sprite at 100,100
 
-		draw_sprite(movable->getSprite(), 16, 16, movable->getX(),movable->getY()); 
-
-		char c = clavier.getchar();
-		if (c == 'd') {
-			movable->move(1, 0);
-		}
-		if (c == 'q') {
-			movable->move(-1, 0);
-		}
-		if (c == 's') {
-			movable->move(0, 1);
-		}
-		if (c == 'z') {
-			movable->move(0, -1);
-		}
-		draw_sprite(movable->getSprite(), 16, 16, movable->getX(),movable->getY());
+		player->movePlayer();
+		bot->moveRandomly();
+		draw_sprite(player->getSprite(), 16, 16, player->getX(),player->getY()); 
+		draw_sprite(bot->getSprite(), 16, 16, bot->getX(),bot->getY()); 
 	}
 }

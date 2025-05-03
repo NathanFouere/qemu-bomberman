@@ -1,10 +1,12 @@
+#ifndef MOVABLE_H
+#define MOVABLE_H
+
 class Movable  {
 private:
     int x, y;
-    unsigned char* spriteData; // Pointeur vers les données du sprite
+    unsigned char* spriteData;
 public:
-    Movable() : x(0), y(0), spriteData(bomb_1) {} // Par défaut sprite_data
-    Movable(int x, int y, unsigned char* data = bomb_1)
+    Movable(int x, int y, unsigned char* data)
         : x(x), y(y), spriteData(data) {}
 
     void setSprite(unsigned char* data) { spriteData = data; }
@@ -14,3 +16,4 @@ public:
     int getX() const { return x; }
     int getY() const { return y; }
 };
+#endif

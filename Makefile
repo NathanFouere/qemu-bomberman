@@ -63,6 +63,8 @@ OBJECTSNAMES=\
  timer TestAndSet Threads thread\
  vga\
  sprite\
+ Player\
+ Bot\
  
 
 OBJECTS=$(patsubst %,build/all-o/%.o,$(OBJECTSNAMES))					  		
