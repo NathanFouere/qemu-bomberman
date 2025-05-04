@@ -2,7 +2,7 @@
 #define MOVABLE_H
 
 class Movable  {
-private:
+protected:
     int x, y;
     unsigned char* spriteData;
 public:

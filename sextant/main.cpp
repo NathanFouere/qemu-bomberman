@@ -102,13 +102,18 @@ extern "C" void Sextant_main(unsigned long magic, unsigned long addr){
 	Clavier clavier;
 	void *temp1;
 	address = addr;
-	Player *player = new Player(25, 25, player1_front_1, &clavier);
-	//Bot *bot = new Bot(50, 50, enemy1_left_1);
-
-
 
 	set_vga_mode13();
 	clear_vga_screen(228);
+
+	Player *player = new Player(125, 125, player1_front_1, &clavier);
+	Bot *bot = new Bot(50, 50, enemy1_left_1);
+	draw_sprite(player->getSprite(), 16, 16, player->getX(),player->getY()); 
+	draw_sprite(bot->getSprite(), 16, 16, bot->getX(),bot->getY()); 
+	player->start();
+	bot->start();
+
+
 	draw_sprite(wall_1, 16, 16, 0,0); // draw the 16x16 sprite at 100,100
 	draw_sprite(wall_1, 16, 16, 0,16); // draw the 16x16 sprite at 100,100
 	while (true)
@@ -116,7 +121,9 @@ extern "C" void Sextant_main(unsigned long magic, unsigned long addr){
 		set_palette_vga(palette_vga);
 
 
-		player->movePlayer();
 		draw_sprite(player->getSprite(), 16, 16, player->getX(),player->getY()); 
+		draw_sprite(bot->getSprite(), 16, 16, bot->getX(),bot->getY()); 
+		thread_yield();
+
 	}
 }

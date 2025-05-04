@@ -19,3 +19,10 @@ void Player::movePlayer() {
         }
     }
 }
+
+void Player::run() {
+    while (true) {
+        movePlayer();
+        Yield();
+    }
+}
