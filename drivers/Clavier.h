@@ -20,12 +20,21 @@ public :
 	 ***/
 	char* getString();
 	/***
-	 * Verifie s'il y a au moins un caractere qui a ete tape.
+	 * Verifie si un caractere a ete tape.
 	 ***/
-	bool testChar();
+	bool isPressed(char c);
 
 	void set_leds(void);
 
+	enum Key {
+		Up = 'w',
+		Down = 's',
+		Left = 'a',
+		Right = 'd',
+		PlaceBomb = 'x',
+		Enter = 0x1C
+	};
+	
 };
 
 #endif
