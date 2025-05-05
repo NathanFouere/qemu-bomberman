@@ -86,10 +86,6 @@ void Sextant_Init(){
 
 	gdt_setup();
 
-	InterfaceMemoire=memoire::nouveau();
-
-	InterfaceMemoire->mem_setup(& __e_kernel,(mbi->mem_upper<<10) + (1<<20),&ecran);
-
 	thread_subsystem_setup(bootstrap_stack_bottom,bootstrap_stack_size);
 
 	sched_subsystem_setup();
@@ -119,11 +115,10 @@ extern "C" void Sextant_main(unsigned long magic, unsigned long addr){
 	while (true)
 	{
 		set_palette_vga(palette_vga);
-
+		clear_vga_screen(228);
 
 		draw_sprite(player->getSprite(), 16, 16, player->getX(),player->getY()); 
 		draw_sprite(bot->getSprite(), 16, 16, bot->getX(),bot->getY()); 
 		thread_yield();
-
 	}
 }

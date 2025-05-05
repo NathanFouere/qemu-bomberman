@@ -28,9 +28,10 @@ vaddr_t MemoirePion::malloc(size_t nbytes)
 	int j;
 	p=(int*)debut;
 
-	/* Question 3 */
-
-	/* ??? */
+	i=i+nbytes;
+	adresse = debut;
+	debut = (void *) i;
+	return (vaddr_t) adresse;
 
 
 	if(DEBUG_MEMOIREPION==1) {
@@ -60,17 +61,14 @@ vaddr_t MemoirePion::malloc(size_t nbytes)
 
 
 sextant_ret_t MemoirePion::freemem(vaddr_t addr, int taille) {
-	/* Question 3 */
-	/* memset(???); */
+	memset((void *) addr,0,taille);
 }
 
 sextant_ret_t MemoirePion::free(vaddr_t addr) {
 	int *p;
 	p=(int*)(addr);
 	p=p-1;
-
-	/* Question 4 */
-	/* ????? */
+	memset((void*)p,0,*p+4);
 	
 	if(DEBUG_MEMOIREPION==1) {
 		ec->sautDeLigne();
