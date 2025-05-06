@@ -48,6 +48,11 @@ memoire* memoire::nouveau(){
 }
 
 
-void* operator new(size_t taille) { return (void*) (*(memoire::nouveau())).malloc(taille);};
+void* operator new(size_t taille) { 
+	return (void*) (*(memoire::nouveau())).malloc(taille);
+};
 
-void  operator delete(void* ptr)  { (*(memoire::nouveau())).free((vaddr_t)ptr); return;};
+void  operator delete(void* ptr)  { 
+	(*(memoire::nouveau())).free((vaddr_t)ptr); 
+	return; 
+};

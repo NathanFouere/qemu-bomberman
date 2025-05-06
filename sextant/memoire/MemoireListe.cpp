@@ -41,32 +41,23 @@ vaddr_t MemoireListe::malloc(size_t nbytes) {
 	struct mblock *p, *q, *leftover;
 
 	int *taille;
-	// ???
 
-	if(DEBUG_MEMOIRELISTE==1) {
-		ec->sautDeLigne();
-		ec->afficherMot("Malloc adresse de debut : ");
-	}
+	nbytes=nbytes+4; // pour sauvegarder la taille
+
 
 	if(nbytes==0 || memlist.mnext== (struct mblock *) NULL) {
 		return(NULL);
 	}
 	//q pointe sur le bloc courant et p sur le bloc suivant
 	for (q= &memlist,p=memlist.mnext ;p != (struct mblock *) NULL ;q=p,p=p->mnext)
-		if(p->mlen == nbytes) {//On demande toute la mŽmoire
+		if(p->mlen == nbytes) {//On demande toute la mÃ©moire
 			q->mnext = p->mnext;
 
 			taille=(int*)p;
-			// ???
-
-			if(DEBUG_MEMOIRELISTE==1) {
-				ec->afficherBase((unsigned int) p,10,BLANC);
-				ec->afficherMot(" Taille : ");
-				ec->afficherBase((unsigned int) *taille,10,BLANC);
-				ec->afficherMot(" Add ret : ");
-				ec->afficherBase((unsigned int) taille+1,10,BLANC);
-			}
+			*taille=(nbytes-4);
+			taille=taille+1;
 			return( (vaddr_t)taille );
+
 		} else if ( p->mlen > nbytes ) {
 			leftover = (struct mblock *)( (unsigned)p + nbytes );//Recucupere le bloc de taille voulue
 			q->mnext = leftover;//insertion du nouveau bloc dans la liste
@@ -77,16 +68,8 @@ vaddr_t MemoireListe::malloc(size_t nbytes) {
 			leftover->mlen = temp2;
 
 			taille=(int*)p;
-			// ???
-			
-			if(DEBUG_MEMOIRELISTE==1) {
-				ec->afficherBase((unsigned int) p,10,BLANC);
-				ec->afficherMot(" Taille : ");
-				ec->afficherBase((unsigned int) *taille,10,BLANC);
-				ec->afficherMot(" Add ret : ");
-				ec->afficherBase((unsigned int) taille+1,10,BLANC);
-			}
-
+			*taille=(nbytes-4);
+			taille=taille+1;
 			return((vaddr_t)taille);
 		}
 	return NULL;
@@ -96,18 +79,11 @@ sextant_ret_t MemoireListe::free(unsigned int addr) {
 	struct mblock *p,*q;
 	unsigned top;
 
-	int *add = ((int*)addr); // ???
+	int *add = ((int*)addr)-1;
 	struct mblock* block = (struct mblock*) add;
 
-	int size = 0 ; // ???
+	int size = *add+4;
 
-	if(DEBUG_MEMOIRELISTE==1) {
-		ec->sautDeLigne();
-		ec->afficherMot("Free adresse de debut : ");
-		ec->afficherBase((unsigned int) block,10,BLANC);
-		ec->afficherMot(" Taille : ");
-		ec->afficherBase((unsigned int) size,10,BLANC);
-	}
 
 	if(size==0)
 			return SEXTANT_ERROR;
@@ -133,6 +109,5 @@ sextant_ret_t MemoireListe::free(unsigned int addr) {
 		q->mnext = p->mnext;
 	}
 	return(SEXTANT_OK);
-
 
 }

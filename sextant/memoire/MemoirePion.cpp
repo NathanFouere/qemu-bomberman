@@ -31,29 +31,6 @@ vaddr_t MemoirePion::malloc(size_t nbytes)
 	i=i+nbytes;
 	adresse = debut;
 	debut = (void *) i;
-	return (vaddr_t) adresse;
-
-
-	if(DEBUG_MEMOIREPION==1) {
-		ec->sautDeLigne();
-		ec->afficherMot("Adresse de debut : ");
-		ec->afficherBase((unsigned int) j,10,BLANC);
-		ec->sautDeLigne();
-		ec->afficherMot("Taille passee en param de malloc : ");
-		ec->afficherBase((unsigned int) nbytes,10,BLANC);
-		ec->sautDeLigne();
-		ec->afficherMot("Taille enregistree : ");
-		ec->afficherBase((unsigned int) *p,10,BLANC);
-		ec->sautDeLigne();
-		ec->afficherMot("Al'adresse : ");
-		ec->afficherBase((unsigned int) p,10,BLANC);
-		ec->sautDeLigne();
-		ec->afficherMot("Adresse de fin : ");
-		ec->afficherBase((unsigned int) i,10,BLANC);
-		ec->sautDeLigne();
-	}
-
-	/* ??? */
 	
 	return (vaddr_t) adresse;
 
@@ -69,19 +46,6 @@ sextant_ret_t MemoirePion::free(vaddr_t addr) {
 	p=(int*)(addr);
 	p=p-1;
 	memset((void*)p,0,*p+4);
-	
-	if(DEBUG_MEMOIREPION==1) {
-		ec->sautDeLigne();
-		ec->afficherMot("Adresse de debut de free : ");
-		ec->afficherBase((unsigned int) addr,10,BLANC);
-		ec->sautDeLigne();
-		ec->afficherMot("Taille retrouvee : ");
-		ec->afficherBase((unsigned int) *p,10,BLANC);
-		ec->sautDeLigne();
-		ec->afficherMot("A l'adresse : ");
-		ec->afficherBase((unsigned int) p,10,BLANC);
-		ec->sautDeLigne();
-	}
 
 
 	return SEXTANT_OK;

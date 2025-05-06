@@ -91,42 +91,28 @@ void  MemoirePaginee::mem_setup(void *begin, int size,Ecran *ec){
 
 }
 
-vaddr_t  MemoirePaginee::malloc(size_t nbytes){
-	paddr_t ppage;
-	vaddr_t temp;
-	temp = free_adress;
+vaddr_t MemoireTab::malloc(size_t nbytes) {
+    if (nbytes > PAGE_SIZE) return SEXTANT_ERROR;
 
-	if (nbytes>PAGE_SIZE) return SEXTANT_ERROR;
-
-
-
-	ppage =  maMemoirePhysique.malloc(PAGE_SIZE);
-	maPagination.paging_map(ppage,free_adress,false,VM_MAP_ATOMIC | VM_MAP_PROT_READ | VM_MAP_PROT_WRITE);
-
-	monEcran->afficherMot(0,40,"Malloc :",BLANC);
-	monEcran->afficherChiffre(0,50,temp);
-
-//	monEcran->afficherMot(0,40,"Malloc :",BLANC);
-//	monEcran->afficherChiffre(0,50,temp);
-
-	free_adress = free_adress+PAGE_SIZE;
-	return temp;
+    for (int i = 0; i < MAXMEM; i++) {
+        if (TabPages[i].isFree == true) {
+            TabPages[i].isFree = false;
+            vaddr_t vaddr = debut + i * PAGE_SIZE;
+            return vaddr;
+        }
+    }
+    return SEXTANT_ERROR;
 }
 
-sextant_ret_t  MemoirePaginee::free(vaddr_t addr){
-	sextant_ret_t temp;
-	monEcran->afficherMot(0,60,"Free :",BLANC);
-	monEcran->afficherChiffre(0,70,addr);
-	 maMemoirePhysique.free(maPagination.paging_get_paddr(addr));
-		monEcran->afficherMot(0,60,"Free :",BLANC);
-		monEcran->afficherChiffre(0,70,addr);
+sextant_ret_t MemoireTab::free(vaddr_t addr) {
+    vaddr_t offset = addr - debut;
+    int pageIndex = offset / PAGE_SIZE;
 
-	temp =maPagination.paging_unmap(addr);
-
-	monEcran->afficherMot(0,60,"Free :",BLANC);
-	monEcran->afficherChiffre(0,70,addr);
-
-	return temp;
+    if (pageIndex >= 0 && pageIndex < MAXMEM && TabPages[pageIndex].isFree == false) {
+        TabPages[pageIndex].isFree = true; 
+        return SEXTANT_OK;
+    }
+    return SEXTANT_ERROR; 
 }
 
 void  MemoirePaginee::memoireaffiche(Ecran *ec){
