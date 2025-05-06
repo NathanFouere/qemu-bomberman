@@ -2,9 +2,21 @@
 #include <drivers/vga.h>
 
 void Bot::moveRandom() {
-    x=x+1;
-    y=y+1;
-    move(x, y);
+    switch (it % 4) {
+        case 0:
+            move(0, 10);
+            break;
+        case 1:
+            move(-10, 0);
+            break;
+        case 2:
+            move(10, 0);
+            break;
+        case 3:
+            move(0, -10);
+            break;
+    }
+    it++;
 }
 
 void Bot::run() {

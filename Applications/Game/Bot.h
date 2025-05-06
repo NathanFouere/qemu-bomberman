@@ -4,6 +4,7 @@
 
 class Bot: public Threads, public Movable {
     public:
+      int it = 0;
     void moveRandom();
     void run();
     Bot(int x, int y, unsigned char* data)
