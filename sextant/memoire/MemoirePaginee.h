@@ -10,7 +10,7 @@
 
 #include "pagination/MemoirePhysique.h"
 #include "pagination/Pagination.h"
-
+#define MAXMEM
 
 class MemoirePaginee : public memoire {
 
