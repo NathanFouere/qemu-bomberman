@@ -4,8 +4,9 @@ extern volatile unsigned char *video;
 
 void set_vga_mode13(void);
 void clear_vga_screen(char color);
-void plot_square(int x, int y, int size, unsigned char color);
 
+void copy_frame_buffer_to_video();
+void clear_frame_buffer(unsigned char color);
 void set_palette_vga(unsigned char palette_vga[256][3]);
 void draw_sprite(const unsigned char* sprite, int w, int h, int dstX, int dstY);
 void draw_char(char c, int x, int y, unsigned char color);

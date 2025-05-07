@@ -1,5 +1,7 @@
 #include "vga.h"
 
+
+
 const unsigned char font8x8_basic[128][8] = {
     { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},   // U+0000 (nul)
     { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},   // U+0001
@@ -131,6 +133,19 @@ const unsigned char font8x8_basic[128][8] = {
     { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}    // U+007F
 };
 
+unsigned char frame_buffer[320 * 200];
+
+void copy_frame_buffer_to_video() {
+    for (int i = 0; i < 320 * 200; i++) {
+        video[i] = frame_buffer[i];
+    }
+}
+void clear_frame_buffer(unsigned char color) {
+    for (int i = 0; i < 320 * 200; i++) {
+        frame_buffer[i] = color;
+    }
+}
+
 volatile unsigned char *video = (unsigned char *)0xA0000;
 /* I/O port helpers (you must have I/O privileges!) */
 static inline void outb(unsigned short port, unsigned char val) {
@@ -249,7 +264,7 @@ void draw_sprite(const unsigned char* sprite,
         for (int xx = 0; xx < w; ++xx) {
             unsigned char c = sprite[yy * w + xx];
             if (c != 0) {
-                video[(yy+dstY)*320 + (xx + dstX)] = c;
+                frame_buffer[(yy+dstY)*320 + (xx + dstX)] = c;
             }
         }
     }
@@ -267,7 +282,7 @@ void draw_char(char c, int x, int y, unsigned char color) {
         unsigned char line = reverse_bits(font8x8_basic[(int)c][row]);
         for (int col = 0; col < 8; col++) {
             if (line & (1 << col)) {
-                video[(y + row) * 320 + (x + (7 - col))] = color;
+                frame_buffer[(y + row) * 320 + (x + (7 - col))] = color;
             }
         }
     }
