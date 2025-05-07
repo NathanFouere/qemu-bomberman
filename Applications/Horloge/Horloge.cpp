@@ -12,22 +12,19 @@ Horloge::Horloge(Ecran* ecr,Timer *timer) {
 }
 
 void Horloge::afficheHeure() {
-	int temps_secondes=0;
-	int minutes=0;
-	int temp=0;
+	int totalSecondes = t->getSeconds();
 
-	temp=t->getSecondes();
+	int minutes = totalSecondes / 60;
+	int secondes = totalSecondes % 60;
 
-	temps_secondes  = temp % 60;
+	char buffer[6];
 
-	minutes = temp / 60  ;
+	buffer[0] = '0' + (minutes / 10);
+	buffer[1] = '0' + (minutes % 10);
+	buffer[2] = ':';
+	buffer[3] = '0' + (secondes / 10);
+	buffer[4] = '0' + (secondes % 10);
+	buffer[5] = '\0';
 
-
-	e->afficherMot(0,39,"::",BLANC);
-
-	if (minutes<10) {e->afficherChiffre(0,37,0);e->afficherChiffre(0,38,minutes);}
-	else e->afficherChiffre(0,37,minutes);
-
-	if (temps_secondes<10) {e->afficherChiffre(0,41,0);e->afficherChiffre(0,42,temps_secondes);}
-	else e->afficherChiffre(0,41,temps_secondes);
+	e->afficherMot(0, (COLONNES-3)/2 , buffer);
 }

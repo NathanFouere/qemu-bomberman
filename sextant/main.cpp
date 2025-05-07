@@ -76,7 +76,7 @@ void Sextant_Init(){
 	//Initialisation de la frequence de l'horloge
 
 	timer.i8254_set_frequency(1000);
-//	irq_set_routine(IRQ_TIMER, ticTac);
+	irq_set_routine(IRQ_TIMER, ticTac);
 	asm volatile("sti\n");//Autorise les interruptions
 
 	irq_set_routine(IRQ_KEYBOARD, handler_clavier);
@@ -89,36 +89,89 @@ void Sextant_Init(){
 	thread_subsystem_setup(bootstrap_stack_bottom,bootstrap_stack_size);
 
 	sched_subsystem_setup();
-	irq_set_routine(IRQ_TIMER, sched_clk);
+	//irq_set_routine(IRQ_TIMER, sched_clk);
 }
 
+char* itoa(int value, char* str, int base) {
+    if (base < 2 || base > 36) {
+        *str = '\0'; // Invalid base
+        return str;
+    }
 
-extern "C" void Sextant_main(unsigned long magic, unsigned long addr){
-	Sextant_Init();
-	Clavier clavier;
-	void *temp1;
-	address = addr;
+    char* ptr = str, *ptr1 = str, tmp_char;
+    int tmp_value;
 
-	set_vga_mode13();
-	clear_vga_screen(228);
+    if (value < 0 && base == 10) {
+        *ptr++ = '-';
+        value = -value;
+    }
 
-	Player *player = new Player(125, 125, player1_front_1, &clavier);
-	Bot *bot = new Bot(50, 50, enemy1_left_1);
-	draw_sprite(player->getSprite(), 16, 16, player->getX(),player->getY()); 
-	draw_sprite(bot->getSprite(), 16, 16, bot->getX(),bot->getY()); 
-	player->start();
-	bot->start();
+    do {
+        tmp_value = value;
+        value /= base;
+        *ptr++ = "0123456789abcdefghijklmnopqrstuvwxyz"[tmp_value - value * base];
+    } while (value);
 
+    *ptr-- = '\0';
 
-	draw_sprite(wall_1, 16, 16, 0,0); // draw the 16x16 sprite at 100,100
-	draw_sprite(wall_1, 16, 16, 0,16); // draw the 16x16 sprite at 100,100
-	while (true)
-	{
+    while (ptr1 < ptr) {
+        tmp_char = *ptr;
+        *ptr-- = *ptr1;
+        *ptr1++ = tmp_char;
+    }
+
+    return str;
+}
+
+extern "C" void Sextant_main(unsigned long magic, unsigned long addr) {
+    Sextant_Init();
+    Clavier clavier;
+    address = addr;
+
+    set_vga_mode13();
+    clear_vga_screen(228);
+
+    Player *player = new Player(125, 125, player1_front_1, &clavier);
+    Bot *bot = new Bot(50, 50, enemy1_left_1);
+    player->start();
+    bot->start();
+
+    const int targetFrameTime = 1000 / 60; // 
+    unsigned long lastFrameTime = timer.getTicks();
+    char fpsStr[20]; // Buffer to hold the FPS string
+
+	while (true) {
+		unsigned long frameStart = timer.getTicks(); // Start of the frame
+	
 		set_palette_vga(palette_vga);
-		clear_vga_screen(228);
-
-		draw_sprite(player->getSprite(), 16, 16, player->getX(),player->getY()); 
-		draw_sprite(bot->getSprite(), 16, 16, bot->getX(),bot->getY()); 
+		clear_frame_buffer(228); // Clear the frame buffer with the background color
+	
+		// Calculate FPS
+		unsigned long frameTime = frameStart - lastFrameTime;
+		lastFrameTime = frameStart;
+		int fps = (frameTime > 0) ? (1000 / frameTime) : 0; // Avoid division by zero
+	
+		// Convert FPS to string and display
+		itoa(fps, fpsStr, 10);
+		draw_text("FPS: ", 10, 10, 255); // Display "FPS: " label
+		draw_text(fpsStr, 50, 10, 255); // Display FPS value next to the label
+	
+		draw_text("Hello World !", 100, 100, 255);
+	
+		draw_sprite(player->getSprite(), 16, 16, player->getX(), player->getY());
+		draw_sprite(bot->getSprite(), 16, 16, bot->getX(), bot->getY());
+	
+		// Copy the frame buffer to video memory
+		copy_frame_buffer_to_video();
+	
 		thread_yield();
+	
+		// Calculate elapsed frame time
+		unsigned long elapsedFrameTime = timer.getTicks() - frameStart;
+	
+		// Busy-wait if the frame finished too early
+		while (elapsedFrameTime < targetFrameTime) {
+			elapsedFrameTime = timer.getTicks() - frameStart;
+		}
 	}
 }

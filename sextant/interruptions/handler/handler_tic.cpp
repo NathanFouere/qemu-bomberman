@@ -4,13 +4,13 @@ int a = 0;
 /**
  * Permet de compter le nombre d'interruption de l'horloge.
  */
-int compt = 0;
-int secondes =0;
+int ticks = 0;
+int seconds =0;
 
 void ticTac(int o) {
-	compt++;
-	if(compt%1000==0) {
-		secondes++;
+	ticks++;
+	if(ticks%1000==0) {
+		seconds++;
 		if(a == 9)
 			a=0;
 		else
