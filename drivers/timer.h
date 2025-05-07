@@ -45,9 +45,8 @@ class Timer {
 
 public :
 	sextant_ret_t i8254_set_frequency(unsigned int freq);
-	int getSecondes();
+	int getSeconds();
+   int getTicks();
 };
-
-
 
 #endif /* _i8259_H_ */

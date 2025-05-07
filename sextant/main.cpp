@@ -76,7 +76,7 @@ void Sextant_Init(){
 	//Initialisation de la frequence de l'horloge
 
 	timer.i8254_set_frequency(1000);
-//	irq_set_routine(IRQ_TIMER, ticTac);
+	irq_set_routine(IRQ_TIMER, ticTac);
 	asm volatile("sti\n");//Autorise les interruptions
 
 	irq_set_routine(IRQ_KEYBOARD, handler_clavier);
@@ -89,7 +89,7 @@ void Sextant_Init(){
 	thread_subsystem_setup(bootstrap_stack_bottom,bootstrap_stack_size);
 
 	sched_subsystem_setup();
-	irq_set_routine(IRQ_TIMER, sched_clk);
+	//irq_set_routine(IRQ_TIMER, sched_clk);
 }
 
 
@@ -116,6 +116,8 @@ extern "C" void Sextant_main(unsigned long magic, unsigned long addr){
 	{
 		set_palette_vga(palette_vga);
 		clear_vga_screen(228);
+
+		draw_text("Hello World !", 100, 100, 255);
 
 		draw_sprite(player->getSprite(), 16, 16, player->getX(),player->getY()); 
 		draw_sprite(bot->getSprite(), 16, 16, bot->getX(),bot->getY()); 

@@ -19,8 +19,8 @@
 
 #include "timer.h"
 
-extern int secondes;
-
+extern int seconds;
+extern int ticks;
 
 /**
  * Configure the first timer of the 82c54 chip as a rate generator,
@@ -71,7 +71,11 @@ sextant_ret_t Timer::i8254_set_frequency(unsigned int freq) {
   return SEXTANT_OK;
 }
 
-int Timer::getSecondes(){
-	return secondes;
+int Timer::getSeconds(){
+	return seconds;
+}
+
+int Timer::getTicks(){
+  return ticks;
 }
 
