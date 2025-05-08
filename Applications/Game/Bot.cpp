@@ -4,16 +4,20 @@
 void Bot::moveRandom() {
     switch (it % 4) {
         case 0:
-            move(0, 10);
+            direction = RIGHT;
+            move(1, 0);
             break;
         case 1:
-            move(-10, 0);
+            direction = LEFT;
+            move(-1, 0);
             break;
         case 2:
-            move(10, 0);
+            direction = DOWN;
+            move(0, 1);
             break;
         case 3:
-            move(0, -10);
+            direction = UP;
+            move(0, -1);
             break;
     }
     it++;

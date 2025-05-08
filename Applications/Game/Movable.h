@@ -1,18 +1,20 @@
 #ifndef MOVABLE_H
 #define MOVABLE_H
+#include "Direction.h"
 
 class Movable  {
 protected:
     int x, y;
-    unsigned char* spriteData;
+    const unsigned char* sprites[4][3];
+    int animationFrame;
+    Direction direction;
 public:
-    Movable(int x, int y, unsigned char* data)
-        : x(x), y(y), spriteData(data) {}
+    Movable(int x, int y)
+        : x(x), y(y), direction(RIGHT) {}
 
-    void setSprite(unsigned char* data) { spriteData = data; }
-    unsigned char* getSprite() const { return spriteData; }
+    const unsigned char* getSprite();
 
-    void move(int dx, int dy) { x += dx; y += dy; }
+    void move(int dx, int dy);
     int getX() const { return x; }
     int getY() const { return y; }
 };
