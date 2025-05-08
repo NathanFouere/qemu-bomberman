@@ -64,6 +64,7 @@ OBJECTSNAMES=\
  vga\
  sprite\
  Player\
+ Board\
  Bot\
  
 

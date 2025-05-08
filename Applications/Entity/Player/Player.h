@@ -1,7 +1,6 @@
 #pragma once
-#include "Entity.h"
+#include "../Entity.h"
 #include "drivers/Clavier.h"
-#include <functional>
 
 /**
  * Player dérive de Entity et gère son déplacement,
@@ -15,12 +14,9 @@ public:
      * @param data pointeur vers le sprite ou les données graphiques
      * @param clavier pointeur vers le gestionnaire de touches
      */
-    Player(const Vector2& pos,
-           unsigned char* data,
-           Clavier* clavier);
+    Player(const Vector& pos, unsigned char* data, Clavier* clavier);
 
     void update(float dt) override;
-    void render() override;
 
 private:
     Clavier* clavier;

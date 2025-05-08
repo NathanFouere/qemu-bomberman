@@ -38,8 +38,10 @@
 #include <drivers/vga.h>
 #include <drivers/sprite.h>
 
-#include <Applications/Game/Player.h>
+#include <Applications/Entity/Player/Player.h>
 #include <Applications/Game/Bot.h>
+#include <Applications/Board/Board.h>
+#include <Applications/Vector.h>
 
 extern char __e_kernel,__b_kernel, __b_data, __e_data,  __b_stack, __e_load ;
 int i;
@@ -69,14 +71,12 @@ Ecran *monEcran = &ecran;
 
 
 void Sextant_Init(){
-
-
 	idt_setup();
 	irq_setup();
-	//Initialisation de la frequence de l'horloge
 
+	//Initialisation de la frequence de l'horloge
 	timer.i8254_set_frequency(1000);
-//	irq_set_routine(IRQ_TIMER, ticTac);
+	//	irq_set_routine(IRQ_TIMER, ticTac);
 	asm volatile("sti\n");//Autorise les interruptions
 
 	irq_set_routine(IRQ_KEYBOARD, handler_clavier);
@@ -97,26 +97,25 @@ void Sextant_Init(){
 }
 
 
-extern "C" void Sextant_main(unsigned long magic, unsigned long addr){
-	Sextant_Init();
-	Clavier clavier;
-	void *temp1;
-	address = addr;
-	Player *player = new Player(25, 25, player1_front_1, &clavier);
-	//Bot *bot = new Bot(50, 50, enemy1_left_1);
+extern "C" void Sextant_main(unsigned long magic, unsigned long addr) {
+    Sextant_Init();
+    Clavier clavier;
+    address = addr;
 
+    // Create your board with desired width/height
+    Board* board = new Board(15, 13);
 
+    // Create a player
+    Player* player = new Player(Vector(64,64), nullptr, &clavier);
 
-	set_vga_mode13();
-	clear_vga_screen(228);
-	draw_sprite(wall_1, 16, 16, 0,0); // draw the 16x16 sprite at 100,100
-	draw_sprite(wall_1, 16, 16, 0,16); // draw the 16x16 sprite at 100,100
-	while (true)
-	{
-		set_palette_vga(palette_vga);
+    set_vga_mode13();
+    clear_vga_screen(228);
 
+    // Main loop
+    while (true) {
+        set_palette_vga(palette_vga);
+		clear_vga_screen(228); 
+        board->draw();
 
-		player->movePlayer();
-		draw_sprite(player->getSprite(), 16, 16, player->getX(),player->getY()); 
-	}
+    }
 }

@@ -1,7 +1,6 @@
 #include "Player.h"
 
-Player::Player(const Vector2& pos, unsigned char* data, Clavier* clavier)
-    : Entity(pos), clavier(clavier) {
+Player::Player(const Vector& pos, unsigned char* data, Clavier* clavier) : Entity(pos), clavier(clavier) {
     // initialisation des données graphiques si nécessaire
 }
 
@@ -10,12 +9,8 @@ void Player::update(float dt) {
     handlePlaceBomb();
 }
 
-void Player::render() {
-    // appel au Renderer ou draw direct selon implémentation
-}
-
 void Player::handleMovement(float dt) {
-    Vector2 delta{0, 0};
+    Vector delta{0, 0};
     if (clavier->isPressed(Clavier::Up))    delta.y -= speed * dt;
     if (clavier->isPressed(Clavier::Down))  delta.y += speed * dt;
     if (clavier->isPressed(Clavier::Left))  delta.x -= speed * dt;
