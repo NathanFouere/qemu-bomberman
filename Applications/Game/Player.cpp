@@ -26,3 +26,7 @@ void Player::run() {
         Yield();
     }
 }
+
+void Player::render() {
+}
+

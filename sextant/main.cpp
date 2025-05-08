@@ -59,11 +59,7 @@ char tab1[4096];
 char tab2[4096];
 char tab[30000];
 
-Ecran ecran;
-
 memoire *InterfaceMemoire;
-Ecran *monEcran = &ecran;
-
 
 #define PAGINATION_USE 1
 
@@ -74,7 +70,6 @@ void Sextant_Init(){
 	idt_setup();
 	irq_setup();
 	//Initialisation de la frequence de l'horloge
-
 	timer.i8254_set_frequency(1000);
 	irq_set_routine(IRQ_TIMER, ticTac);
 	asm volatile("sti\n");//Autorise les interruptions
@@ -89,7 +84,8 @@ void Sextant_Init(){
 	thread_subsystem_setup(bootstrap_stack_bottom,bootstrap_stack_size);
 
 	sched_subsystem_setup();
-	//irq_set_routine(IRQ_TIMER, sched_clk);
+
+	set_palette_vga(palette_vga);
 }
 
 char* itoa(int value, char* str, int base) {
@@ -143,7 +139,6 @@ extern "C" void Sextant_main(unsigned long magic, unsigned long addr) {
 	while (true) {
 		unsigned long frameStart = timer.getTicks(); // Start of the frame
 	
-		set_palette_vga(palette_vga);
 		clear_frame_buffer(228); // Clear the frame buffer with the background color
 	
 		// Calculate FPS

@@ -2,13 +2,39 @@
 #include "drivers/Clavier.h"
 #include "sextant/Activite/Threads.h"
 
+enum Direction { UP, DOWN, LEFT, RIGHT };
+
 class Player: public Threads, public Movable {
     private:
+        int x,y;
+        Direction direction;
+        int animationFrame;
+        const char* sprites[4][3]; // 2D array of strings for sprites (4 directions, 3 frames each)
         Clavier* clavier;
+        const char* getSprite() const { return sprites[direction][animationFrame % 3]; } // Return the current sprite
     public:
         
         void movePlayer();
         Player(int x, int y, unsigned char* data, Clavier* clavier)
-            : Movable(x, y, data), clavier(clavier) {}
+            : Movable(x, y, data), clavier(clavier) {
+                sprites[UP][0] = "player1_up_1";
+                sprites[UP][1] = "player1_up_2";
+                sprites[UP][2] = "player1_up_3";
+        
+                sprites[DOWN][0] = "player1_down_1";
+                sprites[DOWN][1] = "player1_down_2";
+                sprites[DOWN][2] = "player1_down_3";
+        
+                sprites[LEFT][0] = "player1_left_1";
+                sprites[LEFT][1] = "player1_left_2";
+                sprites[LEFT][2] = "player1_left_3";
+        
+                sprites[RIGHT][0] = "player1_right_1";
+                sprites[RIGHT][1] = "player1_right_2";
+                sprites[RIGHT][2] = "player1_right_3";
+            }
         void run();
+        void render();
+        int getX() const { return x; }
+        int getY() const { return y; }
 };
