@@ -4,6 +4,7 @@
 
 void Player::movePlayer() {
     if (clavier->testChar()) {
+        animationFrame++;
         char c = clavier->getchar();
         if (c == 'd') {
             direction = RIGHT;
@@ -27,7 +28,6 @@ void Player::movePlayer() {
 void Player::run() {
     while (true) {
         movePlayer();
-        animationFrame++;
         Yield();
     }
 }
