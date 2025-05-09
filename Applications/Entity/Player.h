@@ -3,10 +3,14 @@
 #include "Direction.h"
 #include <drivers/sprite.h>
 #include "Applications/Entity/Movable.h"
+#include <Applications/Board/Bomb.h>
+#include <Applications/Board/Board.h>
 
 class Player: public Threads, public Movable {
     private:
         Clavier* clavier;
+        Board* board;
+        Bomb* dropBomb();
     public:
         Player(int x, int y, Clavier* clavier)
             : Movable(x, y), clavier(clavier) {

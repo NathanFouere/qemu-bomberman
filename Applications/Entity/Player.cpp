@@ -22,6 +22,11 @@ void Player::movePlayer() {
             direction = UP;
             move(0, -1);
         }
+        if (c == 'n')
+        {
+            //this->board->setTile(this->x, this->y, *this->dropBomb());
+        }
+        
     }
 }
 
@@ -33,6 +38,10 @@ void Player::run() {
 }
 
 void Player::render() {
+}
+
+Bomb* Player::dropBomb() {
+    return new Bomb(this->x, this->y);
 }
 
 

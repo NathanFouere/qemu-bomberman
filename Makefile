@@ -65,6 +65,8 @@ irq_wrappers i8259 idt irq\
  Movable\
  Player\
  Board\
+ Tile\
+ Bomb\
  Bot\
  
 
