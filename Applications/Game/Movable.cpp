@@ -1,16 +1,8 @@
 #include "Movable.h"
 #include <drivers/vga.h>
 
-// Constructeur avec paramètres
-Movable::Movable(int x, int y, unsigned char* data)
-    : x(x), y(y), spriteData(data) {}
-
-void Movable::setSprite(unsigned char* data) {
-    spriteData = data;
-}
-
-unsigned char* Movable::getSprite() const {
-    return spriteData;
+const unsigned char* Movable::getSprite() {
+    return sprites[direction][animationFrame % 3];
 }
 
 void Movable::move(int dx, int dy) {
