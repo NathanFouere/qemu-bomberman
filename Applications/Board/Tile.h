@@ -5,14 +5,9 @@
 #include "TileType.h"
 
 class Tile {
-private:
-    TileType type;
 public:
-    Tile(TileType type = TileType::Empty);
-    TileType getType() const { return type; }
-    void setType(TileType newType) { type = newType; }
-    const unsigned char* sprites;
-    void render(int x, int y) {
-        // draw_sprite(sprites, 16, 16, x * 16 - 8, y * 16 + 24);
-    }
+    virtual ~Tile() {}
+    virtual TileType getType() const = 0; 
+    virtual void render(int x, int y) = 0;
+    const unsigned char* sprites[1]; 
 };

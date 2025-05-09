@@ -151,7 +151,7 @@ extern "C" void Sextant_main(unsigned long magic, unsigned long addr) {
 		itoa(fps, fpsStr, 10);
 		draw_text("FPS: ", 10, 10, 255); // Display "FPS: " label
 		draw_text(fpsStr, 50, 10, 255); // Display FPS value next to the label
-	    board.draw();
+	    // board.draw();
 
 		draw_text("Hello World !", 100, 100, 255);
 	
