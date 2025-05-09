@@ -1,4 +1,3 @@
-//// filepath: /workspaces/qemu-bomberman/Applications/Board/Board.h
 #pragma once
 #include "../Utilities/Vector.h"
 #include <drivers/vga.h>
