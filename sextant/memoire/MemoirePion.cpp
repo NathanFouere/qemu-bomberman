@@ -30,7 +30,7 @@ vaddr_t MemoirePion::malloc(size_t nbytes)
 
 	i=i+nbytes;
 	adresse = debut;
-	debut = (void *) i;
+	debut = (char*)debut + nbytes;
 	
 	return (vaddr_t) adresse;
 

@@ -63,6 +63,7 @@ OBJECTSNAMES=\
  timer TestAndSet Threads thread\
  vga\
  sprite\
+ Movable\
  Player\
  Bot\
  

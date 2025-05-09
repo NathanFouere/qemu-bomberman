@@ -13,7 +13,7 @@
 
 #include "op_memoire.h"
 
-MemoirePion uneMemoire;
+MemoireListe uneMemoire;
 
 memoire::memoire(){
 	i=0;

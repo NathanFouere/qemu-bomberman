@@ -131,8 +131,8 @@ extern "C" void Sextant_main(unsigned long magic, unsigned long addr) {
     set_vga_mode13();
     clear_vga_screen(228);
 
-    Player *player = new Player(125, 125, player1_front_1, &clavier);
-    Bot *bot = new Bot(50, 50, enemy1_left_1);
+    Bot *bot = new Bot(50, 50);
+    Player *player = new Player(125, 125, &clavier);
     player->start();
     bot->start();
 
