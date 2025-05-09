@@ -37,8 +37,8 @@
 #include <drivers/vga.h>
 #include <drivers/sprite.h>
 
-#include <Applications/Entity/Player/Player.h>
 #include <Applications/Game/Bot.h>
+#include <Applications/Game/Player.h>
 #include <Applications/Board/Board.h>
 #include <Applications/Vector.h>
 

@@ -6,11 +6,8 @@
 
 class Player: public Threads, public Movable {
     private:
-        int x,y;
         Clavier* clavier;
     public:
-        
-        void movePlayer();
         Player(int x, int y, Clavier* clavier)
             : Movable(x, y), clavier(clavier) {
                 sprites[UP][0] = player1_back_1;
@@ -29,6 +26,7 @@ class Player: public Threads, public Movable {
                 sprites[RIGHT][1] = player1_right_1;
                 sprites[RIGHT][2] = player1_right_1;
             }
+        void movePlayer();
         void run();
         void render();
         int getX() const { return x; }

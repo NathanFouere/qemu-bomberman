@@ -11,6 +11,7 @@
 
 class Clavier {
 public :
+	bool testChar(); //Retourne vrai si un caractere a ete saisi au clavier
 	/***
 	 * Recupere le premier caractere tape.
 	 ***/
