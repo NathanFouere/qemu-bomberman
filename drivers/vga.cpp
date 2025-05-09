@@ -224,12 +224,22 @@ void clear_vga_screen(char color) {
     }
 }
 
+void plot_rectangle(int x, int y, int height, int width, unsigned char color) {
+    int row, col;
+    for (row = 0; row < height; row++) {
+        int base = (y + row) * 320 + x;
+        for (col = 0; col < width; col++) {
+            frame_buffer[base + col] = color;
+        }
+    }
+}
+
 void plot_square(int x, int y, int size, unsigned char color) {
     int row, col;
     for (row = 0; row < size; row++) {
         int base = (y + row) * 320 + x;
         for (col = 0; col < size; col++) {
-            video[base + col] = color;
+            frame_buffer[base + col] = color;
         }
     }
 }

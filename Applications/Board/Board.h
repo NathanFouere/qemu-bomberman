@@ -1,6 +1,5 @@
 #pragma once
-
-#include "../Utilities/Vector.h"
+#include "Applications/Utilities/Vector.h"
 #include <drivers/vga.h>
 #include <drivers/sprite.h>
 #include <sextant/memoire/Memoire.h>

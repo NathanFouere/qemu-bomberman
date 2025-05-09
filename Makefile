@@ -50,12 +50,12 @@ KERNEL_OBJ = build/boot/sextant.elf
 
 
 OBJECTSNAMES=\
-Clavier cpu_context_switch cpu_context\
+ Clavier cpu_context_switch cpu_context\
  Ecran\
  fonctionsES\
  gdt \
- Horloge handler_tic handler_clavier \
-irq_wrappers i8259 idt irq\
+ handler_tic handler_clavier \
+ irq_wrappers i8259 idt irq\
  Memoire multiboot Mutex main\
  op_memoire\
  Semaphore Spinlock  sched\
@@ -68,6 +68,7 @@ irq_wrappers i8259 idt irq\
  Tile\
  Bomb\
  Bot\
+ Game\
  
 
 OBJECTS=$(patsubst %,build/all-o/%.o,$(OBJECTSNAMES))					  		
