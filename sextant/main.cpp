@@ -31,15 +31,16 @@
 // TP6
 #include <sextant/memoire/segmentation/gdt.h>
 #include <sextant/memoire/Memoire.h>
-#include <sextant/memoire/MemoirePion.h>
 //#include <sextant/memoire/pagination/memoireliste4k.h>
 #include <sextant/memoire/pagination/MemoirePhysique.h>
 #include <sextant/memoire/pagination/Pagination.h>
 #include <drivers/vga.h>
 #include <drivers/sprite.h>
 
-#include <Applications/Game/Player.h>
 #include <Applications/Game/Bot.h>
+#include <Applications/Game/Player.h>
+#include <Applications/Board/Board.h>
+#include <Applications/Vector.h>
 
 extern char __e_kernel,__b_kernel, __b_data, __e_data,  __b_stack, __e_load ;
 int i;
@@ -61,7 +62,7 @@ char tab[30000];
 
 Ecran ecran;
 
-memoire *InterfaceMemoire;
+
 Ecran *monEcran = &ecran;
 
 
@@ -69,17 +70,17 @@ Ecran *monEcran = &ecran;
 
 
 void Sextant_Init(){
-
-
 	idt_setup();
 	irq_setup();
-	//Initialisation de la frequence de l'horloge
 
+	//Initialisation de la frequence de l'horloge
 	timer.i8254_set_frequency(1000);
 	irq_set_routine(IRQ_TIMER, ticTac);
 	asm volatile("sti\n");//Autorise les interruptions
 
 	irq_set_routine(IRQ_KEYBOARD, handler_clavier);
+
+	memory_init();
 
 	multiboot_info_t* mbi;
 	mbi = (multiboot_info_t*)address;
@@ -97,7 +98,6 @@ char* itoa(int value, char* str, int base) {
         *str = '\0'; // Invalid base
         return str;
     }
-
     char* ptr = str, *ptr1 = str, tmp_char;
     int tmp_value;
 
@@ -133,6 +133,8 @@ extern "C" void Sextant_main(unsigned long magic, unsigned long addr) {
 
     Bot *bot = new Bot(50, 50);
     Player *player = new Player(125, 125, &clavier);
+    Board board(20, 11);
+
     player->start();
     bot->start();
 
@@ -155,7 +157,8 @@ extern "C" void Sextant_main(unsigned long magic, unsigned long addr) {
 		itoa(fps, fpsStr, 10);
 		draw_text("FPS: ", 10, 10, 255); // Display "FPS: " label
 		draw_text(fpsStr, 50, 10, 255); // Display FPS value next to the label
-	
+	    board.draw();
+
 		draw_text("Hello World !", 100, 100, 255);
 	
 		draw_sprite(player->getSprite(), 16, 16, player->getX(), player->getY());
