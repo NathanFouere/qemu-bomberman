@@ -4,19 +4,12 @@
 #include <drivers/sprite.h>
 #include <sextant/memoire/Memoire.h> // Include your memory manager
 
-enum class TileType {
-    Empty,
-    Wall,
-    Brick,
-    Bomb
-};
-
 class Board {
 public:
     Board(int w, int h);
     ~Board();
 
-    TileType getTile(int x, int y) const {
+    Tile getTile(int x, int y) const {
         return layout[y][x];
     }
 
@@ -29,7 +22,7 @@ public:
     private:
     int width;
     int height;
-    TileType** layout;
+    Tile** layout;
     
     void initializeWalls();
 };

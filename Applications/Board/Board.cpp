@@ -1,11 +1,12 @@
 #include "Board.h"
+#include "TileType.h"
 
 Board::Board(int w, int h) : width(w), height(h) {
-    layout = static_cast<TileType**>(alloc(height * sizeof(TileType*)));
+    layout = static_cast<Tile**>(alloc(height * sizeof(Tile*)));
     for (int y = 0; y < height; ++y) {
-    layout[y] = static_cast<TileType*>(alloc(width * sizeof(TileType)));
+    layout[y] = static_cast<Tile*>(alloc(width * sizeof(Tile)));
       for (int x = 0; x < width; ++x) {
-            layout[y][x] = TileType::Empty;
+            layout[y][x] = Tile(TileType::Empty);
         }
     }
 
@@ -35,19 +36,7 @@ void Board::initializeWalls() {
 void Board::draw() {
     for (int y = 0; y < height; ++y) {
         for (int x = 0; x < width; ++x) {
-            switch (layout[y][x]) {
-                case TileType::Wall:
-                    draw_sprite(wall_1, 16, 16, x * 16 - 8, y * 16 + 24);
-                    break;
-                case TileType::Brick:
-                    draw_sprite(wall_2, 16, 16, x * 16 - 8, y * 16 + 24);
-                    break;
-                case TileType::Bomb:
-                    // draw_sprite(bomb_sprite, 16, 16, x * 16 - 8, y * 16 + 24);
-                    break;
-                default:
-                    break;
-            }
+            layout[y][x].render(x, y);
         }
     }
 }
