@@ -1,20 +1,22 @@
 #include "Board.h"
+#include "Tile.h"
 
 Board::Board(int w, int h) : width(w), height(h) {
-    layout = static_cast<TileType**>(alloc(height * sizeof(TileType*)));
+    layout = static_cast<Tile**>(alloc(height * sizeof(Tile*)));
     for (int y = 0; y < height; ++y) {
-    layout[y] = static_cast<TileType*>(alloc(width * sizeof(TileType))); // Allocate each row
+    layout[y] = static_cast<Tile*>(alloc(width * sizeof(Tile)));
       for (int x = 0; x < width; ++x) {
-            layout[y][x] = TileType::Empty; // Initialize all tiles to Empty
+            layout[y][x].setType(TileType::Empty);
         }
     }
 
     for (int x = 0; x < width; ++x) {
         for (int y = 0; y < height; ++y) {
-            if (x == 0 || x == width - 1 || y == 0 || y == height - 1) {
-                layout[y][x] = TileType::Wall;
-            } else {
-                layout[y][x] = TileType::Empty;
+            if ((x == 0 || y == 0 || y == height - 1) || ((x % 2 == 0) && (y % 2 == 0))) {
+                layout[y][x].setType(TileType::Wall);
+            }
+            else {
+                layout[y][x].setType(TileType::Empty);
             }
         }
     }
@@ -34,19 +36,7 @@ void Board::initializeWalls() {
 void Board::draw() {
     for (int y = 0; y < height; ++y) {
         for (int x = 0; x < width; ++x) {
-            switch (layout[y][x]) {
-                case TileType::Wall:
-                    draw_sprite(wall_1, 16, 16, x * 16, y * 16 + 24);
-                    break;
-                case TileType::Brick:
-                    // draw_sprite(brick_sprite, 16, 16, x * 16, y * 16);
-                    break;
-                case TileType::Bomb:
-                    // draw_sprite(bomb_sprite, 16, 16, x * 16, y * 16);
-                    break;
-                default:
-                    break;
-            }
+            layout[y][x].render(x, y);
         }
     }
 }
