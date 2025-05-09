@@ -31,7 +31,6 @@
 // TP6
 #include <sextant/memoire/segmentation/gdt.h>
 #include <sextant/memoire/Memoire.h>
-#include <sextant/memoire/MemoirePion.h>
 //#include <sextant/memoire/pagination/memoireliste4k.h>
 #include <sextant/memoire/pagination/MemoirePhysique.h>
 #include <sextant/memoire/pagination/Pagination.h>
@@ -63,7 +62,7 @@ char tab[30000];
 
 Ecran ecran;
 
-memoire *InterfaceMemoire;
+
 Ecran *monEcran = &ecran;
 
 
@@ -81,14 +80,12 @@ void Sextant_Init(){
 
 	irq_set_routine(IRQ_KEYBOARD, handler_clavier);
 
+	memory_init();
+
 	multiboot_info_t* mbi;
 	mbi = (multiboot_info_t*)address;
 
 	gdt_setup();
-
-	InterfaceMemoire=memoire::nouveau();
-
-	InterfaceMemoire->mem_setup(& __e_kernel,(mbi->mem_upper<<10) + (1<<20),&ecran);
 
 	thread_subsystem_setup(bootstrap_stack_bottom,bootstrap_stack_size);
 
@@ -101,21 +98,20 @@ extern "C" void Sextant_main(unsigned long magic, unsigned long addr) {
     Sextant_Init();
     Clavier clavier;
     address = addr;
-
-    // Create your board with desired width/height
-    Board* board = new Board(15, 13);
-
+	
     // Create a player
-    Player* player = new Player(Vector(64,64), nullptr, &clavier);
+    // Player* player = new Player(Vector(64,64), nullptr, &clavier);
 
     set_vga_mode13();
     clear_vga_screen(228);
 
+	// Create a Board instance
+    Board board(20, 11);
+    board.draw();
+
     // Main loop
     while (true) {
         set_palette_vga(palette_vga);
-		clear_vga_screen(228); 
-        board->draw();
 
     }
 }

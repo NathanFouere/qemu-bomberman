@@ -3,6 +3,7 @@
 #include "../Vector.h"
 #include <drivers/vga.h>
 #include <drivers/sprite.h>
+#include <sextant/memoire/Memoire.h> // Include your memory manager
 
 enum class TileType {
     Empty,
@@ -13,23 +14,8 @@ enum class TileType {
 
 class Board {
 public:
-    Board(int w, int h) : size{static_cast<float>(w), static_cast<float>(h)}, width(w), height(h) {
-        layout = new TileType*[height];
-        for (int row = 0; row < height; ++row) {
-            layout[row] = new TileType[width];
-            for (int col = 0; col < width; ++col) {
-                layout[row][col] = TileType::Empty;
-            }
-        }
-        initializeWalls();
-    }
-
-    ~Board() {
-        for (int row = 0; row < height; ++row) {
-            delete[] layout[row];
-        }
-        delete[] layout;
-    }
+    Board(int w, int h);
+    ~Board();
 
     TileType getTile(int x, int y) const {
         return layout[y][x];
@@ -40,12 +26,11 @@ public:
     }
 
     void draw();
-
-    void initializeWalls();
-
-private:
-    Vector size;
+    
+    private:
     int width;
     int height;
     TileType** layout;
+    
+    void initializeWalls();
 };

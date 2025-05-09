@@ -56,7 +56,7 @@ OBJECTSNAMES=\
  gdt \
  Horloge handler_tic handler_clavier Hello\
  InfiniteHello irq_wrappers i8259 idt irq\
- Memoire multiboot Mutex MemoirePion MemoireListe main\
+ Memoire multiboot Mutex main\
  op_memoire\
  Prod PortSerie\
  Semaphore Spinlock  sched\

@@ -1,53 +1,66 @@
-/*
- * Memoire.cpp
- *
- *  Created on: 23 oct. 2008
- *      Author: menaud
- */
-
-
 #include "Memoire.h"
-#include "MemoirePion.h"
-#include "MemoireListe.h"
-#include "MemoirePaginee.h"
+#include <drivers/Ecran.h>
 
-#include "op_memoire.h"
+char memory[MEMORY_SIZE];
+Block* free_list = nullptr;
 
-MemoirePion uneMemoire;
-
-memoire::memoire(){
-	i=0;
-}
-void memoire::memoireaffiche(Ecran *ec){
-	uneMemoire.memoireaffiche(ec);
+void memory_init() {
+    free_list = (Block*)memory;
+    free_list->size = MEMORY_SIZE - sizeof(Block);
+    free_list->free = 1;
+    free_list->next = nullptr;
 }
 
+void* alloc(int size) {
+    // Align requested size to 4 bytes
+    int alignedSize = (size + 3) & ~3;
 
-void memoire::mem_setup(void * begin, int size,Ecran *ecran) {
-	uneMemoire.mem_setup(begin, size, ecran);
+    Block* current = free_list;
+    while (current) {
+        if (current->free && current->size >= alignedSize) {
+            // If current block is large enough, split it
+            if (current->size >= alignedSize + (int)sizeof(Block) + 1) {
+                Block* new_block = (Block*)((char*)current + sizeof(Block) + alignedSize);
+                new_block->size = current->size - alignedSize - sizeof(Block);
+                new_block->free = 1;
+                new_block->next = current->next;
+
+                current->size = alignedSize;
+                current->next = new_block;
+            }
+            current->free = 0;
+            return (void*)((char*)current + sizeof(Block));
+        }
+        current = current->next;
+    }
+    return nullptr; 
 }
 
-vaddr_t memoire::malloc(size_t nbytes){
-	return uneMemoire.malloc(nbytes);
+void free(void* ptr) {
+    if (!ptr) return;
+
+    Block* block = (Block*)((char*)ptr - sizeof(Block));
+    block->free = 1;
+
+    // Fusion avec le bloc suivant si libre
+    if (block->next && block->next->free) {
+        block->size += sizeof(Block) + block->next->size;
+        block->next = block->next->next;
+    }
+
+    // (Améliorable : fusion avec bloc précédent)
 }
 
-void memoire::test(){
-	return uneMemoire.test();
-}
-sextant_ret_t memoire::free(vaddr_t addr) {
-	return uneMemoire.free(addr);
-}
-
-// Ce pattern singleton n'est pas guarantie pour le multi-threading lors de la creation de
-// InterfaceMemoireIn. Cependant nous ne pouvons utiliser ici de new().
-// C'est pour cette raison qu'il faut creer l'objet avant l'initialisation du multitaches.
-
-memoire* memoire::nouveau(){
-	static memoire InterfaceMemoireIn;
-	return &InterfaceMemoireIn;
+// Override global new operator
+void* operator new(size_t size) {
+    void* ptr = alloc(size);
+    if (!ptr) {
+        // Handle allocation failure (e.g., return nullptr or halt execution)
+    }
+    return ptr;
 }
 
-
-void* operator new(size_t taille) { return (void*) (*(memoire::nouveau())).malloc(taille);};
-
-void  operator delete(void* ptr)  { (*(memoire::nouveau())).free((vaddr_t)ptr); return;};
+// Override global delete operator
+void operator delete(void* ptr) noexcept {
+    free(ptr);
+}

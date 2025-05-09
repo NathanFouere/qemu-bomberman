@@ -1,34 +1,26 @@
-/*
- * Memoire.h
- *
- *  Created on: 23 oct. 2008
- *      Author: menaud
- */
+#ifndef MEMORY_H
+#define MEMORY_H
 
-#ifndef MEMOIRE_H_
-#define MEMOIRE_H_
+#define MEMORY_SIZE 4096
 
 #include <drivers/Ecran.h>
-#include <sextant/types.h>
 
-class memoire {
-
-protected :
-	memoire();
-
-public:
-	int i; // pour test
-
-	virtual void mem_setup(void *begin, int size,Ecran *ec);
-	virtual vaddr_t malloc(size_t taille) ;
-	virtual sextant_ret_t free(vaddr_t addr) ;
-	virtual void memoireaffiche(Ecran *ec);
-	virtual void test();
-	static memoire* nouveau();
+struct Block {
+    int size;       // Taille utile du bloc
+    int free;       // 1 = libre, 0 = occupé
+    Block* next;    // Bloc suivant dans la liste
 };
 
+extern char memory[MEMORY_SIZE];
+
+// Liste chaînée des blocs libres/occupés
+extern Block* free_list;
+
+void memory_init();
+void* alloc(int size);
+void free(void* ptr);
+void debug_memory(Ecran& e);
 
 void* operator new(size_t taille);
 void  operator delete(void* ptr);
-
-#endif /* MEMOIRE_H_ */
+#endif
