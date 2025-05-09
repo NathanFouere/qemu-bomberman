@@ -1,4 +1,4 @@
-#include "Applications/Game/Movable.h"
+#include "Applications/Entity/Movable.h"
 #include "drivers/Clavier.h"
 #include "sextant/Activite/Threads.h"
 #include "Direction.h"

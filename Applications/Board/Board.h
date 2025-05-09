@@ -1,6 +1,6 @@
 //// filepath: /workspaces/qemu-bomberman/Applications/Board/Board.h
 #pragma once
-#include "../Vector.h"
+#include "../Utilities/Vector.h"
 #include <drivers/vga.h>
 #include <drivers/sprite.h>
 #include <sextant/memoire/Memoire.h> // Include your memory manager

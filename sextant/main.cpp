@@ -10,7 +10,7 @@
 #include <sextant/interruptions/handler/handler_clavier.h>
 #include <drivers/timer.h>
 #include <drivers/Clavier.h>
-#include <Applications/Horloge/Horloge.h>
+
 // TP3
 #include <sextant/memoire/Memoire.h>
 
@@ -20,27 +20,20 @@
 #include <sextant/types.h>
 
 // TP5
-#include <Applications/HelloThread/Hello.h>
-#include <Applications/HelloThread/InfiniteHello.h>
-
 #include <sextant/Synchronisation/Spinlock/Spinlock.h>
-
-#include <Applications/ProdCons/Prod.h>
-#include <Applications/ProdCons/Cons.h>
 
 // TP6
 #include <sextant/memoire/segmentation/gdt.h>
 #include <sextant/memoire/Memoire.h>
-//#include <sextant/memoire/pagination/memoireliste4k.h>
 #include <sextant/memoire/pagination/MemoirePhysique.h>
 #include <sextant/memoire/pagination/Pagination.h>
 #include <drivers/vga.h>
 #include <drivers/sprite.h>
 
-#include <Applications/Game/Bot.h>
-#include <Applications/Game/Player.h>
+#include <Applications/Entity/Bot.h>
+#include <Applications/Entity/Player.h>
 #include <Applications/Board/Board.h>
-#include <Applications/Vector.h>
+#include <Applications/Utilities/Vector.h>
 
 extern char __e_kernel,__b_kernel, __b_data, __e_data,  __b_stack, __e_load ;
 int i;

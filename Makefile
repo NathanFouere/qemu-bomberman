@@ -50,15 +50,14 @@ KERNEL_OBJ = build/boot/sextant.elf
 
 
 OBJECTSNAMES=\
- Cons Clavier cpu_context_switch cpu_context\
+Clavier cpu_context_switch cpu_context\
  Ecran\
  fonctionsES\
  gdt \
- Horloge handler_tic handler_clavier Hello\
- InfiniteHello irq_wrappers i8259 idt irq\
+ Horloge handler_tic handler_clavier \
+irq_wrappers i8259 idt irq\
  Memoire multiboot Mutex main\
  op_memoire\
- Prod PortSerie\
  Semaphore Spinlock  sched\
  timer TestAndSet Threads thread\
  vga\
