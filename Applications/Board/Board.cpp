@@ -24,6 +24,19 @@ Board::Board(int w, int h) : width(w), height(h) {
     }
 }
 
+bool Board::isBlockedAt(int px, int py) const {
+    int localX = px - BOARD_ORIGIN_X;
+    int localY = py - BOARD_ORIGIN_Y;
+
+    int tx = localX / TILE_SIZE;
+    int ty = localY / TILE_SIZE;
+
+    if (tx < 0 || ty < 0 || tx >= width || ty >= height)
+        return true;
+
+    return layout[ty][tx]->getType() != TILE_EMPTY;
+}
+
 Board::~Board() {
     for (int y = 0; y < height; ++y) {
         for (int x = 0; x < width; ++x) {
@@ -33,7 +46,6 @@ Board::~Board() {
     }
     free(layout);
 }
-
 
 void Board::draw() {
     for (int y = 0; y < height; ++y) {

@@ -22,6 +22,8 @@ public:
         layout[y][x] = tile;
     }
 
+    bool isBlockedAt(int px, int py) const;
+
     void draw();
 
 private:

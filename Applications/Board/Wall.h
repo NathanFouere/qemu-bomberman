@@ -15,6 +15,8 @@ public:
     }
 
     void render(int x, int y) override {
-        draw_sprite(sprites[0], 16, 16, x * 16 - 8, y * 16 + 24);
+        const int px = BOARD_ORIGIN_X + x * TILE_SIZE;
+        const int py = BOARD_ORIGIN_Y + y * TILE_SIZE;
+        draw_sprite(sprites[0], TILE_SIZE, TILE_SIZE, px, py);
     }
 };
