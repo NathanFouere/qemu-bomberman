@@ -1,9 +1,7 @@
 #include <hal/multiboot.h>
 #include <drivers/Ecran.h>
-//#include <Applications/SuperPong/SuperPong.h>
 #include <drivers/PortSerie.h>
 
-// TP2
 #include <sextant/interruptions/idt.h>
 #include <sextant/interruptions/irq.h>
 #include <sextant/interruptions/handler/handler_tic.h>
@@ -11,120 +9,76 @@
 #include <drivers/timer.h>
 #include <drivers/Clavier.h>
 
-// TP3
+#include <sextant/memoire/segmentation/gdt.h>
 #include <sextant/memoire/Memoire.h>
 
-// TP4
 #include <sextant/ordonnancements/cpu_context.h>
 #include <sextant/ordonnancements/preemptif/thread.h>
 #include <sextant/types.h>
 
-// TP5
-#include <sextant/Synchronisation/Spinlock/Spinlock.h>
-
-// TP6
-#include <sextant/memoire/segmentation/gdt.h>
-#include <sextant/memoire/Memoire.h>
-#include <sextant/memoire/pagination/MemoirePhysique.h>
-#include <sextant/memoire/pagination/Pagination.h>
-#include <drivers/vga.h>
-#include <drivers/sprite.h>
-
-#include <Applications/Entity/Bot.h>
-#include <Applications/Entity/Player.h>
-#include <Applications/Board/Board.h>
-#include <Applications/Utilities/Vector.h>
-#include <Applications/Utilities/PseudoRand.h>
+#include <Applications/Game.h>
 
 extern char __e_kernel,__b_kernel, __b_data, __e_data,  __b_stack, __e_load ;
 int i;
 
-extern vaddr_t bootstrap_stack_bottom; //Adresse de début de la pile d'exécution
-extern size_t bootstrap_stack_size;//Taille de la pile d'exécution
+extern vaddr_t bootstrap_stack_bottom;
+extern size_t bootstrap_stack_size;
 
 Timer timer;
-//paddr_t kernel_core_base,kernel_core_top;
 unsigned long address;
 
-struct cpu_state *ctxt_hello1;
-struct cpu_state *ctxt_hello2;
-struct cpu_state *ctxt_main;
-vaddr_t hello1_stack, hello2_stack;
 char tab1[4096];
 char tab2[4096];
 char tab[30000];
-
-Ecran ecran;
-
-
-Ecran *monEcran = &ecran;
-
 
 #define PAGINATION_USE 1
 
 
 void Sextant_Init(){
+	// Interruptions init
 	idt_setup();
 	irq_setup();
 
-	//Initialisation de la frequence de l'horloge
 	timer.i8254_set_frequency(1000);
 	irq_set_routine(IRQ_TIMER, ticTac);
 	asm volatile("sti\n");//Autorise les interruptions
 
 	irq_set_routine(IRQ_KEYBOARD, handler_clavier);
 
+	// Memoire init
 	memory_init();
+	gdt_setup();
 
 	multiboot_info_t* mbi;
 	mbi = (multiboot_info_t*)address;
 
-	gdt_setup();
-
+	// Thread init
 	thread_subsystem_setup(bootstrap_stack_bottom,bootstrap_stack_size);
-
 	sched_subsystem_setup();
-	//irq_set_routine(IRQ_TIMER, sched_clk);
+
+	// VGA init
+	set_vga_mode13();
+    clear_vga_screen(228);
+	set_palette_vga(palette_vga);
 }
 
-char* itoa(int value, char* str, int base) {
-    if (base < 2 || base > 36) {
-        *str = '\0'; // Invalid base
-        return str;
-    }
-    char* ptr = str, *ptr1 = str, tmp_char;
-    int tmp_value;
-
-    if (value < 0 && base == 10) {
-        *ptr++ = '-';
-        value = -value;
-    }
-
-    do {
-        tmp_value = value;
-        value /= base;
-        *ptr++ = "0123456789abcdefghijklmnopqrstuvwxyz"[tmp_value - value * base];
-    } while (value);
-
-    *ptr-- = '\0';
-
-    while (ptr1 < ptr) {
-        tmp_char = *ptr;
-        *ptr-- = *ptr1;
-        *ptr1++ = tmp_char;
-    }
-
-    return str;
-}
 
 extern "C" void Sextant_main(unsigned long magic, unsigned long addr) {
-    Sextant_Init();
+	Sextant_Init();
+
     Clavier clavier;
-    address = addr;
+    Timer timer;
 
-    set_vga_mode13();
-    clear_vga_screen(228);
+    Game game(&timer, &clavier);
 
+	game.displayFPS = true;
+	game.multiplayerMode = false;
+
+    game.init();
+    game.run();
+}
+
+/*
 	
 	int boardWidth = 20;
 	int boardHeight = 11;
@@ -194,4 +148,4 @@ extern "C" void Sextant_main(unsigned long magic, unsigned long addr) {
 			elapsedFrameTime = timer.getTicks() - frameStart;
 		}
 	}
-}
+}*/
