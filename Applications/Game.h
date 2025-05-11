@@ -4,7 +4,6 @@
 #include <Applications/Entity/Player.h>
 #include <Applications/Board/Board.h>
 
-
 #define MAX_BOTS 5
 #define TARGET_FPS 60
 #define TIME_LIMIT 200
@@ -18,22 +17,24 @@ public:
     void run();
 
     bool displayFPS = true;
-
-
-
+    bool multiplayerMode = false;
 
 private:
     Timer* timer;
     Clavier* clavier;
 
-    Player* player;
+    Player* player1;
+    Player* player2;
+
     Bot* bots[MAX_BOTS];
     Board* board;
 
     int timeRemaining = TIME_LIMIT;
     
-    bool displayGameOver = true;
-    bool displayGameWon = true;
+    bool GameOver = false;
+    bool GameWin = false;
+    bool GameRestart = false;
+    bool GameReset = false;
 
     unsigned long lastFrameTime;
     const int targetFrameTime = 1000 / TARGET_FPS;

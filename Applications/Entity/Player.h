@@ -4,12 +4,19 @@
 #include "Direction.h"
 #include <drivers/sprite.h>
 
+enum class PlayerType {
+    PLAYER1,
+    PLAYER2
+};
+
 class Player: public Threads, public Movable {
     private:
         Clavier* clavier;
-    public:
-        Player(int x, int y, Clavier* clavier)
-            : Movable(x, y), clavier(clavier) {
+        int lives = 2;
+        int score = 0;
+
+        void setSprites(PlayerType type) {
+            if (type == PlayerType::PLAYER1) {
                 sprites[UP][0] = player1_back_1;
                 sprites[UP][1] = player1_back_1;
                 sprites[UP][2] = player1_back_1;
@@ -25,10 +32,20 @@ class Player: public Threads, public Movable {
                 sprites[RIGHT][0] = player1_right_1;
                 sprites[RIGHT][1] = player1_right_1;
                 sprites[RIGHT][2] = player1_right_1;
+            } else
+            {
+            }
+        }
+    public:
+        Player(int x, int y, Clavier* clavier, PlayerType type)
+            : Movable(x, y), clavier(clavier) {
+                setSprites(type);
             }
         void movePlayer();
         void run();
         void render();
         int getX() const { return x; }
         int getY() const { return y; }
+        int getLives() const { return lives; }
+        int getScore() const { return score; }
 };

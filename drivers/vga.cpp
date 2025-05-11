@@ -1,6 +1,5 @@
 #include "vga.h"
-
-
+#include "../Applications/Utilities/Utils.h"
 
 const unsigned char font8x8_basic[128][8] = {
     { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},   // U+0000 (nul)
@@ -303,5 +302,22 @@ void draw_text(const char* str, int x, int y, unsigned char color) {
         draw_char(*str, x, y, color);
         x += 8;
         str++;
+    }
+}
+
+void draw_number(unsigned int number, int x, int y, unsigned char color) {
+    char str[12];
+    itoa(number, str, 10);
+
+    int length = 0;
+    char* temp = str;
+    while (*temp++) {
+        length++;
+    }
+    int total_width = length * 8;
+
+    for (int i = length - 1; i >= 0; i--) {
+        x -= 8;
+        draw_char(str[i], x, y, color);
     }
 }

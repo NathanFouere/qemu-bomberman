@@ -72,6 +72,7 @@ extern "C" void Sextant_main(unsigned long magic, unsigned long addr) {
     Game game(&timer, &clavier);
 
 	game.displayFPS = true;
+	game.multiplayerMode = false;
 
     game.init();
     game.run();

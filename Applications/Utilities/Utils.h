@@ -27,20 +27,3 @@ char* itoa(int value, char* str, int base) {
 
     return str;
 }
-
-
-// char getClock(int totalSecondes) {
-//     int minutes = totalSecondes / 60;
-// 	int secondes = totalSecondes % 60;
-
-// 	char buffer[6];
-
-// 	buffer[0] = '0' + (minutes / 10);
-// 	buffer[1] = '0' + (minutes % 10);
-// 	buffer[2] = ':';
-// 	buffer[3] = '0' + (secondes / 10);
-// 	buffer[4] = '0' + (secondes % 10);
-// 	buffer[5] = '\0';
-
-//     return buffer;
-// }
