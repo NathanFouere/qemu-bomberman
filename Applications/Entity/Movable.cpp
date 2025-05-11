@@ -7,22 +7,70 @@ const unsigned char* Movable::getSprite() {
 }
 
 void Movable::move(const Board& board, int dx, int dy) {
-    int newX = x + dx, newY = y + dy;
-    int w = 16;
-    int h = 16;
+    constexpr int w = 16, h = 16;
+    constexpr int maxSlide = 8;
 
-    // check four corners
-    int cornersX[2] = { newX,      newX + w - 1 };
-    int cornersY[2] = { newY,      newY + h - 1 };
+    // HORIZONTAL
+    if (dx != 0) {
+        int nx = x + dx;
+        auto clearAtY = [&](int testY) {
+            int cx = nx + (dx > 0 ? w - 1 : 0);
+            return !board.isBlockedAt(cx, testY)
+                && !board.isBlockedAt(cx, testY + h - 1);
+        };
 
-    for (int ix = 0; ix < 2; ++ix) {
-        for (int iy = 0; iy < 2; ++iy) {
-            if ( board.isBlockedAt(cornersX[ix], cornersY[iy]) ) {
+        if (clearAtY(y)) {
+            x = nx;
+            return;
+        }
+        
+        for (int offset = 1; offset <= maxSlide; ++offset) {
+            // try up
+            if (clearAtY(y - offset)
+             && !board.isBlockedAt(x, y - offset)
+             && !board.isBlockedAt(x + w - 1, y - offset + h - 1)) {
+                y -= 1;
+                return;
+            }
+           
+            if (clearAtY(y + offset)
+             && !board.isBlockedAt(x, y + offset + h - 1)
+             && !board.isBlockedAt(x + w - 1, y + offset)) {
+                y += 1;
+                return;
+            }
+        }
+        return;
+    }
+
+    // VERTICAL
+    if (dy != 0) {
+        int ny = y + dy;
+        auto clearAtX = [&](int testX) {
+            int cy = ny + (dy > 0 ? h - 1 : 0);
+            return !board.isBlockedAt(testX, cy)
+                && !board.isBlockedAt(testX + w - 1, cy);
+        };
+
+        if (clearAtX(x)) {
+            y = ny;
+            return;
+        }
+        for (int offset = 1; offset <= maxSlide; ++offset) {
+            if (clearAtX(x - offset)
+             && !board.isBlockedAt(x - offset, y)
+             && !board.isBlockedAt(x - offset + w - 1, y + h - 1)) {
+                x -= 1;
+                return;
+            }
+            if (clearAtX(x + offset)
+             && !board.isBlockedAt(x + offset + w - 1, y)
+             && !board.isBlockedAt(x + offset, y + h - 1)) {
+                x += 1;
                 return;
             }
         }
     }
-
-    x = newX;
-    y = newY;
 }
+
+
