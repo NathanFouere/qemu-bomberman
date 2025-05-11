@@ -14,25 +14,43 @@ Board::Board(int w, int h) : width(w), height(h) {
             bool isBorder       = (x == 0) || (y == 0) || (y == height - 1);
             bool isCheckerboard = ((x % 2) == 0) && ((y % 2) == 0);
             bool isEntryPoint   = (x == width - 1) && ( (y == 1) || (y == height - 2) );
-            // Keep a safe zone in top-left so the player can move
-            bool safeZone = (x <= 2 && y <= 2);
+            bool safeZone       = (x <= 2 && y <= 2);
 
+            Tile* chosenTile;
             if ((isBorder || isCheckerboard) && !isEntryPoint) {
-                layout[y][x] = new Wall();
+                chosenTile = new Wall();
             }
             else if (safeZone) {
-                layout[y][x] = new EmptyTile();
+                chosenTile = new EmptyTile();
             }
             else {
                 if (pseudoRand() % 100 < 50) {
-                    layout[y][x] = new Brick();
-                }
-                else {
-                    layout[y][x] = new EmptyTile();
+                    chosenTile = new Brick();
+                } else {
+                    chosenTile = new EmptyTile();
                 }
             }
+
+            int px = x * TILE_SIZE + BOARD_ORIGIN_X;
+            int py = y * TILE_SIZE + BOARD_ORIGIN_Y;
+            setTileAt(px, py, chosenTile);
         }
     }
+}
+void Board::setTileAt(int px, int py, Tile* tile) {
+    int localX = px - BOARD_ORIGIN_X;
+    int localY = py - BOARD_ORIGIN_Y;
+    int tx = localX / TILE_SIZE;
+    int ty = localY / TILE_SIZE;
+
+    if (tx < 0 || ty < 0 || tx >= width || ty >= height) {
+        return; 
+    }
+
+    if (layout[ty][tx]) {
+        delete layout[ty][tx];
+    }
+    layout[ty][tx] = tile;
 }
 
 bool Board::isBlockedAt(int px, int py) const {

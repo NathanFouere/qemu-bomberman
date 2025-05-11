@@ -14,12 +14,7 @@ public:
         return layout[y][x];
     }
 
-    void setTile(int x, int y, Tile* tile) {
-        if (layout[y][x]) {
-            delete layout[y][x];
-        }
-        layout[y][x] = tile;
-    }
+    void setTileAt(int px, int py, Tile* tile);
 
     bool isBlockedAt(int px, int py) const;
 
