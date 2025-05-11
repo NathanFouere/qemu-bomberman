@@ -1,22 +1,18 @@
 #pragma once
+
+#include "Tile.h"
+#include <drivers/vga.h>
 #include <drivers/sprite.h>
-#include <Applications/Board/Tile.h>
-#include "TileType.h"
 
-class Bomb: public Tile {
-public:
-    int x;
-    int y;
-    int animationFrame;
-    Bomb(int x, int y) : Tile(TileType::Bomb) {
-        this->y = y;
-        this->x = x;
+class Bomb : public Tile {
+    public:
+        Bomb() : Tile() {}
 
-        this->sprites[0] = bomb_1;
-        this->sprites[1] = bomb_2;
-        this->sprites[2] = bomb3;
-        this->nbSprites = 3;
-    }
-    const unsigned char* getSprite();
-    void render();
-};
+        TileType getType() const override {
+            return TILE_BOMB;
+        }
+
+        void render(int x, int y) override {
+            // draw_sprite(sprites_for_bomb, 16, 16, x * 16 - 8, y * 16 + 24);
+        }
+    };

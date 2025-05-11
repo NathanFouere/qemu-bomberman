@@ -12,13 +12,11 @@ void memory_init() {
 }
 
 void* alloc(int size) {
-    // Align requested size to 4 bytes
     int alignedSize = (size + 3) & ~3;
 
     Block* current = free_list;
     while (current) {
         if (current->free && current->size >= alignedSize) {
-            // If current block is large enough, split it
             if (current->size >= alignedSize + (int)sizeof(Block) + 1) {
                 Block* new_block = (Block*)((char*)current + sizeof(Block) + alignedSize);
                 new_block->size = current->size - alignedSize - sizeof(Block);

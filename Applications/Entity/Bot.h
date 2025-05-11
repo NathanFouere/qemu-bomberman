@@ -1,15 +1,17 @@
 #include "Applications/Entity/Movable.h"
 #include "drivers/Clavier.h"
+#include "../Board/Board.h"
 #include "sextant/Activite/Threads.h"
 #include <drivers/sprite.h>
 
 class Bot: public Threads, public Movable {
     public:
       int it = 0;
+      Board* board;
     void moveRandom();
     void run();
-    Bot(int x, int y)
-        : Movable(x, y) {
+    Bot(int x, int y, Board* boardPtr)
+        : Movable(x, y), board(boardPtr) { 
           sprites[UP][0] = enemy1_right_1;
           sprites[UP][1] = enemy1_right_1;
           sprites[UP][2] = enemy1_right_1;

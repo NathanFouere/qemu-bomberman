@@ -1,5 +1,6 @@
 #include "drivers/Clavier.h"
 #include "sextant/Activite/Threads.h"
+#include "../Board/Board.h"
 #include "Direction.h"
 #include <drivers/sprite.h>
 #include "Applications/Entity/Movable.h"
@@ -10,10 +11,9 @@ class Player: public Threads, public Movable {
     private:
         Clavier* clavier;
         Board* board;
-        Bomb* dropBomb();
     public:
-        Player(int x, int y, Clavier* clavier)
-            : Movable(x, y), clavier(clavier) {
+        Player(int x, int y, Clavier* clavier, Board* boardPtr)
+            : Movable(x, y), clavier(clavier), board(boardPtr) {
                 sprites[UP][0] = player1_back_1;
                 sprites[UP][1] = player1_back_2;
                 sprites[UP][2] = player1_back_3;

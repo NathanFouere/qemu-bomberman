@@ -2,6 +2,8 @@
 #define MOVABLE_H
 #include "Direction.h"
 
+class Board;
+
 class Movable  {
 protected:
     int x, y;
@@ -14,7 +16,7 @@ public:
 
     const unsigned char* getSprite();
 
-    void move(int dx, int dy);
+    void move(const Board& b, int dx, int dy);
     int getX() const { return x; }
     int getY() const { return y; }
 };

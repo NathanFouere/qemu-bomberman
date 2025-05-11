@@ -1,4 +1,5 @@
 #include "Player.h"
+#include "../Board/Board.h"
 #include "drivers/Clavier.h"
 
 
@@ -8,19 +9,19 @@ void Player::movePlayer() {
         char c = clavier->getchar();
         if (c == 'd') {
             direction = RIGHT;
-            move(1, 0);
+            move(*board, 1, 0);
         }
         if (c == 'q') {
             direction = LEFT;
-            move(-1, 0);
+            move(*board, -1, 0);
         }
         if (c == 's') {
             direction = DOWN;
-            move(0, 1);
+            move(*board, 0, 1);
         }
         if (c == 'z') {
             direction = UP;
-            move(0, -1);
+            move(*board, 0, -1);
         }
         if (c == 'n')
         {
