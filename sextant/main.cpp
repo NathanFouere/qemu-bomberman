@@ -127,7 +127,7 @@ extern "C" void Sextant_main(unsigned long magic, unsigned long addr) {
 
     Board board(20, 11);
     Bot *bot = new Bot(50, 50, &board);
-    Player *player = new Player(40, 50, &clavier, &board);
+    Player *player = new Player(8, 40, &clavier, &board);
 
     player->start();
     bot->start();

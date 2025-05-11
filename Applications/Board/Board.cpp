@@ -5,6 +5,14 @@
 #include "Brick.h"
 #include "Bomb.h"
 
+// (LCG) pseudo-random source
+static unsigned int seed = 1;
+static unsigned int pseudoRand() {
+    // LCG constants: a = 1103515245, c = 12345, m = 2^31
+    seed = (1103515245U * seed + 12345U) & 0x7FFFFFFF;
+    return (seed >> 16) & 0x7FFF;
+}
+
 Board::Board(int w, int h) : width(w), height(h) {
     layout = static_cast<Tile***>(alloc(height * sizeof(Tile**)));
     for (int y = 0; y < height; ++y) {
@@ -13,12 +21,22 @@ Board::Board(int w, int h) : width(w), height(h) {
             bool isBorder       = (x == 0) || (y == 0) || (y == height - 1);
             bool isCheckerboard = ((x % 2) == 0) && ((y % 2) == 0);
             bool isEntryPoint   = (x == width - 1) && ( (y == 1) || (y == height - 2) );
+            // Keep a safe zone in top-left so the player can move
+            bool safeZone = (x <= 2 && y <= 2);
 
             if ((isBorder || isCheckerboard) && !isEntryPoint) {
                 layout[y][x] = new Wall();
             }
-            else {
+            else if (safeZone) {
                 layout[y][x] = new EmptyTile();
+            }
+            else {
+                if (pseudoRand() % 100 < 50) {
+                    layout[y][x] = new Brick();
+                }
+                else {
+                    layout[y][x] = new EmptyTile();
+                }
             }
         }
     }
