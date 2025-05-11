@@ -1,14 +1,13 @@
 #ifndef MOVABLE_H
 #define MOVABLE_H
 #include "Direction.h"
+#include "../Board/Board.h"
 
 enum class EntityStatus {
     ALIVE,
     DEAD,
     DEAD_ANIMATION
 };
-
-class Board;
 
 class Movable  {
 protected:

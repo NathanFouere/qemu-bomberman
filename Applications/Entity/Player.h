@@ -39,8 +39,8 @@ class Player: public Threads, public Movable {
         }
     public:
         Board* board;
-        Player(int x, int y, Clavier* clavier, PlayerType type, Board* boardPtr)
-            : Movable(x, y), clavier(clavier), board(boardPtr {
+        Player(int x, int y, PlayerType type, Clavier* clavier, Board* boardPtr)
+            : Movable(x, y), clavier(clavier), board(boardPtr) {
                 setSprites(type);
             }
         void movePlayer();

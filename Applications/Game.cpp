@@ -13,22 +13,22 @@ void Game::init() {
     set_palette_vga(palette_vga);
 
     // TODO adjust spawn positions
-    board = new Board(20, 11);
-    player1 = new Player(16, 16, clavier, PlayerType::PLAYER1);
-    player1->start();
+    // board = new Board(20, 11);
+    // player1 = new Player(16, 16, clavier, PlayerType::PLAYER1);
+    // player1->start();
 
-    if (multiplayerMode){
-        player2 = new Player(288, 168, clavier, PlayerType::PLAYER2);
-        player2->start();
-    }
+    // if (multiplayerMode){
+    //     player2 = new Player(288, 168, clavier, PlayerType::PLAYER2);
+    //     player2->start();
+    // }
 
-    for (int i = 0; i < MAX_BOTS; ++i) {
-        int x = 50 + (i % 5) * 25;
-        int y = 50 + (i / 5) * 25;
-        constexpr int EnemyTypeCount = 5;
-        bots[i] = new Bot(x, y, static_cast<EnemyType>(i % EnemyTypeCount));
-        bots[i]->start();
-    }
+    // for (int i = 0; i < MAX_BOTS; ++i) {
+    //     int x = 50 + (i % 5) * 25;
+    //     int y = 50 + (i / 5) * 25;
+    //     constexpr int EnemyTypeCount = 5;
+    //     bots[i] = new Bot(x, y, static_cast<EnemyType>(i % EnemyTypeCount));
+    //     bots[i]->start();
+    // }
 
     lastFrameTime = timer->getTicks();
 }
