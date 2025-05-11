@@ -4,14 +4,7 @@
 #include "Wall.h"
 #include "Brick.h"
 #include "Bomb.h"
-
-// (LCG) pseudo-random source
-static unsigned int seed = 1;
-static unsigned int pseudoRand() {
-    // LCG constants: a = 1103515245, c = 12345, m = 2^31
-    seed = (1103515245U * seed + 12345U) & 0x7FFFFFFF;
-    return (seed >> 16) & 0x7FFF;
-}
+#include "../Utilities/PseudoRand.h"
 
 Board::Board(int w, int h) : width(w), height(h) {
     layout = static_cast<Tile***>(alloc(height * sizeof(Tile**)));
@@ -32,7 +25,7 @@ Board::Board(int w, int h) : width(w), height(h) {
             }
             else {
                 if (pseudoRand() % 100 < 50) {
-                    layout[y][x] = new Brick();
+                    // layout[y][x] = new Brick();
                 }
                 else {
                     layout[y][x] = new EmptyTile();
