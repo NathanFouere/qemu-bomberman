@@ -8,7 +8,7 @@
 class Brick : public Tile {
 public:
     Brick() : Tile() {
-        sprites[0] = wall_1;
+        sprites[0] = wall_2;
     }
 
     TileType getType() const override {

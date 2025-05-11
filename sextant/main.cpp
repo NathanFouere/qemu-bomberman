@@ -34,7 +34,7 @@
 #include <Applications/Entity/Player.h>
 #include <Applications/Board/Board.h>
 #include <Applications/Utilities/Vector.h>
-// tile
+#include <Applications/Utilities/PseudoRand.h>
 
 extern char __e_kernel,__b_kernel, __b_data, __e_data,  __b_stack, __e_load ;
 int i;
@@ -125,12 +125,31 @@ extern "C" void Sextant_main(unsigned long magic, unsigned long addr) {
     set_vga_mode13();
     clear_vga_screen(228);
 
-    Board board(20, 11);
-    Bot *bot = new Bot(50, 50, &board);
-    Player *player = new Player(40, 50, &clavier, &board);
+	
+	int boardWidth = 20;
+	int boardHeight = 11;
+	int botCount = 3;
 
+    Board board(boardWidth, boardHeight);
+
+    Bot* bots[3];
+	for (int i = 0; i < botCount; i++) {
+        while (true) {
+            int randX = pseudoRand() % (boardWidth - 2) + 1;
+            int randY = pseudoRand() % (boardHeight - 2) + 1;
+
+            int px = randX * TILE_SIZE + BOARD_ORIGIN_X;
+            int py = randY * TILE_SIZE + BOARD_ORIGIN_Y;
+
+            if (!board.isBlockedAt(px, py)) {
+                Bot* bot = new Bot(px, py, &board);
+                bot->start();
+                break;
+            }
+        }
+    }
+    Player *player = new Player(8, 40, &clavier, &board);
     player->start();
-    bot->start();
 
     const int targetFrameTime = 1000 / 60; // 
     unsigned long lastFrameTime = timer.getTicks();
@@ -156,7 +175,11 @@ extern "C" void Sextant_main(unsigned long magic, unsigned long addr) {
 		// draw_text("Hello World !", 100, 100, 255);
 	
 		draw_sprite(player->getSprite(), 16, 16, player->getX(), player->getY());
-		// draw_sprite(bot->getSprite(), 16, 16, bot->getX(), bot->getY());
+		
+        for (int i = 0; i < botCount; i++) {
+            draw_sprite(bots[i]->getSprite(), 16, 16, bots[i]->getX(), bots[i]->getY());
+        }
+
 	
 		// Copy the frame buffer to video memory
 		copy_frame_buffer_to_video();
