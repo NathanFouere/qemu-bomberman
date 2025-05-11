@@ -3,16 +3,19 @@
 #include "Tile.h"
 #include <drivers/vga.h>
 #include <drivers/sprite.h>
+#include <drivers/timer.h>
 
 class Bomb : public Tile {
+    private:
+        int apparitionSecond;
+        int animationFrame;
+        unsigned char* explosionSprites[3];
     public:
-        Bomb() : Tile() {}
+        Bomb();
 
         TileType getType() const override {
             return TILE_BOMB;
         }
 
-        void render(int x, int y) override {
-            // draw_sprite(sprites_for_bomb, 16, 16, x * 16 - 8, y * 16 + 24);
-        }
+        void render(int x, int y);
     };

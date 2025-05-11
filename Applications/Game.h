@@ -10,7 +10,7 @@
 
 class Game {
 public:
-    Game(Timer* t, Clavier* k);
+    Game(Clavier* k);
     void init();
     void update();
     void render();
@@ -20,7 +20,6 @@ public:
     bool multiplayerMode = false;
 
 private:
-    Timer* timer;
     Clavier* clavier;
 
     Player* player1;

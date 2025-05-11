@@ -27,7 +27,6 @@ int i;
 extern vaddr_t bootstrap_stack_bottom;
 extern size_t bootstrap_stack_size;
 
-Timer timer;
 unsigned long address;
 
 char tab1[4096];
@@ -42,7 +41,7 @@ void Sextant_Init(){
 	idt_setup();
 	irq_setup();
 
-	timer.i8254_set_frequency(1000);
+	Timer::getInstance().i8254_set_frequency(1000);
 	irq_set_routine(IRQ_TIMER, ticTac);
 	asm volatile("sti\n");//Autorise les interruptions
 
@@ -70,9 +69,8 @@ extern "C" void Sextant_main(unsigned long magic, unsigned long addr) {
 	Sextant_Init();
 
     Clavier clavier;
-    Timer timer;
 
-    Game game(&timer, &clavier);
+    Game game(&clavier);
 
 	game.displayFPS = true;
 	game.multiplayerMode = false;

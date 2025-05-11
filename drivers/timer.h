@@ -42,11 +42,20 @@
 /** Change timer interrupt (IRQ 0) frequency */
 
 class Timer {
-
-public :
-	sextant_ret_t i8254_set_frequency(unsigned int freq);
-	int getSeconds();
-   int getTicks();
-};
-
-#endif /* _i8259_H_ */
+   private:
+       Timer() {}
+       Timer(const Timer&) = delete;
+       Timer& operator=(const Timer&) = delete;
+   
+   public:
+       static Timer& getInstance() {
+           static Timer instance;
+           return instance;
+       }
+   
+       sextant_ret_t i8254_set_frequency(unsigned int freq);
+       int getSeconds();
+       int getTicks();
+   };
+   
+   #endif 

@@ -67,6 +67,7 @@ OBJECTSNAMES=\
  Board\
  Bot\
  Game\
+ Bomb\
  
 
 OBJECTS=$(patsubst %,build/all-o/%.o,$(OBJECTSNAMES))					  		

@@ -1,7 +1,8 @@
 #include "Game.h"
 #include <Applications/Utilities/PseudoRand.h>
+#include <Applications/Board/Bomb.h>
 
-Game::Game(Timer* t, Clavier* k) : timer(t), clavier(k), player1(nullptr), player2(nullptr), board(nullptr) {
+Game::Game(Clavier* k) :clavier(k), player1(nullptr), player2(nullptr), board(nullptr) {
     for (int i = 0; i < MAX_BOTS; ++i) {
         bots[i] = nullptr;
     }
@@ -53,7 +54,7 @@ void Game::init() {
         }
     }
 
-    lastFrameTime = timer->getTicks();
+    lastFrameTime = Timer::getInstance().getTicks();
 }
 
 void Game::update() {
@@ -100,7 +101,7 @@ void Game::render() {
     }
 
     if (displayFPS) {
-        unsigned long current = timer->getTicks();
+        unsigned long current = Timer::getInstance().getTicks();
         int fps = (current > lastFrameTime) ? (1000 / (current - lastFrameTime)) : 0;
         lastFrameTime = current;
         
@@ -122,15 +123,15 @@ void Game::run() {
             break;
         }
 
-        unsigned long frameStart = timer->getTicks();
+        unsigned long frameStart = Timer::getInstance().getTicks();
         update();
         render();
 
-        timeRemaining = TIME_LIMIT - timer->getSeconds();
+        timeRemaining = TIME_LIMIT - Timer::getInstance().getSeconds();
 
-        unsigned long elapsed = timer->getTicks() - frameStart;
+        unsigned long elapsed = Timer::getInstance().getTicks() - frameStart;
         while (elapsed < targetFrameTime) {
-            elapsed = timer->getTicks() - frameStart;
+            elapsed = Timer::getInstance().getTicks() - frameStart;
         }
     }
 }

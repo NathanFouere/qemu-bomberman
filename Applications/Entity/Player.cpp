@@ -1,6 +1,7 @@
 #include "Player.h"
 #include "../Board/Board.h"
 #include "drivers/Clavier.h"
+#include <Applications/Board/Bomb.h>
 
 
 void Player::movePlayer() {
@@ -22,6 +23,9 @@ void Player::movePlayer() {
             direction = UP;
             move(*board, 0, -1);
         }
+        if(c == 'n') {
+            this->poseBomb();
+        }
     }
 }
 
@@ -34,6 +38,11 @@ void Player::run() {
 }
 
 void Player::render() {
+}
+
+void Player::poseBomb() {
+    Bomb* bombe = new Bomb();
+    this->board->setTileAt(x, y, bombe);
 }
 
 

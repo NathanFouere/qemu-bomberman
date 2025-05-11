@@ -50,4 +50,5 @@ class Player: public Threads, public Movable {
         int getY() const { return y; }
         int getLives() const { return lives; }
         int getScore() const { return score; }
+        void poseBomb();
 };
