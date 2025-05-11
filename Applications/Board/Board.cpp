@@ -83,3 +83,21 @@ void Board::draw() {
         }
     }
 }
+
+void Board::deleteTileAt(int px, int py) {
+    int localX = px - BOARD_ORIGIN_X;
+    int localY = py - BOARD_ORIGIN_Y;
+    int tx = localX / TILE_SIZE;
+    int ty = localY / TILE_SIZE;
+
+    if (tx < 0 || ty < 0 || tx >= width || ty >= height) {
+        return; 
+    }
+
+    // if (layout[ty][tx]->getType() != TILE_BRICK) {
+    //     return;
+    // }
+
+    delete layout[ty][tx];
+    layout[ty][tx] = new EmptyTile();
+}

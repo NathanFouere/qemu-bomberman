@@ -1,11 +1,12 @@
 #include "Bomb.h"
 
-Bomb::Bomb() : Tile() {
+Bomb::Bomb(Board* board, int x, int y) : Tile() {
     apparitionSecond = Timer::getInstance().getSeconds();
     animationFrame = 0;
     sprites[0] = bomb_1;
     sprites[1] = bomb_2;
     sprites[2] = bomb3;
+    // TODO => il faudra fixer pour que ça apparaisse autour du joueur là c'est pas censé marcher comme ça
     explosionSprites[0] = exp_start_1;
     explosionSprites[1] = exp_start_2;
     explosionSprites[2] = exp_start_3;
@@ -18,15 +19,37 @@ Bomb::Bomb() : Tile() {
     explosionSprites[9] = exp_end_2;
     explosionSprites[10] = exp_end_3;
     explosionSprites[11] = exp_end_4;
+    this->board = board;
+    this->exploded = false;
+    this->x = x;
+    this->y = y;
 }
 
-void Bomb::render(int x, int y) {        
-    bool exploded = (Timer::getInstance().getSeconds() - this->apparitionSecond >= 3);    
+void Bomb::render(int x, int y) {      
+    exploded = (Timer::getInstance().getSeconds() - this->apparitionSecond >= 3);  
+    // TODO => il faudra supprimer la bombe quand elle aura exploser
     if (exploded)
     {
+        this->handleExplosion();
         draw_sprite(explosionSprites[animationFrame % 12], 16, 16, x * 16 - 8, y * 16 + 24);
     }else {
         draw_sprite(sprites[animationFrame % 3], 16, 16, x * 16 - 8, y * 16 + 24);
     }
     animationFrame++;
+}
+
+void Bomb::handleExplosion() {
+
+    // supprime à gauche
+    this->board->deleteTileAt(x-1, y);
+
+        // supprime à droite (marche pas)
+    this->board->deleteTileAt(x+1, y);
+
+    // supprime en haut (marche)
+    this->board->deleteTileAt(x, y+1);
+
+    // supprime en dessous (marche pas)
+    this->board->deleteTileAt(x, y-1);
+
 }

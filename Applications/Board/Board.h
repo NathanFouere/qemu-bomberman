@@ -15,6 +15,7 @@ public:
     }
 
     void setTileAt(int px, int py, Tile* tile);
+    void deleteTileAt(int px, int py);
 
     bool isBlockedAt(int px, int py) const;
 

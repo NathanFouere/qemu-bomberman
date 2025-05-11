@@ -7,6 +7,7 @@
 void Player::movePlayer() {
     if (clavier->testChar()) {
         char c = clavier->getchar();
+        animationFrame++;
         if (c == 'd') {
             direction = RIGHT;
             move(*board, 1, 0);
@@ -41,7 +42,7 @@ void Player::render() {
 }
 
 void Player::poseBomb() {
-    Bomb* bombe = new Bomb();
+    Bomb* bombe = new Bomb(board, x ,y);
     this->board->setTileAt(x, y, bombe);
 }
 
