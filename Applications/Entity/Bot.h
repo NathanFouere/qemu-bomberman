@@ -1,5 +1,6 @@
 #include "Applications/Entity/Movable.h"
 #include "drivers/Clavier.h"
+#include "../Board/Board.h"
 #include "sextant/Activite/Threads.h"
 #include <drivers/sprite.h>
 
@@ -16,8 +17,9 @@ public:
     bool alive = true;
     EnemyType type = EnemyType::TYPE1;
     int it = 0;
-
-    Bot(int x, int y, EnemyType type)
+    Board* board;
+  
+    Bot(int x, int y, EnemyType type, Board* boardPtr)
         : Movable(x, y) {
         setSprites(type);
     }

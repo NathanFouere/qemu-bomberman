@@ -8,6 +8,8 @@ enum class EntityStatus {
     DEAD_ANIMATION
 };
 
+class Board;
+
 class Movable  {
 protected:
     int x, y;
@@ -21,7 +23,7 @@ public:
 
     const unsigned char* getSprite();
 
-    void move(int dx, int dy);
+    void move(const Board& b, int dx, int dy);
     int getX() const { return x; }
     int getY() const { return y; }
     EntityStatus getStatus() const { return status; }
