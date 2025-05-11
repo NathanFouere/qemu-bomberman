@@ -1,4 +1,5 @@
 #include "Bomb.h"
+#include "EmptyTile.h"
 
 Bomb::Bomb(Board* board, int x, int y) : Tile() {
     apparitionSecond = Timer::getInstance().getSeconds();
@@ -20,6 +21,7 @@ Bomb::Bomb(Board* board, int x, int y) : Tile() {
     explosionSprites[10] = exp_end_3;
     explosionSprites[11] = exp_end_4;
     this->board = board;
+    this->board->setTileAt(x, y, this);
     this->exploded = false;
     this->x = x;
     this->y = y;
@@ -32,6 +34,11 @@ void Bomb::render(int x, int y) {
     {
         this->handleExplosion();
         draw_sprite(explosionSprites[animationFrame % 12], 16, 16, x * 16 - 8, y * 16 + 24);
+
+        bool erase = (Timer::getInstance().getSeconds() - this->apparitionSecond >= 5);
+        if (erase) {
+            this->board->setTileAt(x, y, new EmptyTile());
+        }
     }else {
         draw_sprite(sprites[animationFrame % 3], 16, 16, x * 16 - 8, y * 16 + 24);
     }
@@ -51,5 +58,4 @@ void Bomb::handleExplosion() {
 
     // supprime en dessous (marche pas)
     this->board->deleteTileAt(x, y-1);
-
 }
