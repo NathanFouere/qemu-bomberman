@@ -16,15 +16,9 @@
 #include <sextant/ordonnancements/preemptif/thread.h>
 #include <sextant/types.h>
 
-//#include <Applications/Game.h>
+#include <Applications/Game.h>
 
 #include <drivers/vga.h>
-#include <drivers/sprite.h>
-
-#include <Applications/Entity/Bot.h>
-#include <Applications/Entity/Player.h>
-#include <Applications/Board/Board.h>
-#include <Applications/Utilities/Vector.h>
 #include <Applications/Utilities/PseudoRand.h>
 
 extern char __e_kernel,__b_kernel, __b_data, __e_data,  __b_stack, __e_load ;
@@ -78,81 +72,11 @@ extern "C" void Sextant_main(unsigned long magic, unsigned long addr) {
     Clavier clavier;
     Timer timer;
 
-    // Game game(&timer, &clavier);
+    Game game(&timer, &clavier);
 
-	// game.displayFPS = true;
-	// game.multiplayerMode = false;
+	game.displayFPS = true;
+	game.multiplayerMode = false;
 
-    // game.init();
-    // game.run();
-
-	int boardWidth = 20;
-	int boardHeight = 11;
-	int botCount = 3;
-
-    Board board(boardWidth, boardHeight);
-
-    // Bot* bots[3];
-	// for (int i = 0; i < botCount; i++) {
-    //     while (true) {
-    //         int randX = pseudoRand() % (boardWidth - 2) + 1;
-    //         int randY = pseudoRand() % (boardHeight - 2) + 1;
-
-    //         int px = randX * TILE_SIZE + BOARD_ORIGIN_X;
-    //         int py = randY * TILE_SIZE + BOARD_ORIGIN_Y;
-
-    //         if (!board.isBlockedAt(px, py)) {
-    //             Bot* bot = new Bot(px, py, &board);
-    //             bot->start();
-    //             break;
-    //         }
-    //     }
-    // }
-
-    Player *player = new Player(8, 40,PlayerType::PLAYER1, &clavier, &board);
-    player->start();
-
-    const int targetFrameTime = 1000 / 60; // 
-    unsigned long lastFrameTime = timer.getTicks();
-    char fpsStr[20]; // Buffer to hold the FPS string
-
-	while (true) {
-		unsigned long frameStart = timer.getTicks(); // Start of the frame
-	
-		set_palette_vga(palette_vga);
-		clear_frame_buffer(228); // Clear the frame buffer with the background color
-	
-		// Calculate FPS
-		unsigned long frameTime = frameStart - lastFrameTime;
-		lastFrameTime = frameStart;
-		int fps = (frameTime > 0) ? (1000 / frameTime) : 0; // Avoid division by zero 
-                                                                                                                                                                                                                                                                                                   	
-		// Convert FPS to string and display
-		// itoa(fps, fpsStr, 10);
-		// draw_text("FPS: ", 10, 10, 255); // Display "FPS: " label
-		// draw_text(fpsStr, 50, 10, 255); // Display FPS value next to the label
-	    board.draw();
-
-		// draw_text("Hello World !", 100, 100, 255);
-
-		draw_sprite(player->getSprite(), 16, 16, player->getX(), player->getY());
-		
-        // for (int i = 0; i < botCount; i++) {
-        //     draw_sprite(bots[i]->getSprite(), 16, 16, bots[i]->getX(), bots[i]->getY());
-        // }
-
-	
-		// Copy the frame buffer to video memory
-		copy_frame_buffer_to_video();
-	
-		thread_yield();
-	
-		// Calculate elapsed frame time
-		unsigned long elapsedFrameTime = timer.getTicks() - frameStart;
-	
-		// Busy-wait if the frame finished too early
-		while (elapsedFrameTime < targetFrameTime) {
-			elapsedFrameTime = timer.getTicks() - frameStart;
-		}
-	}
+    game.init();
+    game.run();
 }

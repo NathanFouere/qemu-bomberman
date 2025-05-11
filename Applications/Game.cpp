@@ -1,4 +1,5 @@
 #include "Game.h"
+#include <Applications/Utilities/PseudoRand.h>
 
 Game::Game(Timer* t, Clavier* k) : timer(t), clavier(k), player1(nullptr), player2(nullptr), board(nullptr) {
     for (int i = 0; i < MAX_BOTS; ++i) {
@@ -13,22 +14,44 @@ void Game::init() {
     set_palette_vga(palette_vga);
 
     // TODO adjust spawn positions
-    // board = new Board(20, 11);
-    // player1 = new Player(16, 16, clavier, PlayerType::PLAYER1);
-    // player1->start();
+    
+    int boardWidth = 20;
+	int boardHeight = 11;
+	int botCount = 3;
 
-    // if (multiplayerMode){
-    //     player2 = new Player(288, 168, clavier, PlayerType::PLAYER2);
-    //     player2->start();
-    // }
+    board = new Board(boardWidth, boardHeight);
+
+    player1 = new Player(8, 40,PlayerType::PLAYER1, clavier, board);
+    player1->start();
+
+    if (multiplayerMode){
+        player2 = new Player(8, 40,PlayerType::PLAYER2, clavier, board);
+        player2->start();
+    }
 
     // for (int i = 0; i < MAX_BOTS; ++i) {
     //     int x = 50 + (i % 5) * 25;
     //     int y = 50 + (i / 5) * 25;
-    //     constexpr int EnemyTypeCount = 5;
     //     bots[i] = new Bot(x, y, static_cast<EnemyType>(i % EnemyTypeCount));
     //     bots[i]->start();
     // }
+    
+	for (int i = 0; i < MAX_BOTS; i++) {
+        constexpr int EnemyTypeCount = 5;
+        while (true) {
+            int randX = pseudoRand() % (boardWidth - 2) + 1;
+            int randY = pseudoRand() % (boardHeight - 2) + 1;
+
+            int px = randX * TILE_SIZE + BOARD_ORIGIN_X;
+            int py = randY * TILE_SIZE + BOARD_ORIGIN_Y;
+
+            if (!board->isBlockedAt(px, py)) {
+                bots[i] = new Bot(px, py, static_cast<EnemyType>(i % EnemyTypeCount),board);
+                bots[i]->start();
+                break;
+            }
+        }
+    }
 
     lastFrameTime = timer->getTicks();
 }
