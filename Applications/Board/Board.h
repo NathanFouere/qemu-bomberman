@@ -4,27 +4,30 @@
 #include <drivers/vga.h>
 #include <drivers/sprite.h>
 #include <sextant/memoire/Memoire.h>
-#include <Applications/Board/Tile.h>
+#include "Tile.h"
 
 class Board {
 public:
     Board(int w, int h);
     ~Board();
 
-    Tile getTile(int x, int y) const {
+    Tile* getTile(int x, int y) const {
         return layout[y][x];
     }
 
-    void setTile(int x, int y, Tile type) {
-        layout[y][x] = type;
+    void setTile(int x, int y, Tile* tile) {
+        if (layout[y][x]) {
+            delete layout[y][x];
+        }
+        layout[y][x] = tile;
     }
+
+    bool isBlockedAt(int px, int py) const;
 
     void draw();
 
 private:
     int width;
     int height;
-    Tile** layout;
-
-    void initializeWalls();
+    Tile*** layout;
 };

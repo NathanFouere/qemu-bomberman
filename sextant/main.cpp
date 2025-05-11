@@ -125,9 +125,9 @@ extern "C" void Sextant_main(unsigned long magic, unsigned long addr) {
     set_vga_mode13();
     clear_vga_screen(228);
 
-    Bot *bot = new Bot(50, 50);
-    Player *player = new Player(125, 125, &clavier);
     Board board(20, 11);
+    Bot *bot = new Bot(50, 50, &board);
+    Player *player = new Player(40, 50, &clavier, &board);
 
     player->start();
     bot->start();
@@ -145,18 +145,18 @@ extern "C" void Sextant_main(unsigned long magic, unsigned long addr) {
 		// Calculate FPS
 		unsigned long frameTime = frameStart - lastFrameTime;
 		lastFrameTime = frameStart;
-		int fps = (frameTime > 0) ? (1000 / frameTime) : 0; // Avoid division by zero
-	
+		int fps = (frameTime > 0) ? (1000 / frameTime) : 0; // Avoid division by zero 
+                                                                                                                                                                                                                                                                                                   	
 		// Convert FPS to string and display
 		itoa(fps, fpsStr, 10);
 		draw_text("FPS: ", 10, 10, 255); // Display "FPS: " label
 		draw_text(fpsStr, 50, 10, 255); // Display FPS value next to the label
 	    board.draw();
 
-		draw_text("Hello World !", 100, 100, 255);
+		// draw_text("Hello World !", 100, 100, 255);
 	
 		draw_sprite(player->getSprite(), 16, 16, player->getX(), player->getY());
-		draw_sprite(bot->getSprite(), 16, 16, bot->getX(), bot->getY());
+		// draw_sprite(bot->getSprite(), 16, 16, bot->getX(), bot->getY());
 	
 		// Copy the frame buffer to video memory
 		copy_frame_buffer_to_video();

@@ -1,7 +1,7 @@
 #ifndef MEMORY_H
 #define MEMORY_H
 
-#define MEMORY_SIZE 4096
+#define MEMORY_SIZE 1048576 // 1 Mo
 
 #include <drivers/Ecran.h>
 
