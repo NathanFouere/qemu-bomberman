@@ -13,14 +13,20 @@ void Game::init() {
     set_palette_vga(palette_vga);
 
     // TODO adjust spawn positions
-    // board = new Board(20, 11);
-    // player1 = new Player(16, 16, clavier, PlayerType::PLAYER1);
-    // player1->start();
+    
+    int boardWidth = 20;
+	int boardHeight = 11;
+	int botCount = 3;
 
-    // if (multiplayerMode){
-    //     player2 = new Player(288, 168, clavier, PlayerType::PLAYER2);
-    //     player2->start();
-    // }
+    board = new Board(boardWidth, boardHeight);
+
+    player1 = new Player(8, 40,PlayerType::PLAYER1, clavier, board);
+    player1->start();
+
+    if (multiplayerMode){
+        player2 = new Player(8, 40,PlayerType::PLAYER2, clavier, board);
+        player2->start();
+    }
 
     // for (int i = 0; i < MAX_BOTS; ++i) {
     //     int x = 50 + (i % 5) * 25;
@@ -62,11 +68,11 @@ void Game::render() {
     
     board->draw();
 
-    for (int i = 0; i < MAX_BOTS; ++i) {
-        if (bots[i] && bots[i]->getStatus() != EntityStatus::DEAD) {
-            draw_sprite(bots[i]->getSprite(), 16, 16, bots[i]->getX(), bots[i]->getY());
-        }
-    }
+    // for (int i = 0; i < MAX_BOTS; ++i) {
+    //     if (bots[i] && bots[i]->getStatus() != EntityStatus::DEAD) {
+    //         draw_sprite(bots[i]->getSprite(), 16, 16, bots[i]->getX(), bots[i]->getY());
+    //     }
+    // }
 
     if (player1->getStatus() != EntityStatus::DEAD) {
         draw_sprite(player1->getSprite(), 16, 16, player1->getX(), player1->getY());
