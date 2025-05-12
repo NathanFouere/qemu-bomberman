@@ -39,7 +39,6 @@ private:
     unsigned long lastChangeTime = 0;  // Last time direction was changed
     unsigned long lastMoveTime = 0;    // Last time bot moved
     int directionIndex = -1;           // Current direction
-    
     void setSprites(EnemyType type) {
         switch (type) {
             case EnemyType::TYPE1:

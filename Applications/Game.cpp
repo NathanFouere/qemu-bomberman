@@ -109,9 +109,13 @@ void Game::checkGameConditions() {
     }
 
     this->checkHitBomb(player1);
+    if(multiplayerMode) {
+        this->checkHitBomb(player2);
+    }
     
     bool allBotsDead = true;
     for (int i = 0; i < MAX_BOTS; ++i) {
+        this->checkHitBomb(bots[i]);
         if (bots[i] && bots[i]->getStatus() != EntityStatus::DEAD) {
             allBotsDead = false;
             break;
