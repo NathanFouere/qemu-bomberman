@@ -11,6 +11,8 @@
 
 #include <sextant/ordonnancements/preemptif/thread.h>
 #include <sextant/types.h>
+#include <drivers/timer.h>
+
 
 class Threads {
 	struct thread *maThread;
@@ -25,6 +27,14 @@ protected:
 	 void Exit(){
 		 thread_exit();
 	 };
+
+	void sleep(int milliseconds) {
+    Timer& timer = Timer::getInstance();
+    unsigned long start = timer.getTicks(); // Get the current time in ticks
+    while (timer.getTicks() - start < milliseconds) {
+        Yield();
+    }
+};
 
 public :
 

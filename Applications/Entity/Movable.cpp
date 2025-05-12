@@ -25,7 +25,6 @@ void Movable::move(const Board& board, int dx, int dy) {
         }
         
         for (int offset = 1; offset <= maxSlide; ++offset) {
-            // try up
             if (clearAtY(y - offset)
              && !board.isBlockedAt(x, y - offset)
              && !board.isBlockedAt(x + w - 1, y - offset + h - 1)) {
@@ -72,5 +71,3 @@ void Movable::move(const Board& board, int dx, int dy) {
         }
     }
 }
-
-
