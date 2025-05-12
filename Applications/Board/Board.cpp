@@ -24,7 +24,7 @@ Board::Board(int w, int h) : width(w), height(h) {
                 chosenTile = new EmptyTile();
             }
             else {
-                if (pseudoRand() % 100 < 50) {
+                if (pseudoRand() % 100 < 33) {
                     chosenTile = new Brick();
                 } else {
                     chosenTile = new EmptyTile();

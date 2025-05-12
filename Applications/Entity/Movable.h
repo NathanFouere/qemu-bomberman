@@ -27,5 +27,6 @@ public:
     int getY() const { return y; }
     EntityStatus getStatus() const { return status; }
     void setStatus(EntityStatus newStatus) { status = newStatus; }
+    void render();
 };
 #endif

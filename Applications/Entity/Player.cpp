@@ -2,47 +2,81 @@
 #include "../Board/Board.h"
 #include "drivers/Clavier.h"
 #include <Applications/Board/Bomb.h>
-
+#include <drivers/timer.h>
 
 void Player::movePlayer() {
+    // Don't process input if player is not active
+    if (!active || status == EntityStatus::DEAD) {
+        return;
+    }
+    
+    // Rate-limit movement to prevent too rapid movement
+    unsigned long currentTime = Timer::getInstance().getTicks();
+    if (currentTime - lastMoveTime < moveDelay) {
+        return;
+    }
+    
     if (clavier->testChar()) {
         char c = clavier->getchar();
-        animationFrame++;
+        
         if (c == 'd') {
             direction = RIGHT;
-            move(*board, 1, 0);
+            move(*board, 3, 0);
+            animationFrame = (animationFrame + 1) % 3;
+            lastMoveTime = currentTime;
         }
-        if (c == 'q') {
+        else if (c == 'q') {
             direction = LEFT;
-            move(*board, -1, 0);
+            move(*board, -3, 0);
+            animationFrame = (animationFrame + 1) % 3;
+            lastMoveTime = currentTime;
         }
-        if (c == 's') {
+        else if (c == 's') {
             direction = DOWN;
-            move(*board, 0, 1);
+            move(*board, 0, 3);
+            animationFrame = (animationFrame + 1) % 3;
+            lastMoveTime = currentTime;
         }
-        if (c == 'z') {
+        else if (c == 'z') {
             direction = UP;
-            move(*board, 0, -1);
+            move(*board, 0, -3);
+            animationFrame = (animationFrame + 1) % 3;
+            lastMoveTime = currentTime;
         }
-        if(c == 'n') {
+        else if(c == 'n') {
             this->poseBomb();
+            lastMoveTime = currentTime;
         }
     }
 }
 
 void Player::run() {
     while (true) {
-        movePlayer();
-        animationFrame++;
+        if (active) {
+            movePlayer();
+        }
+        
+        // Sleep for a short time to avoid consuming too much CPU
+        sleep(10);
+        
+        // Yield to other threads
         Yield();
     }
 }
 
 void Player::render() {
+    if (status != EntityStatus::DEAD) {
+        draw_sprite(this->getSprite(), 16, 16, this->getX(), this->getY());
+    }
 }
 
 void Player::poseBomb() {
-    Bomb* bombe = new Bomb(board, x ,y);
+    // Don't allow placing bombs if player is dead
+    if (status == EntityStatus::DEAD) {
+        return;
+    }
+    
+    Bomb* bombe = new Bomb(board, x, y);
 }
 
 
