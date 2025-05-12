@@ -1,25 +1,14 @@
 #include "Bomb.h"
 #include "EmptyTile.h"
+#include "Explosion.h"
+#include "Tile.h"
 
-Bomb::Bomb(Board* board, int x, int y) : Tile() {
+Bomb::Bomb(Board* board, int x, int y) {
     apparitionSecond = Timer::getInstance().getSeconds();
     animationFrame = 0;
     sprites[0] = bomb_1;
     sprites[1] = bomb_2;
     sprites[2] = bomb3;
-    // TODO => il faudra fixer pour que ça apparaisse autour du joueur là c'est pas censé marcher comme ça
-    explosionSprites[0] = exp_start_1;
-    explosionSprites[1] = exp_start_2;
-    explosionSprites[2] = exp_start_3;
-    explosionSprites[3] = exp_start_4;
-    explosionSprites[4] = exp_mid_1;
-    explosionSprites[5] = exp_mid_2;
-    explosionSprites[6] = exp_mid_3;
-    explosionSprites[7] = exp_mid_4;
-    explosionSprites[8] = exp_end_1;
-    explosionSprites[9] = exp_end_2;
-    explosionSprites[10] = exp_end_3;
-    explosionSprites[11] = exp_end_4;
     this->board = board;
     this->board->setTileAt(x, y, this);
     this->exploded = false;
@@ -28,34 +17,110 @@ Bomb::Bomb(Board* board, int x, int y) : Tile() {
 }
 
 void Bomb::render(int x, int y) {      
-    exploded = (Timer::getInstance().getSeconds() - this->apparitionSecond >= 3);  
-    // TODO => il faudra supprimer la bombe quand elle aura exploser
-    if (exploded)
-    {
-        this->handleExplosion();
-        draw_sprite(explosionSprites[animationFrame % 12], 16, 16, x * 16 - 8, y * 16 + 24);
-
-        bool erase = (Timer::getInstance().getSeconds() - this->apparitionSecond >= 5);
-        if (erase) {
-            this->board->setTileAt(x, y, new EmptyTile());
-        }
-    }else {
+    if (Timer::getInstance().getSeconds() - apparitionSecond > 3) {
+        exploded = true;
+        handleExplosion();
+    } else {
         draw_sprite(sprites[animationFrame % 3], 16, 16, x * 16 - 8, y * 16 + 24);
     }
     animationFrame++;
 }
 
 void Bomb::handleExplosion() {
+    // supprime la tuile actuelle
+    board->deleteTileAt(x, y);
+    board->setTileAt(x, y, new Explosion(board, x, y, ExplosionState::CENTER));
 
     // supprime à gauche
-    this->board->deleteTileAt(x-1, y);
+    for (int i = 1; i <= power; ++i) {
+        if (i < power)
+        {
+            // type = board->getTile(x-TILE_SIZE * i, y)->getType();
+            // if (type == TILE_BRICK || type == TILE_BOMB) {
+            //     board->deleteTileAt(x-TILE_SIZE * i, y);
+            //     board->setTileAt(x-TILE_SIZE * i, y, new EmptyTile());
+            // } 
+            // else if (type == TILE_EMPTY) {
+            //     board->deleteTileAt(x-TILE_SIZE * i, y);
+            //     board->setTileAt(x-TILE_SIZE * i, y, new Explosion(board, x-TILE_SIZE * i, y, ExplosionState::LEFT));
+            // }
 
-        // supprime à droite (marche pas)
-    this->board->deleteTileAt(x+1, y);
+            // // supprime à droite
+            // type = board->getTile(x+TILE_SIZE * i, y)->getType();
+            // if (type == TILE_BRICK || type == TILE_BOMB) {
+            //     board->deleteTileAt(x+TILE_SIZE * i, y);
+            //     board->setTileAt(x+TILE_SIZE * i, y, new EmptyTile());
+            // } 
+            // else if (type == TILE_EMPTY) {
+            //     board->deleteTileAt(x+TILE_SIZE *i, y);
+            //     board->setTileAt(x+TILE_SIZE *i, y, new Explosion(board, x+TILE_SIZE *i, y, ExplosionState::RIGHT));
+            // }
 
-    // supprime en haut (marche)
-    this->board->deleteTileAt(x, y+1);
+            // // supprime en haut
+            // type = board->getTile(x, y-TILE_SIZE * i)->getType();
+            // if (type == TILE_BRICK || type == TILE_BOMB) {
+            //     board->deleteTileAt(x, y-TILE_SIZE * i);
+            //     board->setTileAt(x, y-TILE_SIZE * i, new EmptyTile());
+            // } 
+            // else if (type == TILE_EMPTY) {
+            //     board->deleteTileAt(x, y-TILE_SIZE * i);
+            //     board->setTileAt(x, y-TILE_SIZE *i, new Explosion(board, x, y-TILE_SIZE *i, ExplosionState::UP));
+            // }
+            
+            // // supprime en dessous
+            // type = board->getTile(x, y+TILE_SIZE * i)->getType();
+            // if (type == TILE_BRICK || type == TILE_BOMB) {
+            //     board->deleteTileAt(x, y+TILE_SIZE * i);
+            //     board->setTileAt(x, y+TILE_SIZE * i, new EmptyTile());
+            // } 
+            // else if (type == TILE_EMPTY) {
+            //     board->deleteTileAt(x, y+TILE_SIZE);
+            //     board->setTileAt(x, y+TILE_SIZE, new Explosion(board, x, y+TILE_SIZE * i, ExplosionState::DOWN));
+            // }
+        } 
+        else if (i == power) {
+            // supprime à gauche
+            // if (board->getTile(x, y-TILE_SIZE)->getType() == TILE_EMPTY) {
+                
+            // }
+            // if (type == TILE_BRICK || type == TILE_BOMB) {
+            //     board->deleteTileAt(x-TILE_SIZE * i, y);
+            //     board->setTileAt(x-TILE_SIZE * i, y, new EmptyTile());
+            // } else if (type == TILE_EMPTY) {
+            //     board->deleteTileAt(x-TILE_SIZE * i, y);
+            //     board->setTileAt(x-TILE_SIZE * i, y, new Explosion(board, x-TILE_SIZE * i, y, ExplosionState::LEFT_END));
+            // }
 
-    // supprime en dessous (marche pas)
-    this->board->deleteTileAt(x, y-1);
+            // supprime à droite
+            // type = board->getTile(x+TILE_SIZE * i, y)->getType();
+            // if (type == TILE_BRICK || type == TILE_BOMB) {
+            //     board->deleteTileAt(x+TILE_SIZE * i, y);
+            //     board->setTileAt(x+TILE_SIZE * i, y, new EmptyTile());
+            // } else if (type == TILE_EMPTY) {
+            //     board->deleteTileAt(x+TILE_SIZE * i, y);
+            //     board->setTileAt(x+TILE_SIZE * i, y, new Explosion(board, x+TILE_SIZE * i, y, ExplosionState::RIGHT_END));
+            // }
+
+            // // supprime en haut
+            // type = board->getTile(x, y-TILE_SIZE * i)->getType();
+            // if (type == TILE_BRICK || type == TILE_BOMB) {
+            //     board->deleteTileAt(x, y-TILE_SIZE * i);
+            //     board->setTileAt(x, y-TILE_SIZE * i, new EmptyTile());
+            // } else if (type == TILE_EMPTY) {
+            //     board->deleteTileAt(x, y-TILE_SIZE * i);
+            //     board->setTileAt(x, y-TILE_SIZE * i, new Explosion(board, x, y-TILE_SIZE * i, ExplosionState::UP_END));
+            // }
+            
+            // // supprime en dessous
+            // type = board->getTile(x, y+TILE_SIZE * i)->getType();
+            // if (type == TILE_BRICK || type == TILE_BOMB) {
+            //     board->deleteTileAt(x, y+TILE_SIZE * i);
+            //     board->setTileAt(x, y+TILE_SIZE * i, new EmptyTile());
+            // } else if (type == TILE_EMPTY) {
+            //     board->deleteTileAt(x, y+TILE_SIZE * i);
+            //     board->
+            //     setTileAt(x, y+TILE_SIZE * i, new Explosion(board, x, y+TILE_SIZE * i, ExplosionState::DOWN_END));
+            // }
+        }
+    }
 }

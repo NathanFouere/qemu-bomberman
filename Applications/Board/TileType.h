@@ -4,5 +4,6 @@ enum TileType {
     TILE_EMPTY,
     TILE_WALL,
     TILE_BRICK,
-    TILE_BOMB
+    TILE_BOMB,
+    TILE_EXPLOSION,
 };

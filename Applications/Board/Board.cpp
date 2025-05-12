@@ -94,10 +94,10 @@ void Board::deleteTileAt(int px, int py) {
         return; 
     }
 
-    // if (layout[ty][tx]->getType() != TILE_BRICK) {
-    //     return;
-    // }
-
-    delete layout[ty][tx];
-    layout[ty][tx] = new EmptyTile();
+    TileType type = layout[ty][tx]->getType();
+    if (type == TILE_BRICK || type == TILE_BOMB) {
+        if (layout[ty][tx]) {
+            delete layout[ty][tx];
+        }
+    }
 }

@@ -11,7 +11,7 @@ Game::Game(Clavier* k) :clavier(k), player1(nullptr), player2(nullptr), board(nu
 
 void Game::init() {
     set_vga_mode13();
-    clear_vga_screen(228);
+    clear_vga_screen(16);
     set_palette_vga(palette_vga);
 
     // TODO adjust spawn positions

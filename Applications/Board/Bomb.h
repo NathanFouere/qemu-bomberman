@@ -15,6 +15,7 @@ class Bomb : public Tile {
         bool exploded;
         int x;
         int y;
+        int power = 1;
     public:
         Bomb(Board* board, int x, int y);
 

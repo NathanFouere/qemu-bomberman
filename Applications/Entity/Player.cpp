@@ -42,7 +42,7 @@ void Player::render() {
 }
 
 void Player::poseBomb() {
-    Bomb* bombe = new Bomb(board, x ,y);
+    Bomb* bombe = new Bomb(board, x+8 ,y+8);
 }
 
 
