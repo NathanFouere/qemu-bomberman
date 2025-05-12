@@ -107,6 +107,8 @@ void Game::checkGameConditions() {
             return;
         }
     }
+
+    this->checkHitBomb(player1);
     
     bool allBotsDead = true;
     for (int i = 0; i < MAX_BOTS; ++i) {
@@ -290,4 +292,11 @@ void Game::win() {
 void Game::restart() {
     state = GameState::INITIALIZED;
     init();
+}
+
+void Game::checkHitBomb(Movable* movable) {
+    TileType tileType = this->board->getTileTypeAt(movable->getX(), movable->getY());
+    if (tileType == TILE_BOMB_EXPLODED) {
+        movable->handleHitBomb();
+    }
 }

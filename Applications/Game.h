@@ -67,4 +67,5 @@ private:
     
     void waitForNextFrame(unsigned long frameStart);
     void checkGameConditions();
+    void checkHitBomb(Movable* bot);
 };

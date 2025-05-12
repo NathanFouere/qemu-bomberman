@@ -36,6 +36,13 @@ class Player: public Threads, public Movable {
                 sprites[RIGHT][0] = player1_right_1;
                 sprites[RIGHT][1] = player1_right_2;
                 sprites[RIGHT][2] = player1_right_3;
+
+                deathSprites[0] = player1_death_1;
+                deathSprites[1] = player1_death_2;
+                deathSprites[2] = player1_death_3;
+                deathSprites[3] = player1_death_4;
+                deathSprites[4] = player1_death_5;
+                // Si le temps, gérer les autres sprites de morts
             } else
             {
             }

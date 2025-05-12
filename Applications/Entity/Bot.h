@@ -58,6 +58,12 @@ private:
                 sprites[RIGHT][0] = enemy1_right_1;
                 sprites[RIGHT][1] = enemy1_right_2;
                 sprites[RIGHT][2] = enemy1_right_3;
+
+                deathSprites[0] = enemy1_death_1;
+                deathSprites[1] = enemy1_death_2;
+                deathSprites[2] = enemy1_death_3;
+                deathSprites[3] = enemy1_death_4;
+                deathSprites[4] = enemy1_death_5;
                 break;
 
             case EnemyType::TYPE2:
@@ -76,6 +82,11 @@ private:
                 sprites[RIGHT][0] = enemy2_right_1;
                 sprites[RIGHT][1] = enemy2_right_2;
                 sprites[RIGHT][2] = enemy2_right_3;
+                deathSprites[0] = enemy2_death_1;
+                deathSprites[1] = enemy2_death_2;
+                deathSprites[2] = enemy2_death_3;
+                deathSprites[3] = enemy2_death_4;
+                deathSprites[4] = enemy2_death_5;
                 break;
 
             case EnemyType::TYPE3:
@@ -94,6 +105,12 @@ private:
                 sprites[RIGHT][0] = enemy3_right_1;
                 sprites[RIGHT][1] = enemy3_right_2;
                 sprites[RIGHT][2] = enemy3_right_3;
+
+                deathSprites[0] = enemy3_death_1;
+                deathSprites[1] = enemy3_death_2;
+                deathSprites[2] = enemy3_death_3;
+                deathSprites[3] = enemy3_death_4;
+                deathSprites[4] = enemy3_death_5;
                 break;
 
             case EnemyType::TYPE4:
@@ -112,6 +129,12 @@ private:
                 sprites[RIGHT][0] = enemy4_right_1;
                 sprites[RIGHT][1] = enemy4_right_2;
                 sprites[RIGHT][2] = enemy4_right_3;
+
+                deathSprites[0] = enemy4_death_1;
+                deathSprites[1] = enemy4_death_1;
+                deathSprites[2] = enemy4_death_1;
+                deathSprites[3] = enemy4_death_1;
+                deathSprites[4] = enemy4_death_1;
                 break;
 
             case EnemyType::TYPE5:
@@ -129,7 +152,13 @@ private:
 
                 sprites[RIGHT][0] = enemy5_right_1;
                 sprites[RIGHT][1] = enemy5_right_2;
-                sprites[RIGHT][2] = enemy5_right_1;
+                sprites[RIGHT][2] = enemy5_right_3;
+
+                deathSprites[0] = enemy5_death_1;
+                deathSprites[1] = enemy5_death_2;
+                deathSprites[2] = enemy5_death_3;
+                deathSprites[3] = enemy5_death_4;
+                deathSprites[4] = enemy5_death_5;
                 break;
         }
     }

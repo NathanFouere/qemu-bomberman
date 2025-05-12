@@ -101,3 +101,12 @@ void Board::deleteTileAt(int px, int py) {
     delete layout[ty][tx];
     layout[ty][tx] = new EmptyTile();
 }
+
+TileType Board::getTileTypeAt(int x, int y) {
+    int localX = x - BOARD_ORIGIN_X;
+    int localY = y - BOARD_ORIGIN_Y;
+    int tx = localX / TILE_SIZE;
+    int ty = localY / TILE_SIZE;
+
+    return layout[ty][tx]->getType();
+}

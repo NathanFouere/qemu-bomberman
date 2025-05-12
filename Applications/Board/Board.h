@@ -20,6 +20,7 @@ public:
     bool isBlockedAt(int px, int py) const;
 
     void draw();
+    TileType getTileTypeAt(int x, int y);
 
 private:
     int width;

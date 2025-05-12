@@ -48,14 +48,14 @@ void Bomb::render(int x, int y) {
 void Bomb::handleExplosion() {
 
     // supprime à gauche
-    this->board->deleteTileAt(x-1, y);
+    this->board->deleteTileAt(x - TILE_SIZE, y);
 
         // supprime à droite (marche pas)
-    this->board->deleteTileAt(x+1, y);
+    this->board->deleteTileAt(x + TILE_SIZE, y);
 
     // supprime en haut (marche)
-    this->board->deleteTileAt(x, y+1);
+    this->board->deleteTileAt(x, y+TILE_SIZE);
 
     // supprime en dessous (marche pas)
-    this->board->deleteTileAt(x, y-1);
+    this->board->deleteTileAt(x, y-TILE_SIZE);
 }

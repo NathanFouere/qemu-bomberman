@@ -6,13 +6,14 @@
 enum class EntityStatus {
     ALIVE,
     DEAD,
-    DEAD_ANIMATION
+    DEAD_ANIMATION // TODO => pas sur qu'on garde ce statut
 };
 
 class Movable  {
 protected:
     int x, y;
     const unsigned char* sprites[4][3];
+    const unsigned char* deathSprites[5];
     int animationFrame;
     Direction direction;
     EntityStatus status;
@@ -27,6 +28,7 @@ public:
     int getY() const { return y; }
     EntityStatus getStatus() const { return status; }
     void setStatus(EntityStatus newStatus) { status = newStatus; }
+    void handleHitBomb();
     void render();
 };
 #endif

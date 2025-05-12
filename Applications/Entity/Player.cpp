@@ -78,5 +78,3 @@ void Player::poseBomb() {
     
     Bomb* bombe = new Bomb(board, x, y);
 }
-
-
