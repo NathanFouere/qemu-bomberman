@@ -16,8 +16,9 @@ public:
 
     void setTileAt(int px, int py, Tile* tile);
     void deleteTileAt(int px, int py);
-    void bombExploded(int x, int y, int power);
+    void bombExploded(int px, int py, int power);
     bool isBlockedAt(int px, int py) const;
+    void updateExplosion();
 
     void draw();
 

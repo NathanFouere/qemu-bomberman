@@ -58,6 +58,7 @@ void Game::init() {
 }
 
 void Game::update() {
+    board->updateExplosion();
     thread_yield();
 }
 

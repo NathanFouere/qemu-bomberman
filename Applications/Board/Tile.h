@@ -13,5 +13,11 @@ public:
     virtual ~Tile() {}
     virtual TileType getType() const = 0; 
     virtual void render(int x, int y) = 0;
-    const unsigned char* sprites[4]; 
+    const unsigned char* sprites[4];
+    int getAnimationFrame() const {
+        return animationFrame;
+    }
+    
+private:
+    int animationFrame = 0;
 };

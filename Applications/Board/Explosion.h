@@ -19,20 +19,13 @@ class Explosion : public Tile {
         ExplosionState state;
 
     public:
-        Explosion(Board* board, int x, int y) : Tile() {
-            this->board = board;
-            this->x = x;
-            this->y = y;
-            this->state = state;
-            animationFrame = 0;
-        }
+        Explosion(Board* board, int x, int y) : Tile() {}
 
         Explosion(Board* board, int x, int y, ExplosionState state) : Tile() {
             this->board = board;
             this->x = x;
             this->y = y;
             this->state = state;
-            animationFrame = 0;
             setCorrectSprites();
         }
 
@@ -142,15 +135,7 @@ class Explosion : public Tile {
         }
 
         void render(int renderX, int renderY) override {
-            if (animationFrame < 8) {
-                draw_sprite(explosionSprites[animationFrame % 8], 16, 16, renderX * 16 - 8, renderY * 16 + 24);
-            }
+            draw_sprite(explosionSprites[animationFrame % 8], 16, 16, renderX * 16 - 8, renderY * 16 + 24);
             animationFrame++;
-            if (animationFrame >= 8) {
-                draw_number(x, 68, 9, 15);
-                draw_number(y, 88, 9, 15);
-                // board->deleteTileAt(x - TILE_SIZE, y - TILE_SIZE);
-                // board->setTileAt(x - TILE_SIZE, y - TILE_SIZE, new EmptyTile());
-            }
         }
     };

@@ -38,6 +38,7 @@ Board::Board(int w, int h) : width(w), height(h) {
         }
     }
 }
+
 void Board::setTileAt(int px, int py, Tile* tile) {
     int localX = px - BOARD_ORIGIN_X;
     int localY = py - BOARD_ORIGIN_Y;
@@ -64,7 +65,8 @@ bool Board::isBlockedAt(int px, int py) const {
     if (tx < 0 || ty < 0 || tx >= width || ty >= height)
         return true;
 
-    return layout[ty][tx]->getType() != TILE_EMPTY;
+    return layout[ty][tx]->getType() != TILE_EMPTY &&
+           layout[ty][tx]->getType() != TILE_EXPLOSION;
 }
 
 Board::~Board() {
@@ -91,14 +93,24 @@ void Board::deleteTileAt(int px, int py) {
     int tx = localX / TILE_SIZE;
     int ty = localY / TILE_SIZE;
 
-    if (tx < 0 || ty < 0 || tx >= width || ty >= height) {
-        return; 
-    }
+    // if (tx < 0 || ty < 0 || tx >= width || ty >= height) {
+    //     return; 
+    // }
 
     TileType type = layout[ty][tx]->getType();
-    if (type == TILE_BRICK || type == TILE_BOMB) {
+    if (type == TILE_BRICK || type == TILE_BOMB || type == TILE_EXPLOSION) {
         if (layout[ty][tx]) {
             delete layout[ty][tx];
+        }
+    }
+}
+
+void Board::updateExplosion() {
+    for (int y = 0; y < height; ++y) {
+        for (int x = 0; x < width; ++x) {
+            if (layout[y][x]->getType() == TILE_EXPLOSION && layout[y][x]->getAnimationFrame() == 7) {
+                layout[y][x] = new EmptyTile();
+            }
         }
     }
 }
@@ -165,10 +177,8 @@ void Board::bombExploded(int x, int y, int power) {
         if (i == power) {
             // supprime à gauche
             if (layout[ty][tx-1 * i]->getType() == TILE_BRICK || layout[ty][tx-1 * i]->getType() == TILE_BOMB) {
-                deleteTileAt(x-TILE_SIZE * i, y);
                 setTileAt(x-TILE_SIZE * i, y, new EmptyTile());
             } else if (layout[ty][tx-1 * i]->getType() == TILE_EMPTY) {
-                deleteTileAt(x-TILE_SIZE * i, y);
                 setTileAt(x-TILE_SIZE * i, y, new Explosion(this, x-TILE_SIZE * i, y, ExplosionState::EXPLOSION_LEFT_END));
             } else {
                 break;
@@ -205,4 +215,5 @@ void Board::bombExploded(int x, int y, int power) {
             // }
         }
     }
+
 }
