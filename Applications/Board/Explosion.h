@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Tile.h"
+#include "EmptyTile.h"
 #include <drivers/vga.h>
 #include <drivers/sprite.h>
 #include <drivers/timer.h>
@@ -41,7 +42,7 @@ class Explosion : public Tile {
 
         void setCorrectSprites() {
             switch (state) {
-                case ExplosionState::CENTER:
+                case ExplosionState::EXPLOSION_CENTER:
                     explosionSprites[0] = exp_start_1;
                     explosionSprites[1] = exp_start_2;
                     explosionSprites[2] = exp_start_3;
@@ -51,7 +52,7 @@ class Explosion : public Tile {
                     explosionSprites[6] = exp_start_2;
                     explosionSprites[7] = exp_start_1;
                     break;
-                case ExplosionState::UP:
+                case ExplosionState::EXPLOSION_UP:
                     explosionSprites[0] = exp_start_1;
                     explosionSprites[1] = exp_start_2;
                     explosionSprites[2] = exp_start_3;
@@ -61,7 +62,7 @@ class Explosion : public Tile {
                     explosionSprites[6] = exp_start_2;
                     explosionSprites[7] = exp_start_1;
                     break;
-                case ExplosionState::DOWN:
+                case ExplosionState::EXPLOSION_DOWN:
                     explosionSprites[0] = exp_start_1;
                     explosionSprites[1] = exp_start_2;
                     explosionSprites[2] = exp_start_3;
@@ -71,7 +72,7 @@ class Explosion : public Tile {
                     explosionSprites[6] = exp_start_2;
                     explosionSprites[7] = exp_start_1;
                     break;
-                case ExplosionState::LEFT:
+                case ExplosionState::EXPLOSION_LEFT:
                     explosionSprites[0] = exp_start_1;
                     explosionSprites[1] = exp_start_2;
                     explosionSprites[2] = exp_start_3;
@@ -81,7 +82,7 @@ class Explosion : public Tile {
                     explosionSprites[6] = exp_start_2;
                     explosionSprites[7] = exp_start_1;
                     break;
-                case ExplosionState::RIGHT:
+                case ExplosionState::EXPLOSION_RIGHT:
                     explosionSprites[0] = exp_start_1;
                     explosionSprites[1] = exp_start_2;
                     explosionSprites[2] = exp_start_3;
@@ -91,7 +92,7 @@ class Explosion : public Tile {
                     explosionSprites[6] = exp_start_2;
                     explosionSprites[7] = exp_start_1;
                     break;
-                case ExplosionState::UP_END:
+                case ExplosionState::EXPLOSION_UP_END:
                     explosionSprites[0] = exp_start_1;
                     explosionSprites[1] = exp_start_2;
                     explosionSprites[2] = exp_start_3;
@@ -101,7 +102,7 @@ class Explosion : public Tile {
                     explosionSprites[6] = exp_start_2;
                     explosionSprites[7] = exp_start_1;
                     break;
-                case ExplosionState::DOWN_END:
+                case ExplosionState::EXPLOSION_DOWN_END:
                     explosionSprites[0] = exp_start_1;
                     explosionSprites[1] = exp_start_2;
                     explosionSprites[2] = exp_start_3;
@@ -111,7 +112,7 @@ class Explosion : public Tile {
                     explosionSprites[6] = exp_start_2;
                     explosionSprites[7] = exp_start_1;
                     break;
-                case ExplosionState::LEFT_END:
+                case ExplosionState::EXPLOSION_LEFT_END:
                     explosionSprites[0] = exp_start_1;
                     explosionSprites[1] = exp_start_2;
                     explosionSprites[2] = exp_start_3;
@@ -121,7 +122,7 @@ class Explosion : public Tile {
                     explosionSprites[6] = exp_start_2;
                     explosionSprites[7] = exp_start_1;
                     break;
-                case ExplosionState::RIGHT_END:
+                case ExplosionState::EXPLOSION_RIGHT_END:
                     explosionSprites[0] = exp_start_1;
                     explosionSprites[1] = exp_start_2;
                     explosionSprites[2] = exp_start_3;
@@ -140,14 +141,16 @@ class Explosion : public Tile {
             return state;
         }
 
-        void render(int x, int y) override {
+        void render(int renderX, int renderY) override {
             if (animationFrame < 8) {
-                draw_sprite(explosionSprites[animationFrame % 8], 16, 16, x * 16 - 8, y * 16 + 24);
+                draw_sprite(explosionSprites[animationFrame % 8], 16, 16, renderX * 16 - 8, renderY * 16 + 24);
             }
             animationFrame++;
             if (animationFrame >= 8) {
-                board->deleteTileAt(x, y);
-                board->setTileAt(x, y, new EmptyTile());
+                draw_number(x, 68, 9, 15);
+                draw_number(y, 88, 9, 15);
+                // board->deleteTileAt(x - TILE_SIZE, y - TILE_SIZE);
+                // board->setTileAt(x - TILE_SIZE, y - TILE_SIZE, new EmptyTile());
             }
         }
     };

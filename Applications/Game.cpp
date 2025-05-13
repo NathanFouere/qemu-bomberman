@@ -67,7 +67,7 @@ void Game::render() {
 
     plot_rectangle(0, 0, 24, 320, 5);
     draw_text("TIME", 4, 9, 15);
-    draw_number(timeRemaining, 68, 9, 15);
+    // draw_number(timeRemaining, 68, 9, 15);
 
     // TODO get score + lives from player
     if (multiplayerMode){

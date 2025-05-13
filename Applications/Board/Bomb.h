@@ -5,6 +5,7 @@
 #include <drivers/sprite.h>
 #include <drivers/timer.h>
 #include "Board.h"
+#include "Explosion.h"
 
 class Bomb : public Tile {
     private:
@@ -16,6 +17,8 @@ class Bomb : public Tile {
         int x;
         int y;
         int power = 1;
+
+        void processExplosionDirection(int dx, int dy, ExplosionState midState, ExplosionState endState);
     public:
         Bomb(Board* board, int x, int y);
 

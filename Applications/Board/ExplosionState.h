@@ -1,13 +1,13 @@
 #pragma once
 
 enum ExplosionState {
-    CENTER,
-    UP,
-    DOWN,
-    LEFT,
-    RIGHT,
-    UP_END,
-    DOWN_END,
-    LEFT_END,
-    RIGHT_END,
+    EXPLOSION_CENTER,
+    EXPLOSION_UP,
+    EXPLOSION_DOWN,
+    EXPLOSION_LEFT,
+    EXPLOSION_RIGHT,
+    EXPLOSION_UP_END,
+    EXPLOSION_DOWN_END,
+    EXPLOSION_LEFT_END,
+    EXPLOSION_RIGHT_END,
 };
