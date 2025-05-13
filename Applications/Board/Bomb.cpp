@@ -6,6 +6,7 @@
 Bomb::Bomb(Board* board, int x, int y) {
     apparitionSecond = Timer::getInstance().getSeconds();
     animationFrame = 0;
+    lastAnimTick = Timer::getInstance().getTicks();
     sprites[0] = bomb_1;
     sprites[1] = bomb_2;
     sprites[2] = bomb3;
@@ -23,7 +24,11 @@ void Bomb::render(int x, int y) {
     } else {
         draw_sprite(sprites[animationFrame % 3], 16, 16, x * 16 - 8, y * 16 + 24);
     }
-    animationFrame++;
+    unsigned int currentTicks = Timer::getInstance().getTicks();
+    if (currentTicks - lastAnimTick >= 30) {
+        animationFrame = (animationFrame + 1) % 3;
+        lastAnimTick = currentTicks;
+    }
 }
 
 void Bomb::handleExplosion() {

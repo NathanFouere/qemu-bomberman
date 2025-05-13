@@ -3,6 +3,7 @@
 #include <drivers/sprite.h>
 #include <sextant/memoire/Memoire.h>
 #include "TileType.h"
+#include "drivers/timer.h"
 
 static constexpr int TILE_SIZE = 16;
 static constexpr int BOARD_ORIGIN_X = -8;
@@ -14,10 +15,10 @@ public:
     virtual TileType getType() const = 0; 
     virtual void render(int x, int y) = 0;
     const unsigned char* sprites[4];
-    int getAnimationFrame() const {
-        return animationFrame;
+    int getTime() const {
+        return time;
     }
-    
+
 private:
-    int animationFrame = 0;
+    int time = Timer::getInstance().getSeconds();
 };

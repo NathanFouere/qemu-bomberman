@@ -17,6 +17,7 @@ class Bomb : public Tile {
         int x;
         int y;
         int power = 1;
+        unsigned int lastAnimTick = 0;
 
         void processExplosionDirection(int dx, int dy, ExplosionState midState, ExplosionState endState);
     public:

@@ -65,8 +65,7 @@ bool Board::isBlockedAt(int px, int py) const {
     if (tx < 0 || ty < 0 || tx >= width || ty >= height)
         return true;
 
-    return layout[ty][tx]->getType() != TILE_EMPTY &&
-           layout[ty][tx]->getType() != TILE_EXPLOSION;
+    return layout[ty][tx]->getType() != TILE_EMPTY;
 }
 
 Board::~Board() {
@@ -93,9 +92,9 @@ void Board::deleteTileAt(int px, int py) {
     int tx = localX / TILE_SIZE;
     int ty = localY / TILE_SIZE;
 
-    // if (tx < 0 || ty < 0 || tx >= width || ty >= height) {
-    //     return; 
-    // }
+    if (tx < 0 || ty < 0 || tx >= width || ty >= height) {
+        return; 
+    }
 
     TileType type = layout[ty][tx]->getType();
     if (type == TILE_BRICK || type == TILE_BOMB || type == TILE_EXPLOSION) {
@@ -108,7 +107,7 @@ void Board::deleteTileAt(int px, int py) {
 void Board::updateExplosion() {
     for (int y = 0; y < height; ++y) {
         for (int x = 0; x < width; ++x) {
-            if (layout[y][x]->getType() == TILE_EXPLOSION && layout[y][x]->getAnimationFrame() == 7) {
+            if (layout[y][x]->getType() == TILE_EXPLOSION) {
                 layout[y][x] = new EmptyTile();
             }
         }
@@ -180,8 +179,6 @@ void Board::bombExploded(int x, int y, int power) {
                 setTileAt(x-TILE_SIZE * i, y, new EmptyTile());
             } else if (layout[ty][tx-1 * i]->getType() == TILE_EMPTY) {
                 setTileAt(x-TILE_SIZE * i, y, new Explosion(this, x-TILE_SIZE * i, y, ExplosionState::EXPLOSION_LEFT_END));
-            } else {
-                break;
             }
 
             // // supprime à droite

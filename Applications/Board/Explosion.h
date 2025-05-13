@@ -10,7 +10,6 @@
 
 class Explosion : public Tile {
     private:
-        int apparitionSecond;
         int animationFrame;
         unsigned char* explosionSprites[8];
         Board* board;
@@ -136,6 +135,11 @@ class Explosion : public Tile {
 
         void render(int renderX, int renderY) override {
             draw_sprite(explosionSprites[animationFrame % 8], 16, 16, renderX * 16 - 8, renderY * 16 + 24);
-            animationFrame++;
+            if (16 == 0) {
+                animationFrame++;
+            }
+            if (animationFrame >= 8) {
+                board->setTileAt(x, y, new EmptyTile());
+            }
         }
     };
