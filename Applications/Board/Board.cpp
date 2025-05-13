@@ -49,9 +49,7 @@ void Board::setTileAt(int px, int py, Tile* tile) {
         return; 
     }
 
-    if (layout[ty][tx]) {
-        delete layout[ty][tx];
-    }
+    delete layout[ty][tx];
     layout[ty][tx] = tile;
 }
 
@@ -104,19 +102,8 @@ void Board::deleteTileAt(int px, int py) {
     }
 }
 
-void Board::updateExplosion() {
-    for (int y = 0; y < height; ++y) {
-        for (int x = 0; x < width; ++x) {
-            if (layout[y][x]->getType() == TILE_EXPLOSION) {
-                layout[y][x] = new EmptyTile();
-            }
-        }
-    }
-}
-
 void Board::bombExploded(int x, int y, int power) {
     // supprime la tuile actuelle
-    deleteTileAt(x, y);
     setTileAt(x, y, new Explosion(this, x, y, ExplosionState::EXPLOSION_CENTER));
 
     int localX = x - BOARD_ORIGIN_X;
@@ -124,92 +111,61 @@ void Board::bombExploded(int x, int y, int power) {
     int tx = localX / TILE_SIZE;
     int ty = localY / TILE_SIZE;
 
-    // supprime à gauche
     TileType type;
     for (int i = 1; i <= power; ++i) {
-        // if (i < power)
-        // {
-        //     type = layout[y][x-TILE_SIZE * i]->getType();
-        //     if (type == TILE_BRICK || type == TILE_BOMB) {
-        //         deleteTileAt(x-TILE_SIZE * i, y);
-        //         setTileAt(x-TILE_SIZE * i, y, new EmptyTile());
-        //     } 
-        //     else if (type == TILE_EMPTY) {
-        //         deleteTileAt(x-TILE_SIZE * i, y);
-        //         setTileAt(x-TILE_SIZE * i, y, new Explosion(this, x-TILE_SIZE * i, y, ExplosionState::LEFT));
-        //     }
-
-        //     // supprime à droite
-        //     type = layout[y][x+TILE_SIZE * i]->getType();
-        //     if (type == TILE_BRICK || type == TILE_BOMB) {
-        //         deleteTileAt(x+TILE_SIZE * i, y);
-        //         setTileAt(x+TILE_SIZE * i, y, new EmptyTile());
-        //     } 
-        //     else if (type == TILE_EMPTY) {
-        //         deleteTileAt(x+TILE_SIZE *i, y);
-        //         setTileAt(x+TILE_SIZE *i, y, new Explosion(this, x+TILE_SIZE *i, y, ExplosionState::RIGHT));
-        //     }
-
-        //     // supprime en haut
-        //     type = layout[y-TILE_SIZE * i][x]->getType();
-        //     if (type == TILE_BRICK || type == TILE_BOMB) {
-        //         deleteTileAt(x, y-TILE_SIZE * i);
-        //         setTileAt(x, y-TILE_SIZE * i, new EmptyTile());
-        //     } 
-        //     else if (type == TILE_EMPTY) {
-        //         deleteTileAt(x, y-TILE_SIZE * i);
-        //         setTileAt(x, y-TILE_SIZE *i, new Explosion(this, x, y-TILE_SIZE *i, ExplosionState::UP));
-        //     }
-            
-        //     // supprime en dessous
-        //     type = layout[y+TILE_SIZE * i][x]->getType();
-        //     if (type == TILE_BRICK || type == TILE_BOMB) {
-        //         deleteTileAt(x, y+TILE_SIZE * i);
-        //         setTileAt(x, y+TILE_SIZE * i, new EmptyTile());
-        //     } 
-        //     else if (type == TILE_EMPTY) {
-        //         deleteTileAt(x, y+TILE_SIZE);
-        //         setTileAt(x, y+TILE_SIZE, new Explosion(this, x, y+TILE_SIZE * i, ExplosionState::DOWN));
-        //     }
-        // } 
-        // else 
-        if (i == power) {
-            // supprime à gauche
-            if (layout[ty][tx-1 * i]->getType() == TILE_BRICK || layout[ty][tx-1 * i]->getType() == TILE_BOMB) {
-                setTileAt(x-TILE_SIZE * i, y, new EmptyTile());
-            } else if (layout[ty][tx-1 * i]->getType() == TILE_EMPTY) {
+        // supprime à gauche
+        if (layout[ty][tx-1 * i]->getType() == TILE_BRICK || layout[ty][tx-1 * i]->getType() == TILE_BOMB) {
+            setTileAt(x-TILE_SIZE * i, y, new EmptyTile());
+        } 
+        else if (layout[ty][tx-1 * i]->getType() == TILE_EMPTY) {
+            if (i == power) {
                 setTileAt(x-TILE_SIZE * i, y, new Explosion(this, x-TILE_SIZE * i, y, ExplosionState::EXPLOSION_LEFT_END));
+            } else
+            {
+                setTileAt(x-TILE_SIZE * i, y, new Explosion(this, x-TILE_SIZE * i, y, ExplosionState::EXPLOSION_LEFT));
             }
+        }
 
-            // // supprime à droite
-            // type = layout[y][x+TILE_SIZE * i]->getType();
-            // if (type == TILE_BRICK || type == TILE_BOMB) {
-            //     deleteTileAt(x+TILE_SIZE * i, y);
-            //     setTileAt(x+TILE_SIZE * i, y, new EmptyTile());
-            // } else if (type == TILE_EMPTY) {
-            //     deleteTileAt(x+TILE_SIZE * i, y);
-            //     setTileAt(x+TILE_SIZE * i, y, new Explosion(this, x+TILE_SIZE * i, y, ExplosionState::RIGHT_END));
-            // }
+        // supprime à droite
+        if (layout[ty][tx+1 * i]->getType() == TILE_BRICK || layout[ty][tx+1 * i]->getType() == TILE_BOMB) {
+            setTileAt(x+TILE_SIZE * i, y, new EmptyTile());
+        } 
+        else if (layout[ty][tx+1 * i]->getType() == TILE_EMPTY) {
+            // if i == power ExplosionState::EXPLOSION_RIGHT_END else ExplosionState::EXPLOSION_RIGHT
+            if (i == power) {
+                setTileAt(x+TILE_SIZE * i, y, new Explosion(this, x+TILE_SIZE * i, y, ExplosionState::EXPLOSION_RIGHT_END));
+            } else
+            {
+                setTileAt(x+TILE_SIZE * i, y, new Explosion(this, x+TILE_SIZE * i, y, ExplosionState::EXPLOSION_RIGHT));
+            }
+        }
 
-            // // supprime en haut
-            // type = layout[y-TILE_SIZE * i][x]->getType();
-            // if (type == TILE_BRICK || type == TILE_BOMB) {
-            //     deleteTileAt(x, y-TILE_SIZE * i);
-            //     setTileAt(x, y-TILE_SIZE * i, new EmptyTile());
-            // } else if (type == TILE_EMPTY) {
-            //     deleteTileAt(x, y-TILE_SIZE * i);
-            //     setTileAt(x, y-TILE_SIZE * i, new Explosion(this, x, y-TILE_SIZE * i, ExplosionState::UP_END));
-            // }
-            
-            // // supprime en dessous
-            // type = layout[y+TILE_SIZE * i][x]->getType();
-            // if (type == TILE_BRICK || type == TILE_BOMB) {
-            //     deleteTileAt(x, y+TILE_SIZE * i);
-            //     setTileAt(x, y+TILE_SIZE * i, new EmptyTile());
-            // } else if (type == TILE_EMPTY) {
-            //     deleteTileAt(x, y+TILE_SIZE * i);
-            //     setTileAt(x, y+TILE_SIZE * i, new Explosion(this, x, y+TILE_SIZE * i, ExplosionState::DOWN_END));
-            // }
+        // supprime en haut
+        if (layout[ty-1 * i][tx]->getType() == TILE_BRICK || layout[ty-1 * i][tx]->getType() == TILE_BOMB) {
+            setTileAt(x, y-TILE_SIZE * i, new EmptyTile());
+        } 
+        else if (layout[ty-1 * i][tx]->getType() == TILE_EMPTY) {
+            // if i == power ExplosionState::EXPLOSION_UP_END else ExplosionState::EXPLOSION_UP
+            if (i == power) {
+                setTileAt(x, y-TILE_SIZE * i, new Explosion(this, x, y-TILE_SIZE * i, ExplosionState::EXPLOSION_UP_END));
+            } else
+            {
+                setTileAt(x, y-TILE_SIZE * i, new Explosion(this, x, y-TILE_SIZE * i, ExplosionState::EXPLOSION_UP));
+            }
+        }
+
+        // supprime en dessous
+        if (layout[ty+1 * i][tx]->getType() == TILE_BRICK || layout[ty+1 * i][tx]->getType() == TILE_BOMB) {
+            setTileAt(x, y+TILE_SIZE * i, new EmptyTile());
+        } 
+        else if (layout[ty+1 * i][tx]->getType() == TILE_EMPTY) {
+            // if i == power ExplosionState::EXPLOSION_DOWN_END else ExplosionState::EXPLOSION_DOWN
+            if (i == power) {
+                setTileAt(x, y+TILE_SIZE * i, new Explosion(this, x, y+TILE_SIZE * i, ExplosionState::EXPLOSION_DOWN_END));
+            } else
+            {
+                setTileAt(x, y+TILE_SIZE * i, new Explosion(this, x, y+TILE_SIZE * i, ExplosionState::EXPLOSION_DOWN));
+            }
         }
     }
 

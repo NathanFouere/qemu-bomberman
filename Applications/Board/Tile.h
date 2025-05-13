@@ -15,10 +15,14 @@ public:
     virtual TileType getType() const = 0; 
     virtual void render(int x, int y) = 0;
     const unsigned char* sprites[4];
-    int getTime() const {
-        return time;
+    int getLastAnimTick() const {
+        return lastAnimTick;
+    }
+
+    void setLastAnimTick(int tick) {
+        lastAnimTick = tick;
     }
 
 private:
-    int time = Timer::getInstance().getSeconds();
+    int lastAnimTick = Timer::getInstance().getTicks();
 };

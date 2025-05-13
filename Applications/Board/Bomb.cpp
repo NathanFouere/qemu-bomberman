@@ -6,18 +6,16 @@
 Bomb::Bomb(Board* board, int x, int y) {
     apparitionSecond = Timer::getInstance().getSeconds();
     animationFrame = 0;
-    lastAnimTick = Timer::getInstance().getTicks();
     sprites[0] = bomb_1;
     sprites[1] = bomb_2;
     sprites[2] = bomb3;
     this->board = board;
-    this->board->setTileAt(x, y, this);
     this->exploded = false;
     this->x = x;
     this->y = y;
 }
 
-void Bomb::render(int x, int y) {      
+void Bomb::render(int x, int y) {
     if (Timer::getInstance().getSeconds() - apparitionSecond > 3) {
         exploded = true;
         handleExplosion();
@@ -25,9 +23,9 @@ void Bomb::render(int x, int y) {
         draw_sprite(sprites[animationFrame % 3], 16, 16, x * 16 - 8, y * 16 + 24);
     }
     unsigned int currentTicks = Timer::getInstance().getTicks();
-    if (currentTicks - lastAnimTick >= 30) {
-        animationFrame = (animationFrame + 1) % 3;
-        lastAnimTick = currentTicks;
+    if (currentTicks - lastAnimTick >= 150) {
+        animationFrame++;
+        setLastAnimTick(currentTicks);
     }
 }
 

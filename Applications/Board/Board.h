@@ -18,7 +18,6 @@ public:
     void deleteTileAt(int px, int py);
     void bombExploded(int px, int py, int power);
     bool isBlockedAt(int px, int py) const;
-    void updateExplosion();
 
     void draw();
 
