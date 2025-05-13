@@ -58,6 +58,16 @@ void Game::init() {
 }
 
 void Game::update() {
+
+    this->checkHitBomb(player1);
+
+    if (multiplayerMode){
+        this->checkHitBomb(player2);
+    }
+    
+    for (int i = 0; i < MAX_BOTS; ++i) {
+        this->checkHitBomb(bots[i]);
+    }
     thread_yield();
 }
 
@@ -133,5 +143,32 @@ void Game::run() {
         while (elapsed < targetFrameTime) {
             elapsed = Timer::getInstance().getTicks() - frameStart;
         }
+    }
+}
+
+void Game::checkHitBomb(Movable* movable) {
+    int x = movable->getX();
+    int y = movable->getY();
+
+    TileType tileType = this->board->getTileTypeAt(movable->getX(), movable->getY());
+    if (tileType == TILE_BOMB_EXPLODED) {
+        movable->handleHitBomb();
+    }
+
+    TileType tileType2 = this->board->getTileTypeAt(movable->getX() + TILE_SIZE -1, movable->getY());
+    if (tileType2 == TILE_BOMB_EXPLODED) {
+        movable->handleHitBomb();
+    }
+
+
+    TileType tileType3 = this->board->getTileTypeAt(movable->getX(), movable->getY() + TILE_SIZE-1);
+    if (tileType3 == TILE_BOMB_EXPLODED) {
+        movable->handleHitBomb();
+    }
+
+
+    TileType tileType4 = this->board->getTileTypeAt(movable->getX() + TILE_SIZE - 1, movable->getY() + TILE_SIZE - 1);
+    if (tileType4 == TILE_BOMB_EXPLODED) {
+        movable->handleHitBomb();
     }
 }

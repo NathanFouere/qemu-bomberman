@@ -95,7 +95,7 @@ void Board::deleteTileAt(int px, int py) {
     }
 
     TileType type = layout[ty][tx]->getType();
-    if (type == TILE_BRICK || type == TILE_BOMB || type == TILE_EXPLOSION) {
+    if (type == TILE_BRICK || type == TILE_BOMB_EXPLODING || type == TILE_BOMB_EXPLODED) {
         if (layout[ty][tx]) {
             delete layout[ty][tx];
         }
@@ -114,7 +114,7 @@ void Board::bombExploded(int x, int y, int power) {
     TileType type;
     for (int i = 1; i <= power; ++i) {
         // supprime à gauche
-        if (layout[ty][tx-1 * i]->getType() == TILE_BRICK || layout[ty][tx-1 * i]->getType() == TILE_BOMB) {
+        if (layout[ty][tx-1 * i]->getType() == TILE_BRICK || layout[ty][tx-1 * i]->getType() == TILE_BOMB_EXPLODING) {
             setTileAt(x-TILE_SIZE * i, y, new EmptyTile());
         }
         else if (layout[ty][tx-1 * i]->getType() == TILE_EMPTY) {
@@ -127,7 +127,7 @@ void Board::bombExploded(int x, int y, int power) {
         }
 
         // supprime à droite
-        if (layout[ty][tx+1 * i]->getType() == TILE_BRICK || layout[ty][tx+1 * i]->getType() == TILE_BOMB) {
+        if (layout[ty][tx+1 * i]->getType() == TILE_BRICK || layout[ty][tx+1 * i]->getType() == TILE_BOMB_EXPLODING) {
             setTileAt(x+TILE_SIZE * i, y, new EmptyTile());
         }
         else if (layout[ty][tx+1 * i]->getType() == TILE_EMPTY) {
@@ -141,7 +141,7 @@ void Board::bombExploded(int x, int y, int power) {
         }
 
         // supprime en haut
-        if (layout[ty-1 * i][tx]->getType() == TILE_BRICK || layout[ty-1 * i][tx]->getType() == TILE_BOMB) {
+        if (layout[ty-1 * i][tx]->getType() == TILE_BRICK || layout[ty-1 * i][tx]->getType() == TILE_BOMB_EXPLODING) {
             setTileAt(x, y-TILE_SIZE * i, new EmptyTile());
         }
         else if (layout[ty-1 * i][tx]->getType() == TILE_EMPTY) {
@@ -155,7 +155,7 @@ void Board::bombExploded(int x, int y, int power) {
         }
 
         // supprime en dessous
-        if (layout[ty+1 * i][tx]->getType() == TILE_BRICK || layout[ty+1 * i][tx]->getType() == TILE_BOMB) {
+        if (layout[ty+1 * i][tx]->getType() == TILE_BRICK || layout[ty+1 * i][tx]->getType() == TILE_BOMB_EXPLODING) {
             setTileAt(x, y+TILE_SIZE * i, new EmptyTile());
         }
         else if (layout[ty+1 * i][tx]->getType() == TILE_EMPTY) {
