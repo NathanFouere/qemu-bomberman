@@ -15,11 +15,36 @@ Game::Game(Clavier* k) :clavier(k), player1(nullptr), player2(nullptr), board(nu
 void Game::init() {
     set_vga_mode13();
     clear_vga_screen(228);
-    set_palette_vga(palette_vga);    
+    set_palette_vga(palette_vga);
     
-    // Display "STAGE 1" message
-    clear_frame_buffer(0); // Black background
-    draw_text("STAGE 1", 135, 100, 15); // Centered text
+    // Choose "MODE"
+    bool modeSelected = false;
+    while (!modeSelected) {
+
+        clear_frame_buffer(0); // Bl
+        draw_text("BOMBERMAN", 120, 60, 15);
+        draw_text("1. SOLO MODE", 100, 100, 15);
+        draw_text("2. MULTIPLAYER", 100, 120, 15);
+        draw_text("PRESS 1 OR 2 TO SELECT", 75, 160, 14);
+        copy_frame_buffer_to_video();
+        
+        while (!clavier->testChar()) {
+            thread_yield();
+        }
+        
+        char key = clavier->getchar();
+        if (key == '1') {
+            multiplayerMode = false;
+            modeSelected = true;
+        } else if (key == '2') {
+            multiplayerMode = true;
+            modeSelected = true;
+        }
+    }
+    
+    // Display "STAGE 1"
+    clear_frame_buffer(0);
+    draw_text("STAGE 1", 135, 100, 15);
     copy_frame_buffer_to_video();
     
     // Sleep for 2 seconds
@@ -28,9 +53,9 @@ void Game::init() {
     while (stageTimer.getTicks() - startStageTime < 2000) {
         thread_yield(); // Yield to other threads while waiting
     }
-    
     clear_vga_screen(228);
     
+    // Initialize game variables
     board = new Board(BOARD_WIDTH, BOARD_HEIGHT);
 
     player1 = new Player(8, 40, PlayerType::PLAYER1, clavier, board);
@@ -46,6 +71,8 @@ void Game::init() {
     
 	for (int i = 0; i < MAX_BOTS; i++) {
         constexpr int EnemyTypeCount = 5;
+
+        // Generate bot with random positions
         while (true) {
             int randX = pseudoRand() % (BOARD_WIDTH - 2) + 1;
             int randY = pseudoRand() % (BOARD_HEIGHT - 2) + 1;
@@ -72,17 +99,16 @@ void Game::init() {
 }
 
 void Game::update() {
-    // Check game win/lose conditions
+    // Check game win/lose 
+
     checkGameConditions();
     // thread_yield();
 
     for (int i = 0; i < 10; i++) {
         thread_yield();
-        
         // Small random delay between yields
         unsigned long startTime = Timer::getInstance().getTicks();
         unsigned long delayTime = (startTime % 5) + 1;  // 1-5ms variation
-        
         while (Timer::getInstance().getTicks() - startTime < delayTime) {
         }
     }
@@ -275,8 +301,8 @@ void Game::win() {
     state = GameState::WIN;
     
     // Display win screen
-    clear_frame_buffer(0); // Black background
-    draw_text("YOU WIN!", 130, 100, 15); // Centered text
+    clear_frame_buffer(0);
+    draw_text("YOU WIN!", 130, 100, 15);
     copy_frame_buffer_to_video();
     
     // Wait for a few seconds
