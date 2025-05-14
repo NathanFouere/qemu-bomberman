@@ -29,7 +29,7 @@ class Explosion : public Tile {
         }
 
         TileType getType() const override {
-            return TILE_BOMB_EXPLODING;
+            return TILE_EXPLOSION;
         }
 
         void setCorrectSprites() {
