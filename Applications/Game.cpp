@@ -14,13 +14,40 @@ void Game::init() {
     clear_vga_screen(16);
     set_palette_vga(palette_vga);
 
-    // TODO adjust spawn positions
-    
-    int boardWidth = 20;
-	int boardHeight = 11;
-	int botCount = 3;
+    bool modeSelected = false;
 
-    board = new Board(boardWidth, boardHeight);
+
+    while (!modeSelected) {
+        clear_frame_buffer(0);
+
+        draw_text("BOMBERMAN", 120, 60, 15);
+        draw_text("1. SOLO MODE", 100, 100, 15);
+        draw_text("2. MULTIPLAYER", 100, 120, 15);
+        draw_text("PRESS 1 OR 2 TO SELECT", 75, 160, 14);
+        copy_frame_buffer_to_video();
+        while (!clavier->testChar()) {
+            thread_yield();
+        }
+        char key = clavier->getchar();
+        if (key == '1') {
+            multiplayerMode = false;
+            modeSelected = true;
+        } else if (key == '2') {
+            multiplayerMode = true;
+            modeSelected = true;
+        }
+    }
+    // Display "STAGE 1"
+    clear_frame_buffer(0);
+    draw_text("STAGE 1", 135, 100, 15);
+    copy_frame_buffer_to_video();
+
+    unsigned int startStageTime = Timer::getInstance().getTicks();
+    while (Timer::getInstance().getTicks() - startStageTime < 2000) {
+        thread_yield();
+    }
+
+    board = new Board(BOARD_WIDTH, BOARD_HEIGHT);
 
     player1 = new Player(8, 40,PlayerType::PLAYER1, clavier, board);
     player1->start();
@@ -29,19 +56,12 @@ void Game::init() {
         player2 = new Player(8, 40,PlayerType::PLAYER2, clavier, board);
         player2->start();
     }
-
-    // for (int i = 0; i < MAX_BOTS; ++i) {
-    //     int x = 50 + (i % 5) * 25;
-    //     int y = 50 + (i / 5) * 25;
-    //     bots[i] = new Bot(x, y, static_cast<EnemyType>(i % EnemyTypeCount));
-    //     bots[i]->start();
-    // }
     
 	for (int i = 0; i < MAX_BOTS; i++) {
         constexpr int EnemyTypeCount = 5;
         while (true) {
-            int randX = pseudoRand() % (boardWidth - 2) + 1;
-            int randY = pseudoRand() % (boardHeight - 2) + 1;
+            int randX = pseudoRand() % (BOARD_WIDTH - 2) + 1;
+            int randY = pseudoRand() % (BOARD_HEIGHT - 2) + 1;
 
             int px = randX * TILE_SIZE + BOARD_ORIGIN_X;
             int py = randY * TILE_SIZE + BOARD_ORIGIN_Y;
@@ -60,14 +80,47 @@ void Game::init() {
 void Game::update() {
 
     this->checkHitBomb(player1);
-
+    this->checkPlayerHitBot(player1);
     if (multiplayerMode){
         this->checkHitBomb(player2);
+        this->checkPlayerHitBot(player2);
     }
     
     for (int i = 0; i < MAX_BOTS; ++i) {
         this->checkHitBomb(bots[i]);
     }
+
+    //checkGameWinAndLose();
+
+    if (gameState == GameState::GAME_OVER) {
+        clear_frame_buffer(0);
+        draw_text("GAME OVER", 120, 60, 15);
+        draw_text("PRESS ENTER TO RESTART", 100, 100, 15);
+        copy_frame_buffer_to_video();
+
+        while (!clavier->testChar()) {
+            thread_yield();
+        }
+        char key = clavier->getchar();
+        if (key == Clavier::Enter) {
+            // restartGame();
+        }
+    }
+    else if (gameState == GameState::GAME_WIN) {
+        clear_frame_buffer(0);
+        draw_text("YOU WIN", 120, 60, 15);
+        draw_text("PRESS ENTER TO RESTART", 100, 100, 15);
+        copy_frame_buffer_to_video();
+
+        while (!clavier->testChar()) {
+            thread_yield();
+        }
+        char key = clavier->getchar();
+        if (key == Clavier::Enter) {
+            // restartGame();
+        }
+    }
+
     thread_yield();
 }
 
@@ -77,7 +130,7 @@ void Game::render() {
 
     plot_rectangle(0, 0, 24, 320, 5);
     draw_text("TIME", 4, 9, 15);
-    // draw_number(timeRemaining, 68, 9, 15);
+    draw_number(timeRemaining, 68, 9, 15);
 
     // TODO get score + lives from player
     if (multiplayerMode){
@@ -126,13 +179,6 @@ void Game::run() {
 
     while (true) {
 
-        if (GameWin){
-            break;
-        }
-        if (GameOver){
-            break;
-        }
-
         unsigned long frameStart = Timer::getInstance().getTicks();
         update();
         render();
@@ -161,4 +207,24 @@ void Game::checkHitBomb(Movable* movable) {
             }
         }
     }
+}    
+
+void Game::checkPlayerHitBot(Player* player) {
+    int playerX = player->getX();
+    int playerY = player->getY();
+
+    for (int i = 0; i < MAX_BOTS; ++i) {
+        if (bots[i] && bots[i]->getStatus() != EntityStatus::DEAD) {
+
+            int botX = bots[i]->getX();
+            int botY = bots[i]->getY();
+
+            if (playerX < botX + TILE_SIZE && playerX + TILE_SIZE > botX &&
+                playerY < botY + TILE_SIZE && playerY + TILE_SIZE > botY) {
+                player->decreaseLives();
+                return;
+            }
+        }
+    }
 }
+
