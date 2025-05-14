@@ -24,12 +24,7 @@ class Bomb : public Tile {
         Bomb(Board* board, int x, int y);
 
         TileType getType() const override {
-            if (exploded)
-            {
-                return TILE_BOMB_EXPLODED;
-            }
-            
-            return TILE_BOMB_EXPLODING;
+            return TILE_BOMB;
         }
 
         void render(int x, int y);

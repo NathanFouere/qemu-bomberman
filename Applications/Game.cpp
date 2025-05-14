@@ -147,28 +147,18 @@ void Game::run() {
 }
 
 void Game::checkHitBomb(Movable* movable) {
-    int x = movable->getX();
-    int y = movable->getY();
+    int startX = movable->getX();
+    int startY = movable->getY();
+    int endX = startX + TILE_SIZE;
+    int endY = startY + TILE_SIZE;
 
-    TileType tileType = this->board->getTileTypeAt(movable->getX(), movable->getY());
-    if (tileType == TILE_BOMB_EXPLODED) {
-        movable->handleHitBomb();
-    }
-
-    TileType tileType2 = this->board->getTileTypeAt(movable->getX() + TILE_SIZE -1, movable->getY());
-    if (tileType2 == TILE_BOMB_EXPLODED) {
-        movable->handleHitBomb();
-    }
-
-
-    TileType tileType3 = this->board->getTileTypeAt(movable->getX(), movable->getY() + TILE_SIZE-1);
-    if (tileType3 == TILE_BOMB_EXPLODED) {
-        movable->handleHitBomb();
-    }
-
-
-    TileType tileType4 = this->board->getTileTypeAt(movable->getX() + TILE_SIZE - 1, movable->getY() + TILE_SIZE - 1);
-    if (tileType4 == TILE_BOMB_EXPLODED) {
-        movable->handleHitBomb();
+    for (int x = startX; x < endX; ++x) {
+        for (int y = startY; y < endY; ++y) {
+            TileType tileType = this->board->getTileTypeAt(x, y);
+            if (tileType == TILE_EXPLOSION) {
+                movable->handleHitBomb();
+                return;
+            }
+        }
     }
 }
