@@ -66,4 +66,6 @@ class Player: public Threads, public Movable {
         void poseBomb();
         void addScore(int points) { score += points; }
         void decreaseLives() { if (lives > 0) lives--; }
+        void handleHitBomb();
+        void update();
 };

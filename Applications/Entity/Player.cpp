@@ -81,3 +81,26 @@ void Player::poseBomb() {
 }
 
 
+
+
+void Player::handleHitBomb() {
+    this->decreaseLives();
+    if (lives <= 0) {
+     //   status = EntityStatus::DEAD;
+    }
+    else
+    {    
+        status = EntityStatus::DEAD_ANIMATION;
+    }
+    animationFrame = 0;
+    deathAnimationStartTime = Timer::getInstance().getSeconds();
+}
+
+void Player::update() {
+    if (status == EntityStatus::DEAD_ANIMATION) {
+        if (Timer::getInstance().getSeconds() - deathAnimationStartTime > DEATH_ANIMATION_TIME) {
+            status = EntityStatus::ALIVE;
+        }
+    }
+}
+

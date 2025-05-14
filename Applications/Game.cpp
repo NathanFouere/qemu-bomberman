@@ -59,16 +59,16 @@ void Game::init() {
 
 void Game::update() {
 
-    this->checkHitBomb(player1);
+    this->checkHitBombPlayer(player1);
     player1->update();
 
     if (multiplayerMode){
-        this->checkHitBomb(player2);
+        this->checkHitBombPlayer(player2);
         player2->update();
     }
     
     for (int i = 0; i < MAX_BOTS; ++i) {
-        this->checkHitBomb(bots[i]);
+        this->checkHitBombBot(bots[i]);
         bots[i]->update();
     }
     thread_yield();
@@ -149,11 +149,27 @@ void Game::run() {
     }
 }
 
-void Game::checkHitBomb(Movable* movable) {
+void Game::checkHitBombBot(Bot* movable) {
     int startX = movable->getX();
     int startY = movable->getY();
     int endX = startX + TILE_SIZE;
     int endY = startY + TILE_SIZE;
+
+    for (int x = startX; x < endX; ++x) {
+        for (int y = startY; y < endY; ++y) {
+            TileType tileType = this->board->getTileTypeAt(x, y);
+            if (tileType == TILE_EXPLOSION) {
+                movable->handleHitBomb();
+                return;
+            }
+        }
+    }
+}
+void Game::checkHitBombPlayer(Player* movable) {
+    int startX = movable->getX();
+    int startY = movable->getY();
+    int endX = startX + TILE_SIZE - 1;
+    int endY = startY + TILE_SIZE - 1;
 
     for (int x = startX; x < endX; ++x) {
         for (int y = startY; y < endY; ++y) {

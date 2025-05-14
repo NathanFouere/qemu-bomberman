@@ -38,5 +38,6 @@ private:
     unsigned long lastFrameTime;
     const int targetFrameTime = 1000 / TARGET_FPS;
 
-    void checkHitBomb(Movable* movable);
+    void checkHitBombBot(Bot* movable);
+    void checkHitBombPlayer(Player* movable);
 };

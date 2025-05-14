@@ -29,6 +29,8 @@ public:
     void run();
     void render();
     bool isValidMove(Board& board, int dx, int dy);
+    void handleHitBomb();
+    void update();
 
 private:
     // Rate limiting for movement

@@ -10,6 +10,8 @@ enum class EntityStatus {
     DEAD_ANIMATION // TODO => pas sur qu'on garde ce statut
 };
 
+const int DEATH_ANIMATION_TIME = 2;
+
 class Movable  {
 protected:
     int x, y;
@@ -30,8 +32,6 @@ public:
     int getY() const { return y; }
     EntityStatus getStatus() const { return status; }
     void setStatus(EntityStatus newStatus) { status = newStatus; }
-    void handleHitBomb();
     void render();
-    void update();
 };
 #endif
