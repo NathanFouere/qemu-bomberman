@@ -168,8 +168,8 @@ void Game::checkHitBombBot(Bot* movable) {
 void Game::checkHitBombPlayer(Player* movable) {
     int startX = movable->getX();
     int startY = movable->getY();
-    int endX = startX + TILE_SIZE - 1;
-    int endY = startY + TILE_SIZE - 1;
+    int endX = startX + TILE_SIZE;
+    int endY = startY + TILE_SIZE;
 
     for (int x = startX; x < endX; ++x) {
         for (int y = startY; y < endY; ++y) {

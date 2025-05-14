@@ -172,8 +172,8 @@ void Board::bombExploded(int x, int y, int power) {
 }
 
 TileType Board::getTileTypeAt(int x, int y) {
-    int localX = x - BOARD_ORIGIN_X;
-    int localY = y - BOARD_ORIGIN_Y;
+    int localX = x - BOARD_ORIGIN_X + 1; // obliger de faire + 1, il me semble que cela vient de la gestion des collisions
+    int localY = y - BOARD_ORIGIN_Y + 1; // idem
     int tx = localX / TILE_SIZE;
     int ty = localY / TILE_SIZE;
 

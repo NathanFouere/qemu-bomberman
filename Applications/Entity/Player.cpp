@@ -86,7 +86,7 @@ void Player::poseBomb() {
 void Player::handleHitBomb() {
     this->decreaseLives();
     if (lives <= 0) {
-     //   status = EntityStatus::DEAD;
+        status = EntityStatus::DEAD;
     }
     else
     {    
@@ -103,4 +103,3 @@ void Player::update() {
         }
     }
 }
-
