@@ -166,8 +166,8 @@ void Game::checkHitBombBot(Bot* movable) {
     }
 }
 void Game::checkHitBombPlayer(Player* movable) {
-    int startX = movable->getX();
-    int startY = movable->getY();
+    int startX = movable->getX()  + 1; // obliger de faire + 1, il me semble que cela vient de la gestion des collisions
+    int startY = movable->getY() + 1;
     int endX = startX + TILE_SIZE;
     int endY = startY + TILE_SIZE;
 
