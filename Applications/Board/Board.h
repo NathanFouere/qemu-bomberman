@@ -16,10 +16,11 @@ public:
 
     void setTileAt(int px, int py, Tile* tile);
     void deleteTileAt(int px, int py);
-
+    void bombExploded(int px, int py, int power);
     bool isBlockedAt(int px, int py) const;
 
     void draw();
+    TileType getTileTypeAt(int x, int y);
 
 private:
     int width;

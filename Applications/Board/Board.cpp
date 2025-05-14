@@ -4,6 +4,7 @@
 #include "Wall.h"
 #include "Brick.h"
 #include "Bomb.h"
+#include "Explosion.h"
 #include "../Utilities/PseudoRand.h"
 
 Board::Board(int w, int h) : width(w), height(h) {
@@ -24,7 +25,7 @@ Board::Board(int w, int h) : width(w), height(h) {
                 chosenTile = new EmptyTile();
             }
             else {
-                if (pseudoRand() % 100 < 33) {
+                if (pseudoRand() % 100 < 50) {
                     chosenTile = new Brick();
                 } else {
                     chosenTile = new EmptyTile();
@@ -37,6 +38,7 @@ Board::Board(int w, int h) : width(w), height(h) {
         }
     }
 }
+
 void Board::setTileAt(int px, int py, Tile* tile) {
     int localX = px - BOARD_ORIGIN_X;
     int localY = py - BOARD_ORIGIN_Y;
@@ -47,9 +49,7 @@ void Board::setTileAt(int px, int py, Tile* tile) {
         return; 
     }
 
-    if (layout[ty][tx]) {
-        delete layout[ty][tx];
-    }
+    delete layout[ty][tx];
     layout[ty][tx] = tile;
 }
 
@@ -94,10 +94,88 @@ void Board::deleteTileAt(int px, int py) {
         return; 
     }
 
-    // if (layout[ty][tx]->getType() != TILE_BRICK) {
-    //     return;
-    // }
+    TileType type = layout[ty][tx]->getType();
+    if (type == TILE_BRICK || type == TILE_BOMB_EXPLODING || type == TILE_BOMB_EXPLODED) {
+        if (layout[ty][tx]) {
+            delete layout[ty][tx];
+        }
+    }
+}
 
-    delete layout[ty][tx];
-    layout[ty][tx] = new EmptyTile();
+void Board::bombExploded(int x, int y, int power) {
+    // supprime la tuile actuelle
+    setTileAt(x, y, new Explosion(this, x, y, ExplosionState::EXPLOSION_CENTER));
+
+    int localX = x - BOARD_ORIGIN_X;
+    int localY = y - BOARD_ORIGIN_Y;
+    int tx = localX / TILE_SIZE;
+    int ty = localY / TILE_SIZE;
+
+    TileType type;
+    for (int i = 1; i <= power; ++i) {
+        // supprime à gauche
+        if (layout[ty][tx-1 * i]->getType() == TILE_BRICK || layout[ty][tx-1 * i]->getType() == TILE_BOMB_EXPLODING) {
+            setTileAt(x-TILE_SIZE * i, y, new EmptyTile());
+        }
+        else if (layout[ty][tx-1 * i]->getType() == TILE_EMPTY) {
+            if (i == power) {
+                setTileAt(x-TILE_SIZE * i, y, new Explosion(this, x-TILE_SIZE * i, y, ExplosionState::EXPLOSION_LEFT_END));
+            } else
+            {
+                setTileAt(x-TILE_SIZE * i, y, new Explosion(this, x-TILE_SIZE * i, y, ExplosionState::EXPLOSION_LEFT));
+            }
+        }
+
+        // supprime à droite
+        if (layout[ty][tx+1 * i]->getType() == TILE_BRICK || layout[ty][tx+1 * i]->getType() == TILE_BOMB_EXPLODING) {
+            setTileAt(x+TILE_SIZE * i, y, new EmptyTile());
+        }
+        else if (layout[ty][tx+1 * i]->getType() == TILE_EMPTY) {
+            // if i == power ExplosionState::EXPLOSION_RIGHT_END else ExplosionState::EXPLOSION_RIGHT
+            if (i == power) {
+                setTileAt(x+TILE_SIZE * i, y, new Explosion(this, x+TILE_SIZE * i, y, ExplosionState::EXPLOSION_RIGHT_END));
+            } else
+            {
+                setTileAt(x+TILE_SIZE * i, y, new Explosion(this, x+TILE_SIZE * i, y, ExplosionState::EXPLOSION_RIGHT));
+            }
+        }
+
+        // supprime en haut
+        if (layout[ty-1 * i][tx]->getType() == TILE_BRICK || layout[ty-1 * i][tx]->getType() == TILE_BOMB_EXPLODING) {
+            setTileAt(x, y-TILE_SIZE * i, new EmptyTile());
+        }
+        else if (layout[ty-1 * i][tx]->getType() == TILE_EMPTY) {
+            // if i == power ExplosionState::EXPLOSION_UP_END else ExplosionState::EXPLOSION_UP
+            if (i == power) {
+                setTileAt(x, y-TILE_SIZE * i, new Explosion(this, x, y-TILE_SIZE * i, ExplosionState::EXPLOSION_UP_END));
+            } else
+            {
+                setTileAt(x, y-TILE_SIZE * i, new Explosion(this, x, y-TILE_SIZE * i, ExplosionState::EXPLOSION_UP));
+            }
+        }
+
+        // supprime en dessous
+        if (layout[ty+1 * i][tx]->getType() == TILE_BRICK || layout[ty+1 * i][tx]->getType() == TILE_BOMB_EXPLODING) {
+            setTileAt(x, y+TILE_SIZE * i, new EmptyTile());
+        }
+        else if (layout[ty+1 * i][tx]->getType() == TILE_EMPTY) {
+            // if i == power ExplosionState::EXPLOSION_DOWN_END else ExplosionState::EXPLOSION_DOWN
+            if (i == power) {
+                setTileAt(x, y+TILE_SIZE * i, new Explosion(this, x, y+TILE_SIZE * i, ExplosionState::EXPLOSION_DOWN_END));
+            } else
+            {
+                setTileAt(x, y+TILE_SIZE * i, new Explosion(this, x, y+TILE_SIZE * i, ExplosionState::EXPLOSION_DOWN));
+            }
+        }
+    }
+
+}
+
+TileType Board::getTileTypeAt(int x, int y) {
+    int localX = x - BOARD_ORIGIN_X;
+    int localY = y - BOARD_ORIGIN_Y;
+    int tx = localX / TILE_SIZE;
+    int ty = localY / TILE_SIZE;
+
+    return layout[ty][tx]->getType();
 }

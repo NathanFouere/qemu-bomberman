@@ -9,16 +9,16 @@ void Player::movePlayer() {
     if (!active || status == EntityStatus::DEAD) {
         return;
     }
-    
+
     // Rate-limit movement to prevent too rapid movement
     unsigned long currentTime = Timer::getInstance().getTicks();
     if (currentTime - lastMoveTime < moveDelay) {
         return;
     }
-    
+
     if (clavier->testChar()) {
         char c = clavier->getchar();
-        
+
         if (c == 'd') {
             direction = RIGHT;
             move(*board, 3, 0);
@@ -55,10 +55,10 @@ void Player::run() {
         if (active) {
             movePlayer();
         }
-        
+
         // Sleep for a short time to avoid consuming too much CPU
         sleep(10);
-        
+
         // Yield to other threads
         Yield();
     }
@@ -75,8 +75,9 @@ void Player::poseBomb() {
     if (status == EntityStatus::DEAD) {
         return;
     }
-    
-    Bomb* bombe = new Bomb(board, x, y);
+
+    Bomb* bombe = new Bomb(board, x+8 ,y+8);
+    board->setTileAt(x+8, y+8, bombe);
 }
 
 

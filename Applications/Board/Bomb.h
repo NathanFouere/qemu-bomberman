@@ -5,6 +5,7 @@
 #include <drivers/sprite.h>
 #include <drivers/timer.h>
 #include "Board.h"
+#include "Explosion.h"
 
 class Bomb : public Tile {
     private:
@@ -15,11 +16,20 @@ class Bomb : public Tile {
         bool exploded;
         int x;
         int y;
+        int power = 1;
+        unsigned int lastAnimTick = 0;
+
+        void processExplosionDirection(int dx, int dy, ExplosionState midState, ExplosionState endState);
     public:
         Bomb(Board* board, int x, int y);
 
         TileType getType() const override {
-            return TILE_BOMB;
+            if (exploded)
+            {
+                return TILE_BOMB_EXPLODED;
+            }
+            
+            return TILE_BOMB_EXPLODING;
         }
 
         void render(int x, int y);
