@@ -16,7 +16,6 @@ class Bot : public Threads, public Movable {
 public:
     bool alive = true;
     EnemyType type = EnemyType::TYPE1;
-    int it = 0;
     Board* board;
   
     Bot(int x, int y, EnemyType type, Board* boardPtr)

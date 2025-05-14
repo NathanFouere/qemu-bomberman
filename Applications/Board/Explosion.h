@@ -134,10 +134,9 @@ class Explosion : public Tile {
         }
 
         void render(int renderX, int renderY) override {
-            draw_number(animationFrame, 70, 9, 15);
             draw_sprite(explosionSprites[animationFrame % 8], 16, 16, renderX * 16 - 8, renderY * 16 + 24);
             unsigned int currentTicks = Timer::getInstance().getTicks();
-            if (currentTicks - getLastAnimTick() >= 300) {
+            if (currentTicks - getLastAnimTick() >= 200) {
                 animationFrame++;
                 setLastAnimTick(currentTicks);
             }
