@@ -38,6 +38,7 @@ private:
     unsigned long lastFrameTime;
     const int targetFrameTime = 1000 / TARGET_FPS;
 
+    // TODO => devrait être mis dans une seule fonction => soucis d'heritage au niveau de movable
     void checkHitBombBot(Bot* movable);
     void checkHitBombPlayer(Player* movable);
 };
