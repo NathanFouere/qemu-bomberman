@@ -60,13 +60,16 @@ void Game::init() {
 void Game::update() {
 
     this->checkHitBomb(player1);
+    player1->update();
 
     if (multiplayerMode){
         this->checkHitBomb(player2);
+        player2->update();
     }
     
     for (int i = 0; i < MAX_BOTS; ++i) {
         this->checkHitBomb(bots[i]);
+        bots[i]->update();
     }
     thread_yield();
 }

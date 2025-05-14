@@ -83,4 +83,13 @@ void Movable::move(const Board& board, int dx, int dy) {
 void Movable::handleHitBomb() {
     status = EntityStatus::DEAD_ANIMATION;
     animationFrame = 0;
+    deathAnimationStartTime = Timer::getInstance().getSeconds();
+}
+
+void Movable::update() {
+    if (status == EntityStatus::DEAD_ANIMATION) {
+        if (Timer::getInstance().getSeconds() - deathAnimationStartTime > 2) {
+            status = EntityStatus::ALIVE;
+        }
+    }
 }
