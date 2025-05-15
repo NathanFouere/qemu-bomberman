@@ -3,7 +3,7 @@
 #include "Explosion.h"
 #include "Tile.h"
 
-Bomb::Bomb(Board* board, int x, int y) {
+Bomb::Bomb(Board* board, int x, int y) : animTimer(150) {
     apparitionSecond = Timer::getInstance().getSeconds();
     animationFrame = 0;
     sprites[0] = bomb_1;
@@ -21,11 +21,11 @@ void Bomb::render(int x, int y) {
         handleExplosion();
     } else {
         draw_sprite(sprites[animationFrame % 3], 16, 16, x * 16 - 8, y * 16 + 24);
-    }
-    unsigned int currentTicks = Timer::getInstance().getTicks();
-    if (currentTicks - lastAnimTick >= 150) {
-        animationFrame++;
-        setLastAnimTick(currentTicks);
+        
+        // Use AnimationTimer instead of direct tick calculation
+        if (animTimer.shouldUpdate()) {
+            animationFrame++;
+        }
     }
 }
 
