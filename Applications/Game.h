@@ -30,6 +30,9 @@ public:
 
     bool displayFPS = true;
     bool multiplayerMode = false;
+    
+    // Returns true if any player is in death animation
+    bool isPlayerInDeathAnimation() const;
 
 private:
     Clavier* clavier;

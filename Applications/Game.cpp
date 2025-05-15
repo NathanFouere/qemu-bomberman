@@ -79,11 +79,13 @@ Game::Game(Clavier* k) :clavier(k), player1(nullptr), player2(nullptr), board(nu
 
  void Game::update() {
 
-     this->checkPlayerHitBot(player1);
+    this->checkPlayerHitBot(player1);
+    this->checkHitBombPlayer(player1);
     player1->update();
 
-     if (multiplayerMode){
+    if (multiplayerMode){
         this->checkPlayerHitBot(player2);
+        this->checkHitBombPlayer(player2);
         player2->update();
     }
     
@@ -92,9 +94,8 @@ Game::Game(Clavier* k) :clavier(k), player1(nullptr), player2(nullptr), board(nu
         bots[i]->update();
     }
 
-     checkGameWinAndLose();
-
-     thread_yield();
+    checkGameWinAndLose();
+    thread_yield();
 }
 
  void Game::checkGameWinAndLose(){
@@ -105,11 +106,11 @@ Game::Game(Clavier* k) :clavier(k), player1(nullptr), player2(nullptr), board(nu
         gameState = GameState::GAME_OVER;
     }
 
-     if (timeRemaining <= 0) {
+    if (timeRemaining <= 0) {
         gameState = GameState::GAME_OVER;
     }
 
-     bool allBotsDead = true;
+    bool allBotsDead = true;
     for (int i = 0; i < MAX_BOTS; ++i) {
         if (bots[i] && bots[i]->getStatus() != EntityStatus::DEAD) {
             allBotsDead = false;
@@ -123,9 +124,9 @@ Game::Game(Clavier* k) :clavier(k), player1(nullptr), player2(nullptr), board(nu
 
  void Game::render() {
 
-     clear_frame_buffer(228);
+    clear_frame_buffer(228);
 
-     plot_rectangle(0, 0, 24, 320, 5);
+    plot_rectangle(0, 0, 24, 320, 5);
     draw_text("TIME", 4, 9, 15);
     draw_number(timeRemaining, 68, 9, 15);
 
@@ -134,7 +135,7 @@ Game::Game(Clavier* k) :clavier(k), player1(nullptr), player2(nullptr), board(nu
         draw_number(player1->getScore(), 150, 9, 153);
         draw_number(player2->getScore(), 200, 9, 16);
 
-         draw_text("LEFT", 250, 9, 15);
+        draw_text("LEFT", 250, 9, 15);
         draw_number(player1->getLives(), 300, 9, 153);
         draw_number(player2->getLives(), 312, 9, 16);
 
@@ -169,47 +170,47 @@ Game::Game(Clavier* k) :clavier(k), player1(nullptr), player2(nullptr), board(nu
         draw_number(fps, 316, 188, 255);
     }
 
-     copy_frame_buffer_to_video();
+    copy_frame_buffer_to_video();
 }
 
  void Game::run() {
     while (true) {
-        if (gameState == GameState::GAME_OVER) {
-            clear_frame_buffer(0);
-            draw_text("GAME OVER", 120, 80, 15);
-            draw_text("PRESS ENTER TO RESTART", 70, 100, 15);
-            copy_frame_buffer_to_video();
+        // if (gameState == GameState::GAME_OVER) {
+        //     clear_frame_buffer(0);
+        //     draw_text("GAME OVER", 120, 80, 15);
+        //     draw_text("PRESS ENTER TO RESTART", 70, 100, 15);
+        //     copy_frame_buffer_to_video();
 
-             while (!clavier->testChar()) {
-                thread_yield();
-            }
-            char key = clavier->getchar();
-            if (key == Clavier::Enter) {
-                clear_frame_buffer(0);
-                copy_frame_buffer_to_video();
-                this->resetGame();
-                continue; // Skip the rest of this loop iteration and start fresh
-            }
-        }
-        else if (gameState == GameState::GAME_WIN) {
-            clear_frame_buffer(0);
-            draw_text("YOU WIN", 120, 60, 15);
-            draw_text("PRESS ENTER TO RESTART", 100, 100, 15);
-            copy_frame_buffer_to_video();
+        //      while (!clavier->testChar()) {
+        //         thread_yield();
+        //     }
+        //     char key = clavier->getchar();
+        //     if (key == Clavier::Enter) {
+        //         clear_frame_buffer(0);
+        //         copy_frame_buffer_to_video();
+        //         this->resetGame();
+        //         continue; // Skip the rest of this loop iteration and start fresh
+        //     }
+        // }
+        // else if (gameState == GameState::GAME_WIN) {
+        //     clear_frame_buffer(0);
+        //     draw_text("YOU WIN", 120, 60, 15);
+        //     draw_text("PRESS ENTER TO RESTART", 100, 100, 15);
+        //     copy_frame_buffer_to_video();
 
-             while (!clavier->testChar()) {
-                thread_yield();
-            }
-            char key = clavier->getchar();
-            if (key == Clavier::Enter) {
-                clear_frame_buffer(0);
-                copy_frame_buffer_to_video();
-                this->resetGame();
-                continue; // Skip the rest of this loop iteration and start fresh
-            }
-        }
+        //      while (!clavier->testChar()) {
+        //         thread_yield();
+        //     }
+        //     char key = clavier->getchar();
+        //     if (key == Clavier::Enter) {
+        //         clear_frame_buffer(0);
+        //         copy_frame_buffer_to_video();
+        //         this->resetGame();
+        //         continue; // Skip the rest of this loop iteration and start fresh
+        //     }
+        // }
 
-         unsigned long frameStart = Timer::getInstance().getTicks();
+        unsigned long frameStart = Timer::getInstance().getTicks();
         update();
         render();
 
@@ -223,13 +224,15 @@ Game::Game(Clavier* k) :clavier(k), player1(nullptr), player2(nullptr), board(nu
     }
 }
 
- void Game::checkHitBombBot(Bot* movable) {
+
+
+void Game::checkHitBombBot(Bot* movable) {
     int startX = movable->getX();
     int startY = movable->getY();
     int endX = startX + TILE_SIZE;
     int endY = startY + TILE_SIZE;
 
-     for (int x = startX; x < endX; ++x) {
+    for (int x = startX; x < endX; ++x) {
         for (int y = startY; y < endY; ++y) {
             TileType tileType = this->board->getTileTypeAt(x, y);
             if (tileType == TILE_EXPLOSION) {
@@ -242,25 +245,42 @@ Game::Game(Clavier* k) :clavier(k), player1(nullptr), player2(nullptr), board(nu
 
  void Game::checkPlayerHitBot(Player* player) {
 
-     int playerX = player->getX();
+    int playerX = player->getX();
     int playerY = player->getY();
 
      for (int i = 0; i < MAX_BOTS; ++i) {
         if (bots[i] && bots[i]->getStatus() != EntityStatus::DEAD) {
 
-             int botX = bots[i]->getX();
+            int botX = bots[i]->getX();
             int botY = bots[i]->getY();
 
-             if (playerX < botX + TILE_SIZE && playerX + TILE_SIZE > botX &&
+            if (playerX < botX + TILE_SIZE && playerX + TILE_SIZE > botX &&
                 playerY < botY + TILE_SIZE && playerY + TILE_SIZE > botY) {
-                player->decreaseLives();
+                player->handleHitBomb();
                 return;
             }
         }
     }
 }
 
- void Game::resetGame() {
+void Game::checkHitBombPlayer(Player* movable) {
+    int startX = movable->getX()  + 1; // obliger de faire + 1, il me semble que cela vient de la gestion des collisions
+    int startY = movable->getY() + 1;
+    int endX = startX + TILE_SIZE;
+    int endY = startY + TILE_SIZE;
+
+    for (int x = startX; x < endX; ++x) {
+        for (int y = startY; y < endY; ++y) {
+            TileType tileType = this->board->getTileTypeAt(x, y);
+            if (tileType == TILE_EXPLOSION) {
+                movable->handleHitBomb();
+                return;
+            }
+        }
+    }
+}
+
+void Game::resetGame() {
     // Delete all bots
     for (int i = 0; i < MAX_BOTS; ++i) {
         if (bots[i]) {
@@ -292,4 +312,16 @@ Game::Game(Clavier* k) :clavier(k), player1(nullptr), player2(nullptr), board(nu
     
     // Reinitialize the game (this will also reset gameStartTime)
     init();
+}
+
+bool Game::isPlayerInDeathAnimation() const {
+    if (player1 && player1->getStatus() == EntityStatus::DEAD_ANIMATION) {
+        return true;
+    }
+    
+    if (multiplayerMode && player2 && player2->getStatus() == EntityStatus::DEAD_ANIMATION) {
+        return true;
+    }
+    
+    return false;
 }

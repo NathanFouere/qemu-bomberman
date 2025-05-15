@@ -18,6 +18,8 @@ class Player: public Threads, public Movable {
         bool active = true;
         unsigned long lastMoveTime = 0;
         const int moveDelay = 10;
+        const unsigned long animationFrameInterval = 550; // Time between animation frames (500 ms)
+        unsigned long lastAnimationTime = 0; // Last time animation frame was updated
 
         void setSprites(PlayerType type) {
             if (type == PlayerType::PLAYER1) {
