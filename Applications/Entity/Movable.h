@@ -2,12 +2,15 @@
 #define MOVABLE_H
 #include "Direction.h"
 #include "../Board/Board.h"
+#include <drivers/timer.h>
 
 enum class EntityStatus {
     ALIVE,
     DEAD,
     DEAD_ANIMATION // TODO => pas sur qu'on garde ce statut
 };
+
+const int DEATH_ANIMATION_TIME = 3; // Animation time in seconds
 
 class Movable  {
 protected:
@@ -17,6 +20,7 @@ protected:
     int animationFrame;
     Direction direction;
     EntityStatus status;
+    int deathAnimationStartTime = 0;
 public:
     Movable(int x, int y)
         : x(x), y(y), direction(RIGHT) {}
@@ -28,7 +32,6 @@ public:
     int getY() const { return y; }
     EntityStatus getStatus() const { return status; }
     void setStatus(EntityStatus newStatus) { status = newStatus; }
-    void handleHitBomb();
     void render();
 };
 #endif

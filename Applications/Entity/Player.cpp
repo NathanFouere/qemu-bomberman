@@ -6,8 +6,8 @@
 #include <drivers/timer.h>
 
 void Player::movePlayer() {
-    // Don't process input if player is not active
-    if (!active || status == EntityStatus::DEAD) {
+    // Don't process input if player is not active, is dead or is in death animation
+    if (!active || status == EntityStatus::DEAD || status == EntityStatus::DEAD_ANIMATION) {
         return;
     }
 
@@ -79,3 +79,35 @@ void Player::poseBomb() {
 }
 
 
+
+
+void Player::handleHitBomb() {
+    this->decreaseLives();
+    
+    // Always trigger death animation, whether player has lives left or not
+    status = EntityStatus::DEAD_ANIMATION;
+    
+    // If player has no lives left, it will become DEAD after animation completes
+    animationFrame = 0;
+    deathAnimationStartTime = Timer::getInstance().getSeconds();
+    lastAnimationTime = Timer::getInstance().getTicks(); // Initialize the animation timer
+}
+
+void Player::update() {
+    if (status == EntityStatus::DEAD_ANIMATION) {
+        // Get current time in milliseconds
+        unsigned long currentTime = Timer::getInstance().getTicks();
+        
+        // Increment animation frame every 550ms using the instance variable
+        if (currentTime - lastAnimationTime >= animationFrameInterval) {
+            animationFrame++;
+            lastAnimationTime = currentTime;
+        }
+        
+        if (Timer::getInstance().getSeconds() - deathAnimationStartTime > DEATH_ANIMATION_TIME) {
+            status = EntityStatus::ALIVE;
+            // Set invulnerability period after respawn
+            invulnerabilityEndTime = Timer::getInstance().getTicks() + INVULNERABILITY_DURATION;
+        }
+    }
+}

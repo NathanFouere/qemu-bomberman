@@ -17,7 +17,11 @@ class Player: public Threads, public Movable {
         int score = 0;
         bool active = true;
         unsigned long lastMoveTime = 0;
-        const int moveDelay = 50; 
+        const int moveDelay = 10;
+        const unsigned long animationFrameInterval = 550; // Time between animation frames (500 ms)
+        unsigned long lastAnimationTime = 0; // Last time animation frame was updated
+        unsigned long invulnerabilityEndTime = 0; // Time until which player is invulnerable after respawning
+        const unsigned long INVULNERABILITY_DURATION = 2000; // 2 seconds of invulnerability after respawn
 
         void setSprites(PlayerType type) {
             if (type == PlayerType::PLAYER1) {
@@ -42,7 +46,8 @@ class Player: public Threads, public Movable {
                 deathSprites[2] = player1_death_3;
                 deathSprites[3] = player1_death_4;
                 deathSprites[4] = player1_death_5;
-                // Si le temps, gérer les autres sprites de morts
+                deathSprites[5] = player1_death_6;
+                deathSprites[6] = player1_death_7;
             } else
             {
             }
@@ -66,4 +71,6 @@ class Player: public Threads, public Movable {
         void poseBomb();
         void addScore(int points) { score += points; }
         void decreaseLives() { if (lives > 0) lives--; }
+        void handleHitBomb();
+        void update();
 };

@@ -3,11 +3,8 @@
 #include <drivers/vga.h>
 
 const unsigned char* Movable::getSprite() {
-    if (status == EntityStatus::DEAD) {
-        return deathSprites[animationFrame % 4];
-    }
     if (status == EntityStatus::DEAD_ANIMATION) {
-        return deathSprites[animationFrame % 4];
+        return deathSprites[(animationFrame) % 5];
     }
     
     return sprites[direction][animationFrame % 3];
@@ -77,10 +74,4 @@ void Movable::move(const Board& board, int dx, int dy) {
             }
         }
     }
-}
-
-
-void Movable::handleHitBomb() {
-    status = EntityStatus::DEAD_ANIMATION;
-    animationFrame = 0;
 }

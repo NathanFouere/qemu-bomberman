@@ -46,7 +46,10 @@ void Bot::render(){
 void Bot::run() {   
     while (true) {
         // Move the bot
-        moveRandom();
+        if (!(EntityStatus::DEAD_ANIMATION == status)) {
+            moveRandom();
+        }
+
         
         // Sleep for a short time to avoid too much CPU usage
         // Using different sleep values for different bot types to avoid synchronized movement
@@ -56,6 +59,31 @@ void Bot::run() {
         // Yield to other threads multiple times to ensure fair scheduling
         for (int i = 0; i < 3; i++) {
             Yield();
+        }
+    }
+}
+
+void Bot::handleHitBomb() {
+    status = EntityStatus::DEAD_ANIMATION;
+    animationFrame = 0;
+    deathAnimationStartTime = Timer::getInstance().getSeconds();
+    lastAnimationTime = Timer::getInstance().getTicks(); // Initialize the animation timer
+}
+
+
+void Bot::update() {
+    if (status == EntityStatus::DEAD_ANIMATION) {
+        // Get current time in milliseconds
+        unsigned long currentTime = Timer::getInstance().getTicks();
+        
+        // Increment animation frame every 500ms using the instance variable
+        if (currentTime - lastAnimationTime >= animationFrameInterval) {
+            animationFrame++;
+            lastAnimationTime = currentTime;
+        }
+        
+        if (Timer::getInstance().getSeconds() - deathAnimationStartTime > DEATH_ANIMATION_TIME) {
+            status = EntityStatus::DEAD;
         }
     }
 }
