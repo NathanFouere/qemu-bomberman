@@ -1,8 +1,9 @@
-#ifndef CLAVIER_H
-#define CLAVIER_H
+#ifndef CLAVIER_H_
+#define CLAVIER_H_
 
-#include "../drivers/Ecran.h"
-#include "../hal/fonctionsES.h"
+#include <hal/fonctionsES.h>
+#include <sextant/Synchronisation/Mutex/Mutex.h>
+
 /**
  * @file Clavier.h
  * @class Clavier
@@ -10,32 +11,14 @@
  */
 
 class Clavier {
-public :
-	bool testChar(); //Retourne vrai si un caractere a ete saisi au clavier
-	/***
-	 * Recupere le premier caractere tape.
-	 ***/
-	char getchar();
-	/***
-	 * Recupere tous les caracteres tapes.
-	 ***/
-	char* getString();
-	/***
-	 * Verifie si un caractere a ete tape.
-	 ***/
-	bool isPressed(char c);
+private:
+    static Mutex keyboardMutex;  // Add mutex for synchronization
 
-	void set_leds(void);
-
-	enum Key {
-		Up = 'w',
-		Down = 's',
-		Left = 'a',
-		Right = 'd',
-		PlaceBomb = 'x',
-		Enter = 0x1C
-	};
-	
+public:
+    bool testChar();
+    char getchar();
+    char* getString();
+    void set_leds(void);
 };
 
-#endif
+#endif /* CLAVIER_H_ */

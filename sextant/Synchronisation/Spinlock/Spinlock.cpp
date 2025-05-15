@@ -7,21 +7,19 @@
 
 #include "Spinlock.h"
 
-void Spinlock::Take(int *lck){
-
-	for (int i=0;i<16;i++)
-		if (i!=2)  i8259_disable_irq_line(i);
-
-	//while((*lck)<1){};
-
-	while ( (TestAndSet(lck) )!=0);
-
-//	--(*lck);
+void Spinlock::Take(int *lck) {
+    // Save flags and disable interrupts
+    asm volatile("cli");
+    
+    while (TestAndSet(lck) != 0) {
+        // If lock is held, briefly enable interrupts to prevent deadlock
+        asm volatile("sti; nop; cli");
+    }
 }
 
-
-void Spinlock::Release(int *lck){
-	--(*lck);
-	for (int i=0;i<16;i++)
-		if (i!=2) i8259_enable_irq_line(i);
+void Spinlock::Release(int *lck) {
+    *lck = 1;  // Release the lock
+    
+    // Re-enable interrupts
+    asm volatile("sti");
 }
