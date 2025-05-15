@@ -88,40 +88,11 @@ void Game::update() {
     }
     
     for (int i = 0; i < MAX_BOTS; ++i) {
-        //this->checkHitBombBot(bots[i]);
+        this->checkHitBombBot(bots[i]);
         bots[i]->update();
     }
 
     checkGameWinAndLose();
-
-    if (gameState == GameState::GAME_OVER) {
-        clear_frame_buffer(0);
-        draw_text("GAME OVER", 120, 80, 15);
-        draw_text("PRESS ENTER TO RESTART", 70, 100, 15);
-        copy_frame_buffer_to_video();
-
-        while (!clavier->testChar()) {
-            thread_yield();
-        }
-        char key = clavier->getchar();
-        if (key == Clavier::Enter) {
-            //this->resetGame();
-        }
-    }
-    else if (gameState == GameState::GAME_WIN) {
-        clear_frame_buffer(0);
-        draw_text("YOU WIN", 120, 60, 15);
-        draw_text("PRESS ENTER TO RESTART", 100, 100, 15);
-        copy_frame_buffer_to_video();
-
-        while (!clavier->testChar()) {
-            thread_yield();
-        }
-        char key = clavier->getchar();
-        if (key == Clavier::Enter) {
-            //this->resetGame();
-        }
-    }
 
     thread_yield();
 }
@@ -205,6 +176,35 @@ void Game::run() {
 
     while (true) {
 
+    if (gameState == GameState::GAME_OVER) {
+        clear_frame_buffer(0);
+        draw_text("GAME OVER", 120, 80, 15);
+        draw_text("PRESS ENTER TO RESTART", 70, 100, 15);
+        copy_frame_buffer_to_video();
+
+        while (!clavier->testChar()) {
+            thread_yield();
+        }
+        char key = clavier->getchar();
+        if (key == Clavier::Enter) {
+            //this->resetGame();
+        }
+    }
+    else if (gameState == GameState::GAME_WIN) {
+        clear_frame_buffer(0);
+        draw_text("YOU WIN", 120, 60, 15);
+        draw_text("PRESS ENTER TO RESTART", 100, 100, 15);
+        copy_frame_buffer_to_video();
+
+        while (!clavier->testChar()) {
+            thread_yield();
+        }
+        char key = clavier->getchar();
+        if (key == Clavier::Enter) {
+            //this->resetGame();
+        }
+    }
+
         unsigned long frameStart = Timer::getInstance().getTicks();
         update();
         render();
@@ -229,6 +229,26 @@ void Game::checkHitBombBot(Bot* movable) {
             TileType tileType = this->board->getTileTypeAt(x, y);
             if (tileType == TILE_EXPLOSION) {
                 movable->handleHitBomb();
+                return;
+            }
+        }
+    }
+}
+
+void Game::checkPlayerHitBot(Player* player) {
+
+    int playerX = player->getX();
+    int playerY = player->getY();
+
+    for (int i = 0; i < MAX_BOTS; ++i) {
+        if (bots[i] && bots[i]->getStatus() != EntityStatus::DEAD) {
+
+            int botX = bots[i]->getX();
+            int botY = bots[i]->getY();
+
+            if (playerX < botX + TILE_SIZE && playerX + TILE_SIZE > botX &&
+                playerY < botY + TILE_SIZE && playerY + TILE_SIZE > botY) {
+                player->decreaseLives();
                 return;
             }
         }

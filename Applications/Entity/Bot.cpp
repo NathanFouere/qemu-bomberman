@@ -46,7 +46,10 @@ void Bot::render(){
 void Bot::run() {   
     while (true) {
         // Move the bot
-        moveRandom();
+        if (!(EntityStatus::DEAD_ANIMATION == status)) {
+            moveRandom();
+        }
+
         
         // Sleep for a short time to avoid too much CPU usage
         // Using different sleep values for different bot types to avoid synchronized movement

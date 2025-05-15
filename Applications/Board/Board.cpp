@@ -63,7 +63,7 @@ bool Board::isBlockedAt(int px, int py) const {
     if (tx < 0 || ty < 0 || tx >= width || ty >= height)
         return true;
 
-    return layout[ty][tx]->getType() != TILE_EMPTY;
+    return layout[ty][tx]->getType() != TILE_EMPTY && layout[ty][tx]->getType() != TILE_EXPLOSION;
 }
 
 Board::~Board() {
