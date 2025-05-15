@@ -49,86 +49,97 @@ class Explosion : public Tile {
                     explosionSprites[6] = exp_start_2;
                     explosionSprites[7] = exp_start_1;
                     break;
+                    
                 case ExplosionState::EXPLOSION_UP:
-                    explosionSprites[0] = exp_start_1;
-                    explosionSprites[1] = exp_start_2;
-                    explosionSprites[2] = exp_start_3;
-                    explosionSprites[3] = exp_start_4;
-                    explosionSprites[4] = exp_start_4;
-                    explosionSprites[5] = exp_start_3;
-                    explosionSprites[6] = exp_start_2;
-                    explosionSprites[7] = exp_start_1;
+                    explosionSprites[0] = exp_mid_1;
+                    explosionSprites[1] = exp_mid_2;
+                    explosionSprites[2] = exp_mid_3;
+                    explosionSprites[3] = exp_mid_4;
+                    explosionSprites[4] = exp_mid_4;
+                    explosionSprites[5] = exp_mid_3;
+                    explosionSprites[6] = exp_mid_2;
+                    explosionSprites[7] = exp_mid_1;
                     break;
+                    
                 case ExplosionState::EXPLOSION_DOWN:
-                    explosionSprites[0] = exp_start_1;
-                    explosionSprites[1] = exp_start_2;
-                    explosionSprites[2] = exp_start_3;
-                    explosionSprites[3] = exp_start_4;
-                    explosionSprites[4] = exp_start_4;
-                    explosionSprites[5] = exp_start_3;
-                    explosionSprites[6] = exp_start_2;
-                    explosionSprites[7] = exp_start_1;
+                    explosionSprites[0] = exp_mid_1;
+                    explosionSprites[1] = exp_mid_2;
+                    explosionSprites[2] = exp_mid_3;
+                    explosionSprites[3] = exp_mid_4;
+                    explosionSprites[4] = exp_mid_4;
+                    explosionSprites[5] = exp_mid_3;
+                    explosionSprites[6] = exp_mid_2;
+                    explosionSprites[7] = exp_mid_1;
                     break;
+                    
                 case ExplosionState::EXPLOSION_LEFT:
-                    explosionSprites[0] = exp_start_1;
-                    explosionSprites[1] = exp_start_2;
-                    explosionSprites[2] = exp_start_3;
-                    explosionSprites[3] = exp_start_4;
-                    explosionSprites[4] = exp_start_4;
-                    explosionSprites[5] = exp_start_3;
-                    explosionSprites[6] = exp_start_2;
-                    explosionSprites[7] = exp_start_1;
+                    // Horizontal version
+                    explosionSprites[0] = exp_mid_1;
+                    explosionSprites[1] = exp_mid_2;
+                    explosionSprites[2] = exp_mid_3;
+                    explosionSprites[3] = exp_mid_4;
+                    explosionSprites[4] = exp_mid_4;
+                    explosionSprites[5] = exp_mid_3;
+                    explosionSprites[6] = exp_mid_2;
+                    explosionSprites[7] = exp_mid_1;
                     break;
+                    
                 case ExplosionState::EXPLOSION_RIGHT:
-                    explosionSprites[0] = exp_start_1;
-                    explosionSprites[1] = exp_start_2;
-                    explosionSprites[2] = exp_start_3;
-                    explosionSprites[3] = exp_start_4;
-                    explosionSprites[4] = exp_start_4;
-                    explosionSprites[5] = exp_start_3;
-                    explosionSprites[6] = exp_start_2;
-                    explosionSprites[7] = exp_start_1;
+                    explosionSprites[0] = exp_mid_1;
+                    explosionSprites[1] = exp_mid_2;
+                    explosionSprites[2] = exp_mid_3;
+                    explosionSprites[3] = exp_mid_4;
+                    explosionSprites[4] = exp_mid_4;
+                    explosionSprites[5] = exp_mid_3;
+                    explosionSprites[6] = exp_mid_2;
+                    explosionSprites[7] = exp_mid_1;
                     break;
+                    
                 case ExplosionState::EXPLOSION_UP_END:
-                    explosionSprites[0] = exp_start_1;
-                    explosionSprites[1] = exp_start_2;
-                    explosionSprites[2] = exp_start_3;
-                    explosionSprites[3] = exp_start_4;
-                    explosionSprites[4] = exp_start_4;
-                    explosionSprites[5] = exp_start_3;
-                    explosionSprites[6] = exp_start_2;
-                    explosionSprites[7] = exp_start_1;
+                    explosionSprites[0] = exp_end_1;
+                    explosionSprites[1] = exp_end_2;
+                    explosionSprites[2] = exp_end_3;
+                    explosionSprites[3] = exp_end_4;
+                    explosionSprites[4] = exp_end_4;
+                    explosionSprites[5] = exp_end_3;
+                    explosionSprites[6] = exp_end_2;
+                    explosionSprites[7] = exp_end_1;
                     break;
+                    
                 case ExplosionState::EXPLOSION_DOWN_END:
-                    explosionSprites[0] = exp_start_1;
-                    explosionSprites[1] = exp_start_2;
-                    explosionSprites[2] = exp_start_3;
-                    explosionSprites[3] = exp_start_4;
-                    explosionSprites[4] = exp_start_4;
-                    explosionSprites[5] = exp_start_3;
-                    explosionSprites[6] = exp_start_2;
-                    explosionSprites[7] = exp_start_1;
+                    explosionSprites[0] = exp_end_1;
+                    explosionSprites[1] = exp_end_2;
+                    explosionSprites[2] = exp_end_3;
+                    explosionSprites[3] = exp_end_4;
+                    explosionSprites[4] = exp_end_4;
+                    explosionSprites[5] = exp_end_3;
+                    explosionSprites[6] = exp_end_2;
+                    explosionSprites[7] = exp_end_1;
                     break;
+                    
                 case ExplosionState::EXPLOSION_LEFT_END:
-                    explosionSprites[0] = exp_start_1;
-                    explosionSprites[1] = exp_start_2;
-                    explosionSprites[2] = exp_start_3;
-                    explosionSprites[3] = exp_start_4;
-                    explosionSprites[4] = exp_start_4;
-                    explosionSprites[5] = exp_start_3;
-                    explosionSprites[6] = exp_start_2;
-                    explosionSprites[7] = exp_start_1;
+                    // Horizontal end
+                    explosionSprites[0] = exp_end_1;
+                    explosionSprites[1] = exp_end_2;
+                    explosionSprites[2] = exp_end_3;
+                    explosionSprites[3] = exp_end_4;
+                    explosionSprites[4] = exp_end_4;
+                    explosionSprites[5] = exp_end_3;
+                    explosionSprites[6] = exp_end_2;
+                    explosionSprites[7] = exp_end_1;
                     break;
+                    
                 case ExplosionState::EXPLOSION_RIGHT_END:
-                    explosionSprites[0] = exp_start_1;
-                    explosionSprites[1] = exp_start_2;
-                    explosionSprites[2] = exp_start_3;
-                    explosionSprites[3] = exp_start_4;
-                    explosionSprites[4] = exp_start_4;
-                    explosionSprites[5] = exp_start_3;
-                    explosionSprites[6] = exp_start_2;
-                    explosionSprites[7] = exp_start_1;
+                    explosionSprites[0] = exp_end_1;
+                    explosionSprites[1] = exp_end_2;
+                    explosionSprites[2] = exp_end_3;
+                    explosionSprites[3] = exp_end_4;
+                    explosionSprites[4] = exp_end_4;
+                    explosionSprites[5] = exp_end_3;
+                    explosionSprites[6] = exp_end_2;
+                    explosionSprites[7] = exp_end_1;
                     break;
+                    
                 default:
                     break;
             }
@@ -139,16 +150,45 @@ class Explosion : public Tile {
         }
 
         void render(int renderX, int renderY) override {
-            draw_sprite(explosionSprites[animationFrame % 8], 16, 16, renderX * 16 - 8, renderY * 16 + 24);
+            RotationType rotation = RotationType::NONE;
             
-            // Use AnimationTimer instead of direct tick calculation
+            // Set rotation based on explosion state
+            switch(state) {
+                case ExplosionState::EXPLOSION_DOWN:
+                case ExplosionState::EXPLOSION_DOWN_END:
+                    rotation = RotationType::ROTATE_180;
+                    break;
+                    
+                case ExplosionState::EXPLOSION_LEFT:
+                case ExplosionState::EXPLOSION_LEFT_END:
+                    rotation = RotationType::ROTATE_270;
+                    break;
+                    
+                case ExplosionState::EXPLOSION_RIGHT:
+                case ExplosionState::EXPLOSION_RIGHT_END:
+                    rotation = RotationType::ROTATE_90;
+                    break;
+                    
+                default:
+                    rotation = RotationType::NONE;
+                    break;
+            }
+            
+            // Draw with rotation if needed
+            draw_sprite_rotated(explosionSprites[animationFrame % 8], 16, 16, 
+                              renderX * 16 - 8, renderY * 16 + 24,
+                              rotation);
+
+            // Use the AnimationTimer for consistent timing
             if (animTimer.shouldUpdate()) {
-                animationFrame++;
-                
-                // When animation is complete, replace with empty tile
-                if (animationFrame >= 8) {
-                    board->setTileAt(x, y, new EmptyTile());
+                // Only increment frame counter if we haven't reached the end
+                if (animationFrame < 7) {
+                    animationFrame++;
+                } else {
+                        board->setTileAt(x, y, new EmptyTile());
                 }
             }
         }
     };
+        
+    
