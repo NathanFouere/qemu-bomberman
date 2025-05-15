@@ -279,6 +279,57 @@ void draw_sprite(const unsigned char* sprite,
     }
 }
 
+void draw_sprite_rotated(const unsigned char* sprite,
+                        int w, int h,
+                        int dstX, int dstY,
+                        RotationType rotation) {
+    
+    switch(rotation) {
+        case RotationType::NONE:
+            // Normal draw without rotation
+            draw_sprite(sprite, w, h, dstX, dstY);
+            break;
+            
+        case RotationType::ROTATE_90:
+            // 90 degrees clockwise
+            for (int yy = 0; yy < h; ++yy) {
+                for (int xx = 0; xx < w; ++xx) {
+                    unsigned char c = sprite[yy * w + xx];
+                    if (c != 0) {
+                        // Transpose and flip Y to X
+                        frame_buffer[(xx+dstY)*320 + (h-1-yy+dstX)] = c;
+                    }
+                }
+            }
+            break;
+            
+        case RotationType::ROTATE_180:
+            // 180 degrees (flip both X and Y)
+            for (int yy = 0; yy < h; ++yy) {
+                for (int xx = 0; xx < w; ++xx) {
+                    unsigned char c = sprite[yy * w + xx];
+                    if (c != 0) {
+                        frame_buffer[((h-1-yy)+dstY)*320 + ((w-1-xx)+dstX)] = c;
+                    }
+                }
+            }
+            break;
+            
+        case RotationType::ROTATE_270:
+            // 270 degrees clockwise (90 counter-clockwise)
+            for (int yy = 0; yy < h; ++yy) {
+                for (int xx = 0; xx < w; ++xx) {
+                    unsigned char c = sprite[yy * w + xx];
+                    if (c != 0) {
+                        // Transpose and flip X to Y
+                        frame_buffer[((w-1-xx)+dstY)*320 + (yy+dstX)] = c;
+                    }
+                }
+            }
+            break;
+    }
+}
+
 unsigned char reverse_bits(unsigned char b) {
     b = (b & 0xF0) >> 4 | (b & 0x0F) << 4;
     b = (b & 0xCC) >> 2 | (b & 0x33) << 2;

@@ -1,6 +1,7 @@
 #include <hal/multiboot.h>
 #include <drivers/Ecran.h>
 #include <drivers/PortSerie.h>
+#include <drivers/KeyboardBuffer.h>
 
 #include <sextant/interruptions/idt.h>
 #include <sextant/interruptions/irq.h>
@@ -17,6 +18,7 @@
 #include <sextant/types.h>
 
 #include <Applications/Game.h>
+#include <Applications/ServiceLocator.h>
 
 #include <drivers/vga.h>
 #include <Applications/Utilities/PseudoRand.h>
@@ -45,6 +47,10 @@ void Sextant_Init(){
 	irq_set_routine(IRQ_TIMER, ticTac);
 	asm volatile("sti\n");//Autorise les interruptions
 
+	// Initialize keyboard buffer
+	KeyboardBuffer::init();
+
+	// Register keyboard handler
 	irq_set_routine(IRQ_KEYBOARD, handler_clavier);
 
 	// Memoire init
@@ -69,9 +75,9 @@ extern "C" void Sextant_main(unsigned long magic, unsigned long addr) {
 	Sextant_Init();
 
     Clavier clavier;
+    ServiceLocator::provideKeyboard(&clavier);
 
     Game game(&clavier);
-
 	game.displayFPS = true;
 	game.multiplayerMode = false;
 

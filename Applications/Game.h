@@ -1,8 +1,13 @@
+#ifndef GAME_H_
+#define GAME_H_
+
 #include <drivers/timer.h>
 #include <drivers/Clavier.h>
 #include <Applications/Entity/Bot.h>
 #include <Applications/Entity/Player.h>
 #include <Applications/Board/Board.h>
+#include "Ressource.h"
+#include "ServiceLocator.h"
 
 #define MAX_BOTS 5
 #define TARGET_FPS 60
@@ -11,6 +16,7 @@
 class Game {
 public:
     Game(Clavier* k);
+    ~Game(); // Add destructor for cleanup
     void init();
     void update();
     void render();
@@ -20,13 +26,12 @@ public:
     bool multiplayerMode = false;
 
 private:
-    Clavier* clavier;
+    Clavier* clavier;  // Raw pointer since we don't own this
 
-    Player* player1;
-    Player* player2;
-
-    Bot* bots[MAX_BOTS];
-    Board* board;
+    Resource<Player> player1;
+    Resource<Player> player2;
+    Resource<Bot> bots[MAX_BOTS];
+    Resource<Board> board;
 
     int timeRemaining = TIME_LIMIT;
     
@@ -40,3 +45,5 @@ private:
 
     void checkHitBomb(Movable* movable);
 };
+
+#endif /* GAME_H_ */

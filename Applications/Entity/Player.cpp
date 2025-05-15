@@ -2,6 +2,7 @@
 #include "../Board/Board.h"
 #include "drivers/Clavier.h"
 #include <Applications/Board/Bomb.h>
+#include <sextant/Activite/ThreadManager.h>
 #include <drivers/timer.h>
 
 void Player::movePlayer() {
@@ -10,42 +11,37 @@ void Player::movePlayer() {
         return;
     }
 
-    // Rate-limit movement to prevent too rapid movement
-    unsigned long currentTime = Timer::getInstance().getTicks();
-    if (currentTime - lastMoveTime < moveDelay) {
-        return;
-    }
-
+    // Test keyboard directly
     if (clavier->testChar()) {
+        // Show we have input
+        draw_text("INPUT", 200, 30, 14);
+        
         char c = clavier->getchar();
+        // Show the character
+        draw_text(&c, 250, 30, 14);
 
         if (c == 'd') {
             direction = RIGHT;
-            move(*board, 3, 0);
+            move(*board, 2, 0);
             animationFrame = (animationFrame + 1) % 3;
-            lastMoveTime = currentTime;
         }
         else if (c == 'q') {
             direction = LEFT;
-            move(*board, -3, 0);
+            move(*board, -2, 0);
             animationFrame = (animationFrame + 1) % 3;
-            lastMoveTime = currentTime;
         }
         else if (c == 's') {
             direction = DOWN;
-            move(*board, 0, 3);
+            move(*board, 0, 2);
             animationFrame = (animationFrame + 1) % 3;
-            lastMoveTime = currentTime;
         }
         else if (c == 'z') {
             direction = UP;
-            move(*board, 0, -3);
+            move(*board, 0, -2);
             animationFrame = (animationFrame + 1) % 3;
-            lastMoveTime = currentTime;
         }
         else if(c == 'n') {
             this->poseBomb();
-            lastMoveTime = currentTime;
         }
     }
 }
@@ -56,11 +52,13 @@ void Player::run() {
             movePlayer();
         }
 
-        // Sleep for a short time to avoid consuming too much CPU
-        sleep(10);
-
-        // Yield to other threads
-        Yield();
+        ThreadManager::getInstance().yieldThread();
+        
+        // Short wait to avoid consuming too much CPU
+        unsigned long endTime = Timer::getInstance().getTicks() + 10;
+        while (Timer::getInstance().getTicks() < endTime) {
+            ThreadManager::getInstance().yieldThread();
+        }
     }
 }
 

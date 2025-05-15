@@ -1,27 +1,28 @@
 #include "Clavier.h"
+#include <sextant/ordonnancements/preemptif/thread.h>
+#include <drivers/KeyboardBuffer.h>
 
-extern bool modifBuf;
-extern char buf[256];
-extern int posBuf;
-
-bool Clavier::testChar() {//Retourne vrai si un caract�re a �t� saisi au clavier
-	return modifBuf;
+bool Clavier::testChar() {
+    return KeyboardBuffer::hasData();
 }
 
-char Clavier::getchar(){
-	while(!modifBuf);
-	modifBuf = false;
-	posBuf = 0;
-	return buf[0];
+char Clavier::getchar() {
+    if (!KeyboardBuffer::hasData()) {
+        return 0;
+    }
+    
+    return KeyboardBuffer::get();
 }
 
-char* Clavier::getString(){
-	while(!modifBuf);
-	modifBuf = false;
-	posBuf = 0;
-	return buf;
+char Clavier::waitChar() {
+    // Wait until a key is available
+    while (!KeyboardBuffer::hasData()) {
+        thread_yield();
+    }
+    
+    return KeyboardBuffer::get();
 }
 
 void Clavier::set_leds(void) {
-	ecrireOctet(0x60, 0xED);
+    ecrireOctet(0x60, 0xED);
 }

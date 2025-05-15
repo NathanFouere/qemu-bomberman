@@ -6,6 +6,7 @@
 #include <drivers/timer.h>
 #include "Board.h"
 #include "Explosion.h"
+#include "../Utilities/AnimationTimer.h"
 
 class Bomb : public Tile {
     private:
@@ -17,7 +18,7 @@ class Bomb : public Tile {
         int x;
         int y;
         int power = 1;
-        unsigned int lastAnimTick = 0;
+        AnimationTimer animTimer;
 
         void processExplosionDirection(int dx, int dy, ExplosionState midState, ExplosionState endState);
     public:

@@ -10,14 +10,16 @@
 
 #include <sextant/interruptions/i8259.h>
 
-extern "C" {
-	int TestAndSet(int *lock);
-}
-
 class Spinlock {
 public:
-	void Take(int *lck);
-	void Release(int *lck);
+    int TestAndSet(int *ptr) {
+        int old = *ptr;
+        *ptr = 0;
+        return old;
+    }
+    
+    void Take(int *lck);
+    void Release(int *lck);
 };
 
 #endif /* SPINLOCK_H_ */

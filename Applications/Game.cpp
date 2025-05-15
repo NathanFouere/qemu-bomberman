@@ -1,43 +1,39 @@
 #include "Game.h"
 #include <Applications/Utilities/PseudoRand.h>
 #include <Applications/Board/Bomb.h>
+#include <sextant/Activite/ThreadManager.h>
 
-Game::Game(Clavier* k) :clavier(k), player1(nullptr), player2(nullptr), board(nullptr) {
-    for (int i = 0; i < MAX_BOTS; ++i) {
-        bots[i] = nullptr;
-    }
+Game::Game(Clavier* k) : clavier(k) {
+    ServiceLocator::provideKeyboard(k);
     lastFrameTime = 0;
+}
+
+Game::~Game() {
+    // Resources will auto-clean via RAII
 }
 
 void Game::init() {
     set_vga_mode13();
     clear_vga_screen(16);
     set_palette_vga(palette_vga);
-
-    // TODO adjust spawn positions
     
     int boardWidth = 20;
-	int boardHeight = 11;
-	int botCount = 3;
+    int boardHeight = 11;
+    
+    // Create board using Resource
+    board.reset(new Board(boardWidth, boardHeight));
 
-    board = new Board(boardWidth, boardHeight);
-
-    player1 = new Player(8, 40,PlayerType::PLAYER1, clavier, board);
+    // Create player using Resource
+    player1.reset(new Player(8, 40, PlayerType::PLAYER1, clavier, board.get()));
     player1->start();
 
-    if (multiplayerMode){
-        player2 = new Player(8, 40,PlayerType::PLAYER2, clavier, board);
+    if (multiplayerMode) {
+        player2.reset(new Player(8, 40, PlayerType::PLAYER2, clavier, board.get()));
         player2->start();
     }
-
-    // for (int i = 0; i < MAX_BOTS; ++i) {
-    //     int x = 50 + (i % 5) * 25;
-    //     int y = 50 + (i / 5) * 25;
-    //     bots[i] = new Bot(x, y, static_cast<EnemyType>(i % EnemyTypeCount));
-    //     bots[i]->start();
-    // }
     
-	for (int i = 0; i < MAX_BOTS; i++) {
+    // Create bots using Resource
+    for (int i = 0; i < MAX_BOTS; i++) {
         constexpr int EnemyTypeCount = 5;
         while (true) {
             int randX = pseudoRand() % (boardWidth - 2) + 1;
@@ -47,7 +43,7 @@ void Game::init() {
             int py = randY * TILE_SIZE + BOARD_ORIGIN_Y;
 
             if (!board->isBlockedAt(px, py)) {
-                bots[i] = new Bot(px, py, static_cast<EnemyType>(i % EnemyTypeCount),board);
+                bots[i].reset(new Bot(px, py, static_cast<EnemyType>(i % EnemyTypeCount), board.get()));
                 bots[i]->start();
                 break;
             }
@@ -59,16 +55,16 @@ void Game::init() {
 
 void Game::update() {
 
-    this->checkHitBomb(player1);
+    this->checkHitBomb(player1.get());
 
     if (multiplayerMode){
-        this->checkHitBomb(player2);
+        this->checkHitBomb(player2.get());
     }
     
     for (int i = 0; i < MAX_BOTS; ++i) {
-        this->checkHitBomb(bots[i]);
+        this->checkHitBomb(bots[i].get());
     }
-    thread_yield();
+    ThreadManager::getInstance().yieldThread();
 }
 
 void Game::render() {
@@ -97,7 +93,7 @@ void Game::render() {
     board->draw();
 
     for (int i = 0; i < MAX_BOTS; ++i) {
-        if (bots[i] && bots[i]->getStatus() != EntityStatus::DEAD) {
+        if (bots[i].get() != nullptr && bots[i]->getStatus() != EntityStatus::DEAD) {
             draw_sprite(bots[i]->getSprite(), 16, 16, bots[i]->getX(), bots[i]->getY());
         }
     }
@@ -123,25 +119,20 @@ void Game::render() {
 }
 
 void Game::run() {
-
     while (true) {
-
-        if (GameWin){
-            break;
-        }
-        if (GameOver){
-            break;
-        }
+        if (GameWin || GameOver) break;
 
         unsigned long frameStart = Timer::getInstance().getTicks();
+
         update();
         render();
 
         timeRemaining = TIME_LIMIT - Timer::getInstance().getSeconds();
 
-        unsigned long elapsed = Timer::getInstance().getTicks() - frameStart;
-        while (elapsed < targetFrameTime) {
-            elapsed = Timer::getInstance().getTicks() - frameStart;
+        // Handle frame timing with ThreadManager
+        unsigned long targetTime = frameStart + targetFrameTime;
+        while (Timer::getInstance().getTicks() < targetTime) {
+            ThreadManager::getInstance().yieldThread();
         }
     }
 }

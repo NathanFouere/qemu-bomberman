@@ -1,41 +1,27 @@
-#ifndef CLAVIER_H
-#define CLAVIER_H
+#ifndef CLAVIER_H_
+#define CLAVIER_H_
 
-#include "../drivers/Ecran.h"
-#include "../hal/fonctionsES.h"
+#include <hal/fonctionsES.h>
+#include <drivers/KeyboardBuffer.h>
+
 /**
  * @file Clavier.h
  * @class Clavier
- * @brief Permet la récupération des caractères saisis au clavier.
+ * @brief Keyboard interface for user applications
  */
-
 class Clavier {
-public :
-	bool testChar(); //Retourne vrai si un caractere a ete saisi au clavier
-	/***
-	 * Recupere le premier caractere tape.
-	 ***/
-	char getchar();
-	/***
-	 * Recupere tous les caracteres tapes.
-	 ***/
-	char* getString();
-	/***
-	 * Verifie si un caractere a ete tape.
-	 ***/
-	bool isPressed(char c);
-
-	void set_leds(void);
-
-	enum Key {
-		Up = 'w',
-		Down = 's',
-		Left = 'a',
-		Right = 'd',
-		PlaceBomb = 'x',
-		Enter = 0x1C
-	};
-	
+public:
+    // Check if a key is available
+    bool testChar();
+    
+    // Get a character (returns 0 if no key available)
+    char getchar();
+    
+    // Wait for a key and return it
+    char waitChar();
+    
+    // Set keyboard LEDs (not implemented)
+    void set_leds(void);
 };
 
-#endif
+#endif /* CLAVIER_H_ */

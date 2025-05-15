@@ -17,7 +17,7 @@ class Player: public Threads, public Movable {
         int score = 0;
         bool active = true;
         unsigned long lastMoveTime = 0;
-        const int moveDelay = 10;
+        const int moveDelay = 50; 
 
         void setSprites(PlayerType type) {
             if (type == PlayerType::PLAYER1) {
