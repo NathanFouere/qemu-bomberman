@@ -59,3 +59,18 @@ void Bot::run() {
         }
     }
 }
+
+void Bot::handleHitBomb() {
+    status = EntityStatus::DEAD_ANIMATION;
+    animationFrame = 0;
+    deathAnimationStartTime = Timer::getInstance().getSeconds();
+}
+
+
+void Bot::update() {
+    if (status == EntityStatus::DEAD_ANIMATION) {
+        if (Timer::getInstance().getSeconds() - deathAnimationStartTime > DEATH_ANIMATION_TIME) {
+            status = EntityStatus::DEAD;
+        }
+    }
+}

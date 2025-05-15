@@ -79,15 +79,17 @@ void Game::init() {
 
 void Game::update() {
 
-    this->checkHitBomb(player1);
     this->checkPlayerHitBot(player1);
+    player1->update();
+
     if (multiplayerMode){
-        this->checkHitBomb(player2);
         this->checkPlayerHitBot(player2);
+        player2->update();
     }
     
     for (int i = 0; i < MAX_BOTS; ++i) {
-        this->checkHitBomb(bots[i]);
+        //this->checkHitBombBot(bots[i]);
+        bots[i]->update();
     }
 
     checkGameWinAndLose();
@@ -103,7 +105,7 @@ void Game::update() {
         }
         char key = clavier->getchar();
         if (key == Clavier::Enter) {
-            this->resetGame();
+            //this->resetGame();
         }
     }
     else if (gameState == GameState::GAME_WIN) {
@@ -117,7 +119,7 @@ void Game::update() {
         }
         char key = clavier->getchar();
         if (key == Clavier::Enter) {
-            this->resetGame();
+            //this->resetGame();
         }
     }
 
@@ -216,7 +218,7 @@ void Game::run() {
     }
 }
 
-void Game::checkHitBomb(Movable* movable) {
+void Game::checkHitBombBot(Bot* movable) {
     int startX = movable->getX();
     int startY = movable->getY();
     int endX = startX + TILE_SIZE;
@@ -231,41 +233,4 @@ void Game::checkHitBomb(Movable* movable) {
             }
         }
     }
-}    
-
-void Game::checkPlayerHitBot(Player* player) {
-    int playerX = player->getX();
-    int playerY = player->getY();
-
-    for (int i = 0; i < MAX_BOTS; ++i) {
-        if (bots[i] && bots[i]->getStatus() != EntityStatus::DEAD) {
-
-            int botX = bots[i]->getX();
-            int botY = bots[i]->getY();
-
-            if (playerX < botX + TILE_SIZE && playerX + TILE_SIZE > botX &&
-                playerY < botY + TILE_SIZE && playerY + TILE_SIZE > botY) {
-                player->decreaseLives();
-                return;
-            }
-        }
-    }
 }
-
-void Game::restartGame() {
-
-}
-
-void Game::resetGame() {
-    clear_frame_buffer(0);
-    draw_text("RESTARTING GAME", 100, 100, 15);
-    copy_frame_buffer_to_video();
-
-    unsigned int startStageTime = Timer::getInstance().getTicks();
-    while (Timer::getInstance().getTicks() - startStageTime < 1500) {
-        thread_yield();
-    }
-    
-    init();
-}
-
