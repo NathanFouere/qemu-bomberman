@@ -67,11 +67,21 @@ void Bot::handleHitBomb() {
     status = EntityStatus::DEAD_ANIMATION;
     animationFrame = 0;
     deathAnimationStartTime = Timer::getInstance().getSeconds();
+    lastAnimationTime = Timer::getInstance().getTicks(); // Initialize the animation timer
 }
 
 
 void Bot::update() {
     if (status == EntityStatus::DEAD_ANIMATION) {
+        // Get current time in milliseconds
+        unsigned long currentTime = Timer::getInstance().getTicks();
+        
+        // Increment animation frame every 500ms using the instance variable
+        if (currentTime - lastAnimationTime >= animationFrameInterval) {
+            animationFrame++;
+            lastAnimationTime = currentTime;
+        }
+        
         if (Timer::getInstance().getSeconds() - deathAnimationStartTime > DEATH_ANIMATION_TIME) {
             status = EntityStatus::DEAD;
         }

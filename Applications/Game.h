@@ -41,6 +41,7 @@ private:
     Board* board;
 
     int timeRemaining = TIME_LIMIT;
+    unsigned long gameStartTime; // Time when the game actually starts
 
     GameState gameState = GameState::INIT;
 

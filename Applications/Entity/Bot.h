@@ -36,10 +36,12 @@ private:
     // Rate limiting for movement
     const unsigned long moveDelay = 75;  // milliseconds between moves
     const unsigned long directionChangeInterval = 1000; // Time between direction changes
+    const unsigned long animationFrameInterval = 550; // Time between animation frames (500 ms)
     
     // Per-instance variables for movement tracking
     unsigned long lastChangeTime = 0;  // Last time direction was changed
     unsigned long lastMoveTime = 0;    // Last time bot moved
+    unsigned long lastAnimationTime = 0; // Last time animation frame was updated    // Last time bot moved
     int directionIndex = -1;           // Current direction
     void setSprites(EnemyType type) {
         switch (type) {

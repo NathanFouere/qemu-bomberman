@@ -4,7 +4,7 @@
 
 const unsigned char* Movable::getSprite() {
     if (status == EntityStatus::DEAD_ANIMATION) {
-        return deathSprites[(animationFrame / 30) % 4];
+        return deathSprites[(animationFrame) % 5];
     }
     
     return sprites[direction][animationFrame % 3];
