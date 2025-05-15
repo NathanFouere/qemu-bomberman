@@ -2,22 +2,25 @@
 #define CLAVIER_H_
 
 #include <hal/fonctionsES.h>
-#include <sextant/Synchronisation/Mutex/Mutex.h>
+#include <drivers/KeyboardBuffer.h>
 
 /**
  * @file Clavier.h
  * @class Clavier
- * @brief Permet la récupération des caractères saisis au clavier.
+ * @brief Keyboard interface for user applications
  */
-
 class Clavier {
-private:
-    static Mutex keyboardMutex;  // Add mutex for synchronization
-
 public:
+    // Check if a key is available
     bool testChar();
+    
+    // Get a character (returns 0 if no key available)
     char getchar();
-    char* getString();
+    
+    // Wait for a key and return it
+    char waitChar();
+    
+    // Set keyboard LEDs (not implemented)
     void set_leds(void);
 };
 

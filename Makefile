@@ -58,6 +58,7 @@ OBJECTSNAMES=\
  irq_wrappers i8259 idt irq\
  Memoire multiboot Mutex main\
  op_memoire\
+ ServiceLocator ThreadManager KeyboardBuffer \
  Semaphore Spinlock  sched\
  timer TestAndSet Threads thread\
  vga\
