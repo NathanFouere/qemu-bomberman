@@ -85,13 +85,11 @@ void Player::poseBomb() {
 
 void Player::handleHitBomb() {
     this->decreaseLives();
-    if (lives <= 0) {
-        status = EntityStatus::DEAD;
-    }
-    else
-    {    
-        status = EntityStatus::DEAD_ANIMATION;
-    }
+    
+    // Always trigger death animation, whether player has lives left or not
+    status = EntityStatus::DEAD_ANIMATION;
+    
+    // If player has no lives left, it will become DEAD after animation completes
     animationFrame = 0;
     deathAnimationStartTime = Timer::getInstance().getSeconds();
     lastAnimationTime = Timer::getInstance().getTicks(); // Initialize the animation timer
@@ -110,6 +108,8 @@ void Player::update() {
         
         if (Timer::getInstance().getSeconds() - deathAnimationStartTime > DEATH_ANIMATION_TIME) {
             status = EntityStatus::ALIVE;
+            // Set invulnerability period after respawn
+            invulnerabilityEndTime = Timer::getInstance().getTicks() + INVULNERABILITY_DURATION;
         }
     }
 }

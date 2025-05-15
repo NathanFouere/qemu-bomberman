@@ -13,13 +13,16 @@ Game::Game(Clavier* k) :clavier(k), player1(nullptr), player2(nullptr), board(nu
     set_vga_mode13();
     clear_vga_screen(16);
     set_palette_vga(palette_vga);
+    
+    // Reset the player hit time
+    playerHitTime = 0;
 
-     bool modeSelected = false;
+    bool modeSelected = false;
 
-      while (!modeSelected) {
+    while (!modeSelected) {
         clear_frame_buffer(0);
 
-         draw_text("BOMBERMAN", 120, 60, 15);
+        draw_text("BOMBERMAN", 120, 60, 15);
         draw_text("1. SOLO MODE", 100, 100, 15);
         draw_text("2. MULTIPLAYER", 100, 120, 15);
         draw_text("PRESS 1 OR 2 TO SELECT", 75, 160, 14);
@@ -36,6 +39,7 @@ Game::Game(Clavier* k) :clavier(k), player1(nullptr), player2(nullptr), board(nu
             modeSelected = true;
         }
     }
+
     // Display "STAGE 1"
     clear_frame_buffer(0);
     draw_text("STAGE 1", 135, 100, 15);
@@ -78,15 +82,27 @@ Game::Game(Clavier* k) :clavier(k), player1(nullptr), player2(nullptr), board(nu
 }
 
  void Game::update() {
-
-    this->checkPlayerHitBot(player1);
-    this->checkHitBombPlayer(player1);
+    // Get current time
+    unsigned long currentTime = Timer::getInstance().getTicks();
+    
+    bool gameIsFrozen = (playerHitTime > 0 && (currentTime - playerHitTime) < FREEZE_DURATION);
+    
     player1->update();
-
-    if (multiplayerMode){
-        this->checkPlayerHitBot(player2);
-        this->checkHitBombPlayer(player2);
+    if (multiplayerMode) {
         player2->update();
+    }
+    
+    if (gameIsFrozen) {
+        thread_yield();
+        return;
+    }
+    
+    this->checkHitBombPlayer(player1);
+    this->checkPlayerHitBot(player1);
+    
+    if (multiplayerMode) {
+        this->checkHitBombPlayer(player2);
+        this->checkPlayerHitBot(player2);
     }
     
     for (int i = 0; i < MAX_BOTS; ++i) {
@@ -123,6 +139,8 @@ Game::Game(Clavier* k) :clavier(k), player1(nullptr), player2(nullptr), board(nu
 }
 
  void Game::render() {
+    unsigned long currentTime = Timer::getInstance().getTicks();
+    bool playerJustHit = (playerHitTime > 0 && (currentTime - playerHitTime) < FREEZE_DURATION);
 
     clear_frame_buffer(228);
 
@@ -169,46 +187,55 @@ Game::Game(Clavier* k) :clavier(k), player1(nullptr), player2(nullptr), board(nu
         draw_text("FPS: ", 268, 188, 255);
         draw_number(fps, 316, 188, 255);
     }
+    
+    // Show hit message when player is hit
+    if (playerJustHit) {
+        draw_text("HIT!!", 140, 99, 0);
+        draw_text("HIT!!", 141, 100, 0);
+        draw_text("HIT!!", 140, 101, 0);
+        draw_text("HIT!!", 139, 100, 0);
+        draw_text("HIT!!", 140, 100, 15);
+    }
 
     copy_frame_buffer_to_video();
 }
 
  void Game::run() {
     while (true) {
-        // if (gameState == GameState::GAME_OVER) {
-        //     clear_frame_buffer(0);
-        //     draw_text("GAME OVER", 120, 80, 15);
-        //     draw_text("PRESS ENTER TO RESTART", 70, 100, 15);
-        //     copy_frame_buffer_to_video();
+        if (gameState == GameState::GAME_OVER) {
+            clear_frame_buffer(0);
+            draw_text("GAME OVER", 120, 80, 15);
+            draw_text("PRESS ENTER TO RESTART", 70, 100, 15);
+            copy_frame_buffer_to_video();
 
-        //      while (!clavier->testChar()) {
-        //         thread_yield();
-        //     }
-        //     char key = clavier->getchar();
-        //     if (key == Clavier::Enter) {
-        //         clear_frame_buffer(0);
-        //         copy_frame_buffer_to_video();
-        //         this->resetGame();
-        //         continue; // Skip the rest of this loop iteration and start fresh
-        //     }
-        // }
-        // else if (gameState == GameState::GAME_WIN) {
-        //     clear_frame_buffer(0);
-        //     draw_text("YOU WIN", 120, 60, 15);
-        //     draw_text("PRESS ENTER TO RESTART", 100, 100, 15);
-        //     copy_frame_buffer_to_video();
+            while (!clavier->testChar()) {
+                thread_yield();
+            }
+            char key = clavier->getchar();
+            if (key == Clavier::Enter) {
+                clear_frame_buffer(0);
+                copy_frame_buffer_to_video();
+                this->resetGame();
+                continue; // Skip the rest of this loop iteration and start fresh
+            }
+        }
+        else if (gameState == GameState::GAME_WIN) {
+            clear_frame_buffer(0);
+            draw_text("YOU WIN", 120, 60, 15);
+            draw_text("PRESS ENTER TO RESTART", 80, 100, 15);
+            copy_frame_buffer_to_video();
 
-        //      while (!clavier->testChar()) {
-        //         thread_yield();
-        //     }
-        //     char key = clavier->getchar();
-        //     if (key == Clavier::Enter) {
-        //         clear_frame_buffer(0);
-        //         copy_frame_buffer_to_video();
-        //         this->resetGame();
-        //         continue; // Skip the rest of this loop iteration and start fresh
-        //     }
-        // }
+            while (!clavier->testChar()) {
+                thread_yield();
+            }
+            char key = clavier->getchar();
+            if (key == Clavier::Enter) {
+                clear_frame_buffer(0);
+                copy_frame_buffer_to_video();
+                this->resetGame();
+                continue; // Skip the rest of this loop iteration and start fresh
+            }
+        }
 
         unsigned long frameStart = Timer::getInstance().getTicks();
         update();
@@ -244,6 +271,10 @@ void Game::checkHitBombBot(Bot* movable) {
 }
 
  void Game::checkPlayerHitBot(Player* player) {
+    // Ne pas vérifier les collisions si le joueur est déjà dans une animation de mort
+    if (player->getStatus() == EntityStatus::DEAD_ANIMATION) {
+        return;
+    }
 
     int playerX = player->getX();
     int playerY = player->getY();
@@ -257,6 +288,7 @@ void Game::checkHitBombBot(Bot* movable) {
             if (playerX < botX + TILE_SIZE && playerX + TILE_SIZE > botX &&
                 playerY < botY + TILE_SIZE && playerY + TILE_SIZE > botY) {
                 player->handleHitBomb();
+                playerHitTime = Timer::getInstance().getTicks(); // Record when player was hit by bot
                 return;
             }
         }
@@ -264,6 +296,13 @@ void Game::checkHitBombBot(Bot* movable) {
 }
 
 void Game::checkHitBombPlayer(Player* movable) {
+    // Ne pas vérifier les collisions si le joueur est déjà dans une animation de mort
+    // ou s'il est en période d'invulnérabilité après une réapparition
+    if (movable->getStatus() == EntityStatus::DEAD_ANIMATION || 
+        Timer::getInstance().getTicks() < playerHitTime + FREEZE_DURATION) {
+        return;
+    }
+
     int startX = movable->getX()  + 1; // obliger de faire + 1, il me semble que cela vient de la gestion des collisions
     int startY = movable->getY() + 1;
     int endX = startX + TILE_SIZE;
@@ -274,6 +313,7 @@ void Game::checkHitBombPlayer(Player* movable) {
             TileType tileType = this->board->getTileTypeAt(x, y);
             if (tileType == TILE_EXPLOSION) {
                 movable->handleHitBomb();
+                playerHitTime = Timer::getInstance().getTicks(); // Record when player was hit
                 return;
             }
         }
@@ -309,6 +349,7 @@ void Game::resetGame() {
     // Reset game state
     gameState = GameState::INIT;
     timeRemaining = TIME_LIMIT; // Reset time remaining
+    playerHitTime = 0; // Reset player hit time
     
     // Reinitialize the game (this will also reset gameStartTime)
     init();

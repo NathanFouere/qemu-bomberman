@@ -10,7 +10,7 @@ enum class EntityStatus {
     DEAD_ANIMATION // TODO => pas sur qu'on garde ce statut
 };
 
-const int DEATH_ANIMATION_TIME = 2;
+const int DEATH_ANIMATION_TIME = 3; // Animation time in seconds
 
 class Movable  {
 protected:

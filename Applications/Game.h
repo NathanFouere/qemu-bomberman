@@ -7,6 +7,7 @@
 #define MAX_BOTS 5
 #define TARGET_FPS 60
 #define TIME_LIMIT 200
+#define FREEZE_DURATION 1000 // Duration in milliseconds for which the game freezes when player is hit
 
 #define BOARD_WIDTH 20
 #define BOARD_HEIGHT 11
@@ -45,6 +46,7 @@ private:
 
     int timeRemaining = TIME_LIMIT;
     unsigned long gameStartTime; // Time when the game actually starts
+    unsigned long playerHitTime; // Time when the player was hit
 
     GameState gameState = GameState::INIT;
 
