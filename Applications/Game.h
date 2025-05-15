@@ -43,8 +43,6 @@ private:
     int timeRemaining = TIME_LIMIT;
 
     GameState gameState = GameState::INIT;
-    bool waitingForKeyPress = false;
-    bool exitWaitingLoop = false;
 
     unsigned long lastFrameTime;
     const int targetFrameTime = 1000 / TARGET_FPS;

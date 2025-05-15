@@ -75,32 +75,9 @@ void Game::init() {
     }
 
     lastFrameTime = Timer::getInstance().getTicks();
-    
-    // Réinitialiser l'état du jeu à RUNNING
-    gameState = GameState::RUNNING;
-    waitingForKeyPress = false;
-    exitWaitingLoop = false;
 }
 
 void Game::update() {
-    // Skip normal update if we're in a waiting state
-    if (waitingForKeyPress) {
-        if (clavier->testChar()) {
-            char key = clavier->getchar();
-            if (key == Clavier::Enter) {
-                waitingForKeyPress = false;
-                this->resetGame();
-            }
-        }
-        // Forced exit from waiting loop (timeout or exit request)
-        if (exitWaitingLoop) {
-            waitingForKeyPress = false;
-            exitWaitingLoop = false;
-            this->resetGame();
-        }
-        thread_yield();
-        return;
-    }
 
     this->checkHitBomb(player1);
     this->checkPlayerHitBot(player1);
@@ -120,52 +97,28 @@ void Game::update() {
         draw_text("GAME OVER", 120, 80, 15);
         draw_text("PRESS ENTER TO RESTART", 70, 100, 15);
         copy_frame_buffer_to_video();
-        
-        // Set the waiting flag instead of blocking with a while loop
-        waitingForKeyPress = true;
-        
-        // Set a timeout of 10 seconds to automatically restart if no key is pressed
-        unsigned int startWaitTime = Timer::getInstance().getTicks();
-        while (Timer::getInstance().getTicks() - startWaitTime < 10000) {
-            if (clavier->testChar()) {
-                char key = clavier->getchar();
-                if (key == Clavier::Enter) {
-                    waitingForKeyPress = false;
-                    this->resetGame();
-                    break;
-                }
-            }
+
+        while (!clavier->testChar()) {
             thread_yield();
         }
-        // If we reach here, the timeout occurred
-        waitingForKeyPress = false;
-        this->resetGame();
+        char key = clavier->getchar();
+        if (key == Clavier::Enter) {
+            this->resetGame();
+        }
     }
     else if (gameState == GameState::GAME_WIN) {
         clear_frame_buffer(0);
         draw_text("YOU WIN", 120, 60, 15);
         draw_text("PRESS ENTER TO RESTART", 100, 100, 15);
         copy_frame_buffer_to_video();
-        
-        // Set the waiting flag instead of blocking with a while loop
-        waitingForKeyPress = true;
-        
-        // Set a timeout of 10 seconds to automatically restart if no key is pressed
-        unsigned int startWaitTime = Timer::getInstance().getTicks();
-        while (Timer::getInstance().getTicks() - startWaitTime < 10000) {
-            if (clavier->testChar()) {
-                char key = clavier->getchar();
-                if (key == Clavier::Enter) {
-                    waitingForKeyPress = false;
-                    this->resetGame();
-                    break;
-                }
-            }
+
+        while (!clavier->testChar()) {
             thread_yield();
         }
-        // If we reach here, the timeout occurred
-        waitingForKeyPress = false;
-        this->resetGame();
+        char key = clavier->getchar();
+        if (key == Clavier::Enter) {
+            this->resetGame();
+        }
     }
 
     thread_yield();
@@ -247,30 +200,17 @@ void Game::render() {
 }
 
 void Game::run() {
-    // Initialize the game state to RUNNING when we start the game
-    gameState = GameState::RUNNING;
 
     while (true) {
+
         unsigned long frameStart = Timer::getInstance().getTicks();
-        
-        // Update the game
         update();
-        
-        // Only render if we're not waiting for a key press or if we are in a final state
-        if (!waitingForKeyPress || gameState == GameState::GAME_OVER || gameState == GameState::GAME_WIN) {
-            render();
-        }
+        render();
 
-        // Update time remaining only in RUNNING state
-        if (gameState == GameState::RUNNING) {
-            timeRemaining = TIME_LIMIT - Timer::getInstance().getSeconds();
-        }
+        timeRemaining = TIME_LIMIT - Timer::getInstance().getSeconds();
 
-        // Frame rate control
         unsigned long elapsed = Timer::getInstance().getTicks() - frameStart;
         while (elapsed < targetFrameTime) {
-            // Give other threads a chance to run
-            thread_yield();
             elapsed = Timer::getInstance().getTicks() - frameStart;
         }
     }
@@ -317,46 +257,15 @@ void Game::restartGame() {
 }
 
 void Game::resetGame() {
-    // Nettoyer l'écran et afficher le message de redémarrage
     clear_frame_buffer(0);
     draw_text("RESTARTING GAME", 100, 100, 15);
     copy_frame_buffer_to_video();
 
-    // Attendre un court instant pour que le joueur puisse lire le message
     unsigned int startStageTime = Timer::getInstance().getTicks();
     while (Timer::getInstance().getTicks() - startStageTime < 1500) {
         thread_yield();
     }
     
-    // Libérer la mémoire des objets existants
-    if (player1) {
-        delete player1;
-        player1 = nullptr;
-    }
-    
-    if (player2) {
-        delete player2;
-        player2 = nullptr;
-    }
-    
-    for (int i = 0; i < MAX_BOTS; ++i) {
-        if (bots[i]) {
-            delete bots[i];
-            bots[i] = nullptr;
-        }
-    }
-    
-    if (board) {
-        delete board;
-        board = nullptr;
-    }
-    
-    // Réinitialiser les variables d'état
-    waitingForKeyPress = false;
-    exitWaitingLoop = false;
-    timeRemaining = TIME_LIMIT;
-
-    // Initialiser un nouveau jeu
     init();
 }
 
